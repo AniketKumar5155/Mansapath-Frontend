@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import FormPage from "./page/FormPage";
-import AdminDashboard from "./page/AdminDashboard";
 import OperatorLogin from "./page/OperatorLoginPage";
+import SubmissionsPage from "./page/SubmissionsPage";
+import AdminDashboard from "./page/adminDashboard";
 
 const App = () => {
   return (
@@ -12,8 +13,9 @@ const App = () => {
 
   <Routes>
     <Route path = "/form" element={<FormPage/>}/>
-    <Route path = "/admin-dashboard" element={<AdminDashboard/>} />
+    <Route path = "/submissions" element={<SubmissionsPage/>} />
     <Route path = "/operator-login" element={<OperatorLogin/>} />
+    <Route path = "/admin-dashboard" element={<AdminDashboard/>} />
   </Routes>
 
 

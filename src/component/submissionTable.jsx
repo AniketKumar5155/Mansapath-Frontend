@@ -21,7 +21,7 @@ const SubmissionTable = () => {
   ];
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
+    <div style={{ height: 650, width: "100%" }}>
       <DataGrid
         rows={submissions}
         columns={columns}
