@@ -1,8 +1,8 @@
+import { useState } from "react";
 import InputField from "./Input";
 import { toast } from "react-toastify";
 import useFormStore from "../store/formStore";
 import formSubmissionSchema from "../validator/formSchema";
-import { useState } from "react";
 
 const Form = () => {
     const [formData, setFormData] = useState({

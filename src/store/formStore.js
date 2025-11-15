@@ -1,20 +1,20 @@
 import { create } from "zustand";
 import {
-    createFormSubmission
+    createFormSubmission,
+    getAllSubmissions,
 } from "../service/formService"
 
 const useFormStore = create((set) => ({
-    formSubmissions: [],
+    submissions: [],
     loading: false,
-    error: {},
-    setErrors: (errors) => set({ errors }),
+    error: null,
 
     submitForm: async (formData) => {
-        set({ loading: true, errros: {} });
+        set({ loading: true, errors: {} });
         try {
             const data = await createFormSubmission(formData);
             set((state) => ({
-                formSubmissions: [...state.formSubmissions, data],
+                submissions: [...state.submissions, data],
             }));
             return {
                 success: true,
@@ -22,16 +22,26 @@ const useFormStore = create((set) => ({
                 data,
             };
         } catch (error) {
-            const message = error.response?.data?.message || error.message || "Failed to submit form";
-            set({ errors: message });
-            return {
-                success: false,
-                error: message,
-            };
+            const message = error.response?.data?.message || error.message;
+            set({ error: message });
+            return { success: false, error: message };
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    getSubmissions: async () => {
+        set({ loading: true, error: null });
+        try {
+            const data = await getAllSubmissions();
+            set({ submissions: data });
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            set({ error: message });
         } finally {
             set({ loading: false });
         }
     }
-}))
+}));
 
 export default useFormStore;
