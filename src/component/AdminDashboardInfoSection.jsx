@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
-import { FaClipboardList } from "react-icons/fa"; // optional icon
+import { FaClipboardList } from "react-icons/fa";
 import useFormStore from "../store/formStore";
 
 const AdminDashboardInfoSection = () => {

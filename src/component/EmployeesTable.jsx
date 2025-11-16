@@ -1,43 +1,42 @@
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import useFormStore from "../store/formStore";
+import useEmployeeStore from "../store/useEmployeeStore"
 import CustomButton from "./CustomButton";
 import Form from "./Form";
+import { toast } from "react-toastify";
 
-const SubmissionTable = () => {
-  const { submissions, getSubmissions, loading } = useFormStore();
+const EmployeesTable = () => {
+  const { employees, getAllEmployees, loading } = useEmployeeStore();
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    getSubmissions();
+    try{
+    getAllEmployees();
+    }catch(error){
+      console.log(error)
+      toast.error("Failed to fetch employees")
+    }
   }, []);
 
   const columns = [
     { field: "id", headerName: "ID", width: 80 },
     { field: "first_name", headerName: "First Name", width: 130 },
     { field: "last_name", headerName: "Last Name", width: 130 },
-    { field: "gender", headerName: "Gender", width: 110 },
+    { field: "username", headerName: "Username", width:130},
+    // { field: "gender", headerName: "Gender", width: 110 },
     { field: "email", headerName: "Email", width: 200 },
     { field: "phone_number", headerName: "Phone", width: 125 },
-    { field: "address", headerName: "Address", width: 260 },
-    { field: "status", headerName: "Status", width: 60 },
+    // { field: "address", headerName: "Address", width: 260 },
+    { field: "role", headerName: "Role", width: 60 },
     { field: "created_at", headerName: "Created At", width: 220 },
   ];
 
   return (
     <>
-      <div className="w-full flex justify-end mb-3">
-        <CustomButton
-          label="NEW +"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 mr-12"
-          onClick={() => setShowForm(true)}
-        />
-      </div>
-
       <div className="overflow-x-auto overflow-y-hidden w-[96.6%] border rounded-md">
         <div style={{ height: 650, width: "1300px" }}>
           <DataGrid
-            rows={submissions}
+            rows={employees}
             columns={columns}
             loading={loading}
             getRowId={(row) => row.id}
@@ -45,10 +44,8 @@ const SubmissionTable = () => {
           />
         </div>
       </div>
-
-      {showForm && <Form overlay={true} onClose={() => setShowForm(false)} />}
     </>
   );
 };
 
-export default SubmissionTable;
+export default EmployeesTable;
