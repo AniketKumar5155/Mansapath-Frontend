@@ -1,23 +1,22 @@
 import { useState } from "react";
 import InputField from "./Input";
 import { toast } from "react-toastify";
-import useFormStore from "../store/formStore";
-import formSubmissionSchema from "../validator/formSchema";
+import useEmployeeStore from "../store/useEmployeeStore";
 import SuccessModal from "./SuccessModal";
+import { employeeSchema } from "../validator/employeeSchema";
 
-const Form = () => {
+const CreateEmployeeForm = () => {
     const [formData, setFormData] = useState({
         first_name: "",
         middle_name: "",
         last_name: "",
-        gender: "",
+        username: "",
         email: "",
-        phone_number: "",
-        address: "",
+        password: "",
     });
 
     const [fielderrors, setFieldErrors] = useState({});
-    const { submitForm, loading } = useFormStore();
+    const { createEmployee, loading } = useEmployeeStore();
     const [submitted, setSubmitted] = useState(false);
 
     const handleChange = (e) => {
@@ -28,7 +27,7 @@ const Form = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validatedData = formSubmissionSchema.safeParse(formData);
+        const validatedData = employeeSchema.safeParse(formData);
 
         if (!validatedData.success) {
             const errorsMap = {};
@@ -45,7 +44,7 @@ const Form = () => {
         setFieldErrors({});
 
         try {
-            const submit = await submitForm(formData);
+            const submit = await createEmployee(formData);
 
             if (submit.success) {
                 setSubmitted(true);
@@ -105,21 +104,15 @@ const Form = () => {
                         </div>
                     </div>
 
-                    <label className="block mb-1 mt-6 font-medium">Gender*</label>
-                    <select
-                        name="gender"
-                        className="px-3 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-amber-400"
-                        value={formData.gender}
+                    <label className="block mb-1 mt-6 font-medium">Username*</label>
+                    <InputField
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
                         onChange={handleChange}
-                    >
-                        <option value="">Select gender</option>
-                        <option value="MALE">Male</option>
-                        <option value="FEMALE">Female</option>
-                        <option value="OTHER">Other</option>
-                        <option value="RATHER NOT SAY">Rather not say</option>
-                    </select>
-                    {fielderrors.gender && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.gender}</p>
+                    />
+                    {fielderrors.username && (
+                        <p className="text-red-500 text-sm mt-1">{fielderrors.username}</p>
                     )}
 
                     <label className="block mb-1 mt-6 font-medium">Email</label>
@@ -145,24 +138,24 @@ const Form = () => {
                         <p className="text-red-500 text-sm mt-1">{fielderrors.phone_number}</p>
                     )}
 
-                    <label className="block mb-1 mt-6 font-medium">Address</label>
-                    <InputField
-                        name="address"
-                        placeholder="Address*"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
+                    {/* <label className="block mb-1 mt-6 font-medium">Address</label> */}
+                    {/* <InputField */}
+                        {/* name="address" */}
+                        {/* placeholder="Address*" */}
+                        {/* value={formData.address} */}
+                        {/* onChange={handleChange} */}
+                    {/* /> */}
 
-                    <label className="block mb-1 mt-6 font-medium">Problem description</label>
-                    <textarea
-                        name="problem_description"
-                        placeholder="Describe your problem..."
-                        className="px-3 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-amber-400"
-                        value={formData.problem_description}
+                    <label className="block mb-1 mt-6 font-medium">password*</label>
+                    <InputField 
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
                         onChange={handleChange}
                     />
-                    {fielderrors.problem_description && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.problem_description}</p>
+                    {fielderrors.password && (
+                        <p className="text-red-500 text-sm mt-1">{fielderrors.password}</p>
                     )}
 
                     <button
@@ -177,8 +170,7 @@ const Form = () => {
             <SuccessModal
                 isOpen={submitted}
                 title="Form Submitted"
-                messageline1="Your form has been submitted."
-                messageline2="We will contact you soon."
+                messageline1="Employee Created Successfully"
                 buttonText="OK"
                 onClose={() => setSubmitted(false)}
             />
@@ -186,4 +178,4 @@ const Form = () => {
     );
 };
 
-export default Form;
+export default CreateEmployeeForm;

@@ -18,7 +18,6 @@ const useAuthStore = create((set) => ({
                 return false;
             }
 
-            // Save token
             localStorage.setItem("accessToken", res.accessToken);
 
             set({

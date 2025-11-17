@@ -1,11 +1,13 @@
-import React from 'react'
+import CreateEmployeeForm from "../component/CreateEmployeeForm"
 
 const EmployeeCreatePage = () => {
   return (
     <>
-      
+      <div>
+        <CreateEmployeeForm/>
+      </div>
     </>
   )
 }
 
-export default EmployeeCreatePage
+export default EmployeeCreatePage;
