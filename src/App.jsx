@@ -5,6 +5,7 @@ import OperatorLogin from "./page/OperatorLoginPage";
 import SubmissionsPage from "./page/SubmissionsPage";
 import AdminDashboard from "./page/adminDashboard";
 import EmployeesPage from "./page/EmployeesPage";
+import EmployeeCreatePage from "./page/EmployeeCreatePage";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
 
   <Routes>
     <Route path = "/form" element={<FormPage/>}/>
+    <Route path = "/create-employee" element={<EmployeeCreatePage/>}/>
     <Route path = "/submissions" element={<SubmissionsPage/>} />
     <Route path = "/operator-login" element={<OperatorLogin/>} />
     <Route path = "/admin-dashboard" element={<AdminDashboard/>} />

@@ -12,7 +12,13 @@ const CreateEmployeeForm = () => {
         last_name: "",
         username: "",
         email: "",
+        phone_number: "",
+        blood_group: "",
+        age: "",
+        address: "",
+        aadhar_number: "",
         password: "",
+        role: "EMPLOYEE",
     });
 
     const [fielderrors, setFieldErrors] = useState({});
@@ -27,16 +33,20 @@ const CreateEmployeeForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validatedData = employeeSchema.safeParse(formData);
+
+        const dataForValidation = {
+            ...formData,
+            age: formData.age === "" ? undefined : Number(formData.age),
+        };
+
+        const validatedData = employeeSchema.safeParse(dataForValidation);
 
         if (!validatedData.success) {
             const errorsMap = {};
-
             validatedData.error.issues.forEach((issue) => {
                 const fieldName = issue.path?.[0];
                 errorsMap[fieldName] = issue.message;
             });
-
             setFieldErrors(errorsMap);
             return;
         }
@@ -44,12 +54,12 @@ const CreateEmployeeForm = () => {
         setFieldErrors({});
 
         try {
-            const submit = await createEmployee(formData);
+            const submit = await createEmployee(validatedData.data);
 
             if (submit.success) {
                 setSubmitted(true);
             } else {
-                toast.error(submit?.error || submit.message || "Submit failed");
+                toast.error(submit?.error || "Submit failed");
             }
         } catch (error) {
             toast.error("Unexpected error occurred");
@@ -60,107 +70,125 @@ const CreateEmployeeForm = () => {
         <>
             <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
                 <form onSubmit={handleSubmit}>
-
-                    <div className="flex mb-4 font-bold justify-center items-center text-2xl">FORM</div>
+                    <div className="flex mb-4 font-bold justify-center text-2xl">FORM</div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label className="block mb-1 font-medium">First name*</label>
                             <InputField
                                 name="first_name"
-                                placeholder="First name*"
                                 value={formData.first_name}
                                 onChange={handleChange}
                             />
-                            {fielderrors.first_name && (
-                                <p className="text-red-500 text-sm mt-1">{fielderrors.first_name}</p>
-                            )}
+                            {fielderrors.first_name && <p className="text-red-500 text-sm">{fielderrors.first_name}</p>}
                         </div>
 
                         <div>
                             <label className="block mb-1 font-medium">Middle name</label>
                             <InputField
                                 name="middle_name"
-                                placeholder="Middle name"
                                 value={formData.middle_name}
                                 onChange={handleChange}
                             />
-                            {fielderrors.middle_name && (
-                                <p className="text-red-500 text-sm mt-1">{fielderrors.middle_name}</p>
-                            )}
                         </div>
 
                         <div>
-                            <label className="block mb-1 font-medium">Last name*</label>
+                            <label className="block mb-1 font-medium">Last Name*</label>
                             <InputField
                                 name="last_name"
-                                placeholder="Last name*"
                                 value={formData.last_name}
                                 onChange={handleChange}
                             />
-                            {fielderrors.last_name && (
-                                <p className="text-red-500 text-sm mt-1">{fielderrors.last_name}</p>
-                            )}
+                            {fielderrors.last_name && <p className="text-red-500 text-sm">{fielderrors.last_name}</p>}
                         </div>
                     </div>
 
                     <label className="block mb-1 mt-6 font-medium">Username*</label>
                     <InputField
                         name="username"
-                        placeholder="Username"
                         value={formData.username}
                         onChange={handleChange}
                     />
-                    {fielderrors.username && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.username}</p>
-                    )}
+                    {fielderrors.username && <p className="text-red-500 text-sm">{fielderrors.username}</p>}
 
-                    <label className="block mb-1 mt-6 font-medium">Email</label>
+                    <label className="block mb-1 mt-6 font-medium">Email*</label>
                     <InputField
                         type="email"
                         name="email"
-                        placeholder="Email"
                         value={formData.email}
                         onChange={handleChange}
                     />
-                    {fielderrors.email && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.email}</p>
-                    )}
+                    {fielderrors.email && <p className="text-red-500 text-sm">{fielderrors.email}</p>}
 
-                    <label className="block mb-1 mt-6 font-medium">Phone number* (Whatsapp)</label>
+                    <label className="block mb-1 mt-6 font-medium">Phone number*</label>
                     <InputField
                         name="phone_number"
-                        placeholder="Phone number*"
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
-                    {fielderrors.phone_number && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.phone_number}</p>
-                    )}
+                    {fielderrors.phone_number && <p className="text-red-500 text-sm">{fielderrors.phone_number}</p>}
 
-                    {/* <label className="block mb-1 mt-6 font-medium">Address</label> */}
-                    {/* <InputField */}
-                        {/* name="address" */}
-                        {/* placeholder="Address*" */}
-                        {/* value={formData.address} */}
-                        {/* onChange={handleChange} */}
-                    {/* /> */}
+                    <label className="block mb-1 mt-6 font-medium">Blood Group*</label>
+                    <select
+                        name="blood_group"
+                        value={formData.blood_group}
+                        onChange={handleChange}
+                        className="w-full border px-3 py-2 rounded-md"
+                    >
+                        <option value="">Select Blood Group</option>
+                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
+                            <option key={bg} value={bg}>{bg}</option>
+                        ))}
+                    </select>
+                    {fielderrors.blood_group && <p className="text-red-500 text-sm">{fielderrors.blood_group}</p>}
 
-                    <label className="block mb-1 mt-6 font-medium">password*</label>
-                    <InputField 
+                    <label className="block mb-1 mt-6 font-medium">Age*</label>
+                    <InputField
+                        type="number"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleChange}
+                    />
+                    {fielderrors.age && <p className="text-red-500 text-sm">{fielderrors.age}</p>}
+
+                    <label className="block mb-1 mt-6 font-medium">Address*</label>
+                    <InputField
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                    />
+                    {fielderrors.address && <p className="text-red-500 text-sm">{fielderrors.address}</p>}
+
+                    <label className="block mb-1 mt-6 font-medium">Aadhaar Number*</label>
+                    <InputField
+                        name="aadhar_number"
+                        value={formData.aadhar_number}
+                        onChange={handleChange}
+                    />
+                    {fielderrors.aadhar_number && <p className="text-red-500 text-sm">{fielderrors.aadhar_number}</p>}
+
+                    <label className="block mb-1 mt-6 font-medium">Password*</label>
+                    <InputField
                         type="password"
                         name="password"
-                        placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
                     />
-                    {fielderrors.password && (
-                        <p className="text-red-500 text-sm mt-1">{fielderrors.password}</p>
-                    )}
+                    {fielderrors.password && <p className="text-red-500 text-sm">{fielderrors.password}</p>}
 
+                    <label className="block mb-1 mt-6 font-medium">Role</label>
+                    <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                        className="w-full border px-3 py-2 rounded-md"
+                    >
+                        <option value="" disabled>Select Role</option>
+                        <option value="EMPLOYEE">Employee</option>
+                    </select>
                     <button
                         type="submit"
-                        className="mt-8 w-full bg-amber-500 text-white py-3 rounded-md font-semibold hover:bg-amber-600 transition-all"
+                        className="mt-8 w-full bg-amber-500 text-white py-3 rounded-md"
                     >
                         {loading ? "Submitting..." : "Submit"}
                     </button>

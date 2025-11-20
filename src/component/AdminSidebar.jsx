@@ -7,6 +7,7 @@ const AdminSidebar = ({ open, onClose }) => {
 
   const items = [
     { icon: <Home size={18} />, label: "Dashboard", path: "/admin-dashboard" },
+    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/create-employee" },
     { icon: <Folder size={18} />, label: "Employees", path: "/employees" },
     { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/form" },
     { icon: <Folder size={18} />, label: "Submissions", path: "/submissions" },

@@ -12,6 +12,7 @@ import useFormStore from "../store/formStore";
 import { useEffect, useState } from "react";
 import SubmissionStatusDonutChart from "../component/SubmissionStatusDonutChart";
 import useEmployeeStore from "../store/useEmployeeStore";
+import AdminHeader from "../component/AdminHeader";
 
 const AdminDashboard = () => {
   const { submissions, getSubmissions } = useFormStore();
@@ -35,18 +36,22 @@ const AdminDashboard = () => {
     setPendingCount(submissions.filter(s => s.status === "PENDING").length);
   }, [submissions]);
 
-  // Update employees count
   useEffect(() => {
     setTotalEmployeesCount(employees.length);
   }, [employees]);
 
-  return (
-    <div className="flex max-h-screen bg-gray-100 overflow-hidden">
-      <div className="w-[20%]">
-        <AdminSidebar />
-      </div>
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
-      <div className="w-[80%] flex p-6 gap-6">
+  return (
+    <>
+    
+    <div className="flex max-h-screen bg-gray-100 overflow-hidden">
+
+      <div className="w-[80%] flex flex-col p-6 gap-6">
+        <AdminHeader
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          message="EMPLOYEES"
+        />
 
         <div className="w-[60%] flex flex-col gap-6">
 
@@ -83,6 +88,7 @@ const AdminDashboard = () => {
 
       </div>
     </div>
+    </>
   );
 };
 

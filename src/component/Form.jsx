@@ -14,6 +14,7 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
         middle_name: "",
         last_name: "",
         gender: "",
+        age: "",
         status: "",
         category: "",
         email: "",
@@ -31,14 +32,12 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
         setIsEditing(!!id);
     }, [id]);
 
-
     useEffect(() => {
         if (id) {
             const existing = submissions.find((s) => s.id === id);
             if (existing) setFormData(existing);
         }
     }, [id, submissions]);
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -49,9 +48,16 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const cleanedData = Object.fromEntries(
+            Object.entries(formData).map(([key, value]) => [
+                key,
+                value === "" ? undefined : value
+            ])
+        );
+
         const validatedData = isEditing
-            ? formUpdateSchema.safeParse(formData)
-            : formSubmissionSchema.safeParse(formData);
+            ? formUpdateSchema.safeParse(cleanedData)
+            : formSubmissionSchema.safeParse(cleanedData);
 
         if (!validatedData.success) {
             const errorsMap = {};
@@ -67,8 +73,8 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
 
         try {
             const submit = isEditing
-                ? await updateSubmission(id, formData)
-                : await submitForm(formData);
+                ? await updateSubmission(id, cleanedData)
+                : await submitForm(cleanedData);
 
             if (submit.success) {
                 setSubmitted(true);
@@ -206,6 +212,22 @@ const InnerForm = ({
         </select>
         {fielderrors.gender && (
             <p className="text-red-500 text-sm mt-1">{fielderrors.gender}</p>
+        )}
+
+        <label className="block mb-1 mt-6 font-medium">Age*</label>
+        <InputField
+            name="age"
+            type="number"
+            value={formData.age}
+            onChange={(e) => handleChange({
+                target: {
+                    name: "age",
+                    value: e.target.value === "" ? "" : Number(e.target.value)
+                }
+            })}
+        />
+        {fielderrors.age && (
+            <p className="text-red-500 text-sm mt-1">{fielderrors.age}</p>
         )}
 
         {isEditing && (
