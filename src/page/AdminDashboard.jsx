@@ -1,95 +1,43 @@
+import { useState } from "react";
 import AdminSidebar from "../component/AdminSidebar";
-import Card from "../component/Card";
-import {
-  LuClipboardList,
-  LuFolder,
-  LuClock,
-  // LuCheckCircle2,
-  LuUsersRound,
-  // LuUserCog2
-} from "react-icons/lu";
-import useFormStore from "../store/formStore";
-import { useEffect, useState } from "react";
-import SubmissionStatusDonutChart from "../component/SubmissionStatusDonutChart";
-import useEmployeeStore from "../store/useEmployeeStore";
 import AdminHeader from "../component/AdminHeader";
+import AdminDashboardInfoSection from "../component/AdminDashboardInfoSection";
 
 const AdminDashboard = () => {
-  const { submissions, getSubmissions } = useFormStore();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [totalSubmissions, setTotalSubmissions] = useState(0);
-  const [openCount, setOpenCount] = useState(0);
-  const [closedCount, setClosedCount] = useState(0);
-  const [pendingCount, setPendingCount] = useState(0);
-  const [totalEmployeesCount, setTotalEmployeesCount] = useState(0);
+    return (
+        <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
 
-  const { employees } = useEmployeeStore();
+            {sidebarOpen && (
+                <div className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-  useEffect(() => {
-    getSubmissions();
-  }, []);
+            <aside className={`
+                    fixed lg:static top-0 left-0 h-full w-64 bg-white z-50 
+                    transform transition-transform duration-300 ease-in-out
+                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+                `}
+            >
+                <AdminSidebar open={true} onClose={() => setSidebarOpen(false)} />
+            </aside>
 
-  useEffect(() => {
-    setTotalSubmissions(submissions.length);
-    setOpenCount(submissions.filter(s => s.status === "OPEN").length);
-    setClosedCount(submissions.filter(s => s.status === "CLOSED").length);
-    setPendingCount(submissions.filter(s => s.status === "PENDING").length);
-  }, [submissions]);
+            <main className="flex flex-col w-full min-w-0 max-h-screen">
 
-  useEffect(() => {
-    setTotalEmployeesCount(employees.length);
-  }, [employees]);
+                <AdminHeader
+                    onToggleSidebar={() => setSidebarOpen(true)}
+                    message="ADMIN DASHBOARD"
+                />
 
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  return (
-    <>
-    
-    <div className="flex max-h-screen bg-gray-100 overflow-hidden">
-
-      <div className="w-[80%] flex flex-col p-6 gap-6">
-        <AdminHeader
-          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-          message="EMPLOYEES"
-        />
-
-        <div className="w-[60%] flex flex-col gap-6">
-
-          <div className="flex flex-wrap gap-6">
-            <Card label="Total Submissions" value={totalSubmissions} icon={<LuClipboardList />} />
-            <Card label="Open" value={openCount} icon={<LuFolder />} />
-            <Card label="Pending" value={pendingCount} icon={<LuClock />} />
-            <Card label="Closed" value={closedCount} icon={<LuClipboardList />} />
-          </div>
-
-          <div className="bg-white rounded-xl shadow p-6 w-[84%] h-[70%]">
-            <h2 className="text-lg font-semibold mb-4">Submission Status Overview</h2>
-            <div className="flex justify-center">
-              <SubmissionStatusDonutChart />
-            </div>
-          </div>
-        </div>
-
-        <div className="w-[40%] flex flex-col gap-6">
-
-          <div className="flex flex-col gap-6 justify-center items-center">
-            <Card label="Total Employees" value={totalEmployeesCount} icon={<LuUsersRound />} />
-            <Card label="Total Managers" value={1} icon={<LuClipboardList />} />
-          </div>
-
-          <div className="bg-white rounded-xl shadow p-6 w-full h-[350px]">
-            <h2 className="text-lg font-semibold mb-4">To be decided</h2>
-            <div className="flex justify-center items-center h-full">
-              <p className="text-gray-500">To be decided</p>
-            </div>
-          </div>
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                    <AdminDashboardInfoSection />
+                </div>
+            </main>
 
         </div>
-
-      </div>
-    </div>
-    </>
-  );
+    );
 };
 
 export default AdminDashboard;

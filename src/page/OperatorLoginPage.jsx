@@ -37,7 +37,7 @@ const OperatorLogin = () => {
 
             if (success) {
                 toast.success("Login successful")
-                navigate("/admin-dashboard");
+                navigate("/superadmin/dashboard");
             } else {
                 toast.error("Invalid email or password");
             }

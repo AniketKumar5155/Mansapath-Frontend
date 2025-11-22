@@ -2,11 +2,13 @@ import { create } from "zustand";
 import {
     createFormSubmissionService,
     getAllSubmissionsService,
+    getSubmissionsService,
     updateSubmissionService,
 } from "../service/formService"
 
 const useFormStore = create((set) => ({
     submissions: [],
+    allSubmissions: [],
     total: 0,
     page: 1,
     limit: 10,
@@ -34,10 +36,23 @@ const useFormStore = create((set) => ({
         }
     },
 
+    getAllSubmissions: async () => {
+        set({ loading: true, error: null });
+        try {
+            const fetchedSubmissions = await getAllSubmissionsService();
+            set({ allSubmissions: fetchedSubmissions});
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            set({ error: message });
+        } finally {
+            set({ loading: false });
+        }
+    },
+
     getSubmissions: async (page = 1, limit = 10, search = "", filter = "", sortType = "", sortDirection = "") => {
         set({ loading: true, error: null });
         try {
-            const res = await getAllSubmissionsService(page, limit, search, filter, sortType, sortDirection);
+            const res = await getSubmissionsService(page, limit, search, filter, sortType, sortDirection);
 
             set({
                 submissions: res.data.submissions,

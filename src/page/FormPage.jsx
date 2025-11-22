@@ -1,7 +1,7 @@
 import Form from "../component/Form"
 const FormPage = () => {
   return (
-    <div>
+    <div className="bg-blue-50">
       <Form/>
     </div>
   )

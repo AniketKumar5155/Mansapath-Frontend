@@ -1,0 +1,74 @@
+import { useEffect, useState } from "react";
+import Card from "../component/Card";
+import {
+    LuClipboardList,
+    LuFolder,
+    LuClock,
+    LuUsersRound,
+} from "react-icons/lu";
+import useFormStore from "../store/formStore";
+import useEmployeeStore from "../store/useEmployeeStore";
+import SubmissionStatusDonutChart from "../component/SubmissionStatusDonutChart";
+
+const AdminDashboardInfoSection = () => {
+    const { allSubmissions, getSubmissions } = useFormStore();
+    const { employees } = useEmployeeStore();
+
+    const [totalSubmissions, setTotalSubmissions] = useState(0);
+    const [openCount, setOpenCount] = useState(0);
+    const [closedCount, setClosedCount] = useState(0);
+    const [pendingCount, setPendingCount] = useState(0);
+    const [totalEmployeesCount, setTotalEmployeesCount] = useState(0);
+
+    useEffect(() => {
+        getSubmissions();
+    }, []);
+
+    useEffect(() => {
+        setTotalSubmissions(allSubmissions.length);
+        setOpenCount(allSubmissions.filter(s => s.status === "OPEN").length);
+        setClosedCount(allSubmissions.filter(s => s.status === "CLOSED").length);
+        setPendingCount(allSubmissions.filter(s => s.status === "PENDING").length);
+    }, [allSubmissions]);
+
+    useEffect(() => {
+        setTotalEmployeesCount(employees.length);
+    }, [employees]);
+
+    return (
+        <div className="flex flex-col lg:flex-row gap-8 w-full">
+            <div className="flex flex-col gap-6 w-full lg:w-[60%]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Card label="Total Submissions" value={totalSubmissions} icon={<LuClipboardList />} />
+                    <Card label="Open" value={openCount} icon={<LuFolder />} />
+                    <Card label="Pending" value={pendingCount} icon={<LuClock />} />
+                    <Card label="Closed" value={closedCount} icon={<LuClipboardList />} />
+                </div>
+
+                <div className="bg-white rounded-xl shadow p-6 w-full min-h-80 flex flex-col">
+                    <h2 className="text-lg font-semibold mb-4">Submission Status Overview</h2>
+                    <div className="flex justify-center items-center flex-1">
+                        <SubmissionStatusDonutChart />
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-6 w-full lg:w-[40%]">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Card label="Total Employees" value={totalEmployeesCount} icon={<LuUsersRound />} />
+                    <Card label="Total Managers" value={1} icon={<LuClipboardList />} />
+                </div>
+
+                <div className="bg-white rounded-xl shadow p-6 w-full min-h-[350px] flex flex-col">
+                    <h2 className="text-lg font-semibold mb-4">To be decided</h2>
+                    <div className="flex justify-center items-center flex-1">
+                        <p className="text-gray-500">To be decided</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AdminDashboardInfoSection;

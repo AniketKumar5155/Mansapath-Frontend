@@ -1,4 +1,4 @@
-import { Home, PlusSquare, User, LogOut, Folder, X } from "lucide-react";
+import { Home, PlusSquare, User, LogOut, Folder, X, LayoutDashboard } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const AdminSidebar = ({ open, onClose }) => {
@@ -6,11 +6,12 @@ const AdminSidebar = ({ open, onClose }) => {
   const location = useLocation();
 
   const items = [
-    { icon: <Home size={18} />, label: "Dashboard", path: "/admin-dashboard" },
-    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/create-employee" },
-    { icon: <Folder size={18} />, label: "Employees", path: "/employees" },
-    { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/form" },
-    { icon: <Folder size={18} />, label: "Submissions", path: "/submissions" },
+    { icon: <Home size={18} />, label: "Home", path: "/" },
+    { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/superadmin/dashboard" },
+    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee" },
+    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees" },
+    { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/book-session" },
+    { icon: <Folder size={18} />, label: "Submissions", path: "/admin/submissions" },
     { icon: <User size={18} />, label: "Profile", path: "/admin/profile" },
   ];
 
