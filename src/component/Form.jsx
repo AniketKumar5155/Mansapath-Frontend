@@ -8,7 +8,7 @@ import {
   formUpdateSchema
 } from "../validator/formSchema";
 
-const Form = ({ overlay = false, onClose = () => {}, id }) => {
+const Form = ({ overlay = false, onClose = () => { }, id }) => {
   const [formData, setFormData] = useState({
     first_name: "",
     middle_name: "",
@@ -49,11 +49,14 @@ const Form = ({ overlay = false, onClose = () => {}, id }) => {
     e.preventDefault();
 
     const cleanedData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => [
-        key,
-        value === "" ? undefined : value
-      ])
+      Object.entries(formData).filter(([_, value]) => {
+        if (isEditing) {
+          return value !== "" && value !== null && value !== undefined;
+        }
+        return true;
+      })
     );
+
 
     const validatedData = isEditing
       ? formUpdateSchema.safeParse(cleanedData)
@@ -88,61 +91,62 @@ const Form = ({ overlay = false, onClose = () => {}, id }) => {
 
   return (
     <>
-      {/* ================= OVERLAY MODE ================= */}
       {overlay && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
-          <div className="relative bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl">
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-2xl font-semibold hover:text-red-500"
-            >
-              ×
-            </button>
+        <div className="fixed inset-0 bg-black/40 overflow-y-auto z-50 p-6">
+          <div className="min-h-screen flex justify-center items-start">
 
-            <div className="grid md:grid-cols-2 h-full">
+            <div className="relative bg-white rounded-2xl w-full max-w-5xl shadow-2xl my-10">
 
-              {/* LEFT - IMAGE / INFO */}
-              <div className="hidden md:flex flex-col justify-center p-10 bg-amber-50">
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                  Begin Your Healing Journey
-                </h2>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  Mental health is just as important as physical health. 
-                  This form helps us connect you with the right support.
-                </p>
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-2xl font-semibold hover:text-red-500 z-10"
+              >
+                ×
+              </button>
 
-                <div className="w-full h-64 bg-white border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
-                  Add Poster / Illustration Here
+              <div className="grid md:grid-cols-2">
+
+                <div className="hidden md:flex flex-col justify-center p-10 bg-amber-50">
+                  <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                    Begin Your Healing Journey
+                  </h2>
+
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Mental health is just as important as physical health.
+                  </p>
+
+                  <div className="w-full h-64 bg-white border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
+                    Add Poster / Illustration Here
+                  </div>
                 </div>
-              </div>
 
-              {/* RIGHT - FORM */}
-              <div className="p-8 overflow-y-auto">
-                <InnerForm
-                  formData={formData}
-                  handleChange={handleChange}
-                  fielderrors={fielderrors}
-                  handleSubmit={handleSubmit}
-                  loading={loading}
-                  isEditing={isEditing}
-                />
-              </div>
+                <div className="p-8">
+                  <InnerForm
+                    formData={formData}
+                    handleChange={handleChange}
+                    fielderrors={fielderrors}
+                    handleSubmit={handleSubmit}
+                    loading={loading}
+                    isEditing={isEditing}
+                  />
+                </div>
 
+              </div>
             </div>
-          </div>
 
-          <SuccessModal
-            isOpen={submitted}
-            title={isEditing ? "Form Updated" : "Form Submitted"}
-            messageline1="Your request has been processed."
-            messageline2="Thank you."
-            buttonText="OK"
-            onClose={() => setSubmitted(false)}
-          />
+            <SuccessModal
+              isOpen={submitted}
+              title={isEditing ? "Form Updated" : "Form Submitted"}
+              messageline1="Your request has been processed."
+              messageline2="Thank you."
+              buttonText="OK"
+              onClose={() => setSubmitted(false)}
+            />
+
+          </div>
         </div>
       )}
 
-      {/* ================= FULL PAGE MODE ================= */}
       {!overlay && (
         <div className="min-h-screen w-full bg-linear-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center px-4 py-16">
           <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid md:grid-cols-2">
@@ -153,14 +157,14 @@ const Form = ({ overlay = false, onClose = () => {}, id }) => {
                   Mental Health Support Form
                 </h1>
                 <p className="text-gray-700 leading-relaxed mb-8">
-                  You are not alone. This confidential form allows us to understand 
+                  You are not alone. This confidential form allows us to understand
                   your concerns and help you find the support you deserve.
                 </p>
               </div>
 
               <div className="w-full h-80 bg-white border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
-                     <img src="src\assets\confi.jpg" alt="" className="h-full w-full obtain-contain" />
-                              </div>
+                <img src="src\assets\confi.jpg" alt="" className="h-full w-full obtain-contain" />
+              </div>
 
               <p className="text-sm text-gray-500 mt-6">
                 All information remains confidential and secured.
@@ -180,8 +184,8 @@ const Form = ({ overlay = false, onClose = () => {}, id }) => {
               <SuccessModal
                 isOpen={submitted}
                 title={isEditing ? "Form Updated" : "Form Submitted"}
-                messageline1="Your form has been processed."
-                messageline2="We will contact you soon."
+                message1="Your form has been submitted."
+                message2="We will contact you soon."
                 buttonText="OK"
                 onClose={() => setSubmitted(false)}
               />
@@ -312,7 +316,7 @@ const InnerForm = ({
       onChange={handleChange}
     />
 
-    <label className="block mb-1 mt-6 font-medium">Address</label>
+    <label className="block mb-1 mt-6 font-medium">Address*</label>
     <InputField
       name="address"
       value={formData.address}

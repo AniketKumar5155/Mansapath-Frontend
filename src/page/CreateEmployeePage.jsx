@@ -8,4 +8,4 @@ const CreateEmployeePage = () => {
   )
 }
 
-export default CreateEmployeePage
+export default CreateEmployeePage;

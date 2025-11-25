@@ -1,19 +1,43 @@
-import { Home, PlusSquare, User, LogOut, Folder, X, LayoutDashboard } from "lucide-react";
+import {
+  Home,
+  PlusSquare,
+  User,
+  LogOut,
+  Folder,
+  X,
+  LayoutDashboard
+} from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore";
+import { useEffect } from "react";
 
 const AdminSidebar = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { logout, accessToken, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/operator-login");
+    }
+  }, [accessToken, navigate]);
+
   const items = [
     { icon: <Home size={18} />, label: "Home", path: "/" },
-    { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/superadmin/dashboard" },
-    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee" },
-    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees" },
+    { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/superadmin/dashboard", adminOnly: true },
+    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee", adminOnly: true },
+    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees", adminOnly: true },
     { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/book-session" },
     { icon: <Folder size={18} />, label: "Submissions", path: "/admin/submissions" },
-    { icon: <User size={18} />, label: "Profile", path: "/admin/profile" },
+    // { icon: <User size={18} />, label: "Profile", path: "/admin/profile" },
   ];
+
+  const handleLogout = () => {
+    logout();
+    navigate("/operator-login");
+    onClose && onClose();
+  };
 
   return (
     <>
@@ -34,40 +58,38 @@ const AdminSidebar = ({ open, onClose }) => {
         <div className="flex items-center justify-between px-2 pb-4">
           <h1 className="text-2xl font-bold text-[#2C7BA0]">Manasapath</h1>
 
-          <button
-            className="lg:hidden p-1"
-            onClick={onClose}
-          >
+          <button className="lg:hidden p-1" onClick={onClose}>
             <X size={26} className="text-gray-700" />
           </button>
         </div>
 
         <ul className="flex flex-col gap-2">
-          {items.map((item) => (
-            <SidebarItem
-              key={item.label}
-              icon={item.icon}
-              label={item.label}
-              active={location.pathname === item.path}
-              onClick={() => {
-                navigate(item.path);
-                onClose();
-              }}
-            />
-          ))}
+          {items
+            .filter(
+              item => !item.adminOnly || user?.role === "SUPERADMIN"
+            )
+            .map((item) => (
+              <SidebarItem
+                key={item.label}
+                icon={item.icon}
+                label={item.label}
+                active={location.pathname === item.path}
+                onClick={() => {
+                  navigate(item.path);
+                  onClose && onClose();
+                }}
+              />
+            ))}
         </ul>
 
-        <div className="grow"></div>
+        <div className="grow" />
 
         <ul className="pb-4">
           <SidebarItem
             icon={<LogOut size={18} />}
             label="Logout"
             isLogout
-            onClick={() => {
-              navigate("/operator-login");
-              onClose();
-            }}
+            onClick={handleLogout}
           />
         </ul>
       </div>

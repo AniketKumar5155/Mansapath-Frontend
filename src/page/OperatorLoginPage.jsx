@@ -11,7 +11,7 @@ const OperatorLogin = () => {
     });
 
     const [fieldErrors, setFieldErrors] = useState({});
-    const { login, loading } = useAuthStore();
+    const { login, loading, user } = useAuthStore();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -33,11 +33,17 @@ const OperatorLogin = () => {
         }
 
         try {
-            const success = await login(formData);
+            const loggedUser = await login(formData);
 
-            if (success) {
-                toast.success("Login successful")
-                navigate("/superadmin/dashboard");
+            if (loggedUser) {
+                toast.success("Login successful");
+
+                if (loggedUser.role === "SUPERADMIN") {
+                    navigate("/superadmin/dashboard");
+                } else {
+                    navigate("/admin/submissions");
+                }
+                
             } else {
                 toast.error("Invalid email or password");
             }
@@ -79,6 +85,7 @@ const OperatorLogin = () => {
                     <button
                         type="submit"
                         className="mt-6 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                        disabled={loading}
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>

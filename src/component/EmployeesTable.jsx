@@ -4,7 +4,7 @@ import useEmployeeStore from "../store/useEmployeeStore";
 import { CiEdit } from "react-icons/ci";
 import ToolBar from "./ToolBar";
 import CustomButton from "./CustomButton";
-import Form from "./Form";
+import CreateEmployeeForm from "./CreateEmployeeForm";
 
 const EmployeesTable = () => {
   const { employees, getAllEmployees, loading, total } = useEmployeeStore();
@@ -43,7 +43,6 @@ const EmployeesTable = () => {
     { field: "phone_number", headerName: "Phone", width: 140 },
     { field: "blood_group", headerName: "Blood Group", width: 120 },
     { field: "address", headerName: "Address", width: 220 },
-    { field: "aadhar_number", headerName: "Aadhar", width: 180 },
     {
       field: "action",
       headerName: "Action",
@@ -68,13 +67,6 @@ const EmployeesTable = () => {
       <ToolBar
         searchValue={search}
         onSearchChange={setSearch}
-        filters={[
-          { value: "", label: "All" },
-          { value: "ACTIVE", label: "ACTIVE" },
-          { value: "INACTIVE", label: "INACTIVE" },
-        ]}
-        selectedFilter={filter}
-        onFilterChange={setFilter}
         sortTypes={[
           { value: "", label: "Default" },
           { value: "created_at", label: "Created At" },
@@ -123,7 +115,7 @@ const EmployeesTable = () => {
       </div>
 
       {showForm && (
-        <Form
+        <CreateEmployeeForm
           overlay={true}
           onClose={() => setShowForm(false)}
           id={editingSubmission}

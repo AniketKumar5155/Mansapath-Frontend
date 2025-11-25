@@ -24,21 +24,28 @@ const ToolBar = ({
   };
 
   return (
-    <div className="w-full mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="w-full mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4 rounded-2xl bg-white shadow-lg border border-gray-200">
 
-      <div className="flex flex-nowrap items-center gap-2 overflow-x-auto">
+      <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar">
 
-        <div className="relative w-full sm:w-64">
+        <div className="relative min-w-60">
           <Search
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
           />
+
           <input
             value={query}
             onChange={handleInput}
             type="text"
             placeholder="Search..."
-            className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+            className="
+              pl-11 pr-4 py-2.5 w-full
+              bg-gray-50
+              border border-gray-300
+              rounded-full text-sm
+              outline-none transition
+            "
           />
         </div>
 
@@ -46,7 +53,14 @@ const ToolBar = ({
           <select
             value={selectedFilter}
             onChange={(e) => onFilterChange(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md bg-white"
+            className="
+              px-4 py-2.5 text-sm rounded-full
+              bg-gray-50
+              border border-gray-300
+              hover:border-gray-400
+              cursor-pointer
+              outline-none transition
+            "
           >
             <option value="">Filter</option>
             {filters.map((f) => (
@@ -61,7 +75,14 @@ const ToolBar = ({
           <select
             value={selectedSortType}
             onChange={(e) => onSortTypeChange(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md bg-white"
+            className="
+              px-4 py-2.5 text-sm rounded-full
+              bg-gray-50
+              border border-gray-300
+              hover:border-gray-400
+              cursor-pointer
+              outline-none transition
+            "
           >
             <option value="">Sort By</option>
             {sortTypes.map((s) => (
@@ -72,11 +93,18 @@ const ToolBar = ({
           </select>
         )}
 
-       {sortDirections.length > 0 && (
+        {sortDirections.length > 0 && (
           <select
             value={selectedSortDirection}
             onChange={(e) => onSortDirectionChange(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-md bg-white"
+            className="
+              px-4 py-2.5 text-sm rounded-full
+              bg-gray-50
+              border border-gray-300
+              hover:border-gray-400
+              cursor-pointer
+              outline-none transition
+            "
           >
             <option value="">Direction</option>
             {sortDirections.map((d) => (
@@ -88,9 +116,11 @@ const ToolBar = ({
         )}
       </div>
 
-      <div className="flex justify-end w-full sm:w-auto">
-        {actions}
-      </div>
+      {actions && (
+        <div className="flex justify-end gap-2">
+          {actions}
+        </div>
+      )}
     </div>
   );
 };

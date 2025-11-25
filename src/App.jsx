@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+import useAuthStore from "./store/useAuthStore";
+
 import FormPage from "./page/FormPage";
 import OperatorLogin from "./page/OperatorLoginPage";
 import SubmissionsPage from "./page/SubmissionsPage";
@@ -8,28 +11,58 @@ import EmployeesPage from "./page/EmployeesPage";
 import EmployeeCreatePage from "./page/EmployeeCreatePage";
 import HomePage from "./page/HomePage";
 
+import AdminRoute from "./component/AdminRoute";
+
 const App = () => {
-  const theme = localStorage.getItem("theme");
+  const { accessToken, getProfile } = useAuthStore();
+
+  useEffect(() => {
+    if (accessToken) {
+      getProfile();
+    }
+  }, [accessToken]);
+
   return (
     <>
-    <BrowserRouter>
-  <ToastContainer />
+      <BrowserRouter>
+        <ToastContainer />
 
-  <Routes>
-    <Route path = "/" element={<HomePage  />}/>
-    <Route path = "/book-session" element={<FormPage/>}/>
-    <Route path = "/superadmin/create-employee" element={<EmployeeCreatePage/>}/>
-    <Route path = "/admin/submissions" element={<SubmissionsPage/>} />
-    <Route path = "/operator-login" element={<OperatorLogin/>} />
-    <Route path = "/superadmin/dashboard" element={<AdminDashboard/>} />
-    <Route path = "/superadmin/employees" element={<EmployeesPage/>} />
-  </Routes>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/book-session" element={<FormPage />} />
+          <Route path="/operator-login" element={<OperatorLogin />} />
+          <Route path="/admin/submissions" element={<SubmissionsPage />} />
 
+          <Route
+            path="/superadmin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
 
+          <Route
+            path="/superadmin/create-employee"
+            element={
+              <AdminRoute>
+                <EmployeeCreatePage />
+              </AdminRoute>
+            }
+          />
 
-</BrowserRouter>
+          <Route
+            path="/superadmin/employees"
+            element={
+              <AdminRoute>
+                <EmployeesPage />
+              </AdminRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

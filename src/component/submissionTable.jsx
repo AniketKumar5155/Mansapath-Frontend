@@ -5,9 +5,13 @@ import CustomButton from "./CustomButton";
 import Form from "./Form";
 import { CiEdit } from "react-icons/ci";
 import ToolBar from "./ToolBar";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const SubmissionTable = () => {
   const { submissions, getSubmissions, loading, total } = useFormStore();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -39,7 +43,37 @@ const SubmissionTable = () => {
     { field: "last_name", headerName: "Last Name", width: 130 },
     { field: "gender", headerName: "Gender", width: 90 },
     { field: "age", headerName: "Age", width: 80 },
-    { field: "status", headerName: "Status", width: 110 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 110,
+      renderCell: (params) => {
+        const value = params.value;
+
+        let bgColor = "";
+        let textColor = "";
+
+        if (value === "OPEN") {
+          bgColor = "bg-green-100";
+          textColor = "text-green-700";
+        } else if (value === "PENDING") {
+          bgColor = "bg-yellow-100";
+          textColor = "text-yellow-700";
+        } else if (value === "CLOSED") {
+          bgColor = "bg-red-100";
+          textColor = "text-red-700";
+        }
+
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${bgColor} ${textColor}`}
+          >
+            {value}
+          </span>
+        );
+      }
+    },
+
     { field: "category", headerName: "Category", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone_number", headerName: "Phone", width: 150 },
@@ -107,8 +141,7 @@ const SubmissionTable = () => {
 
       <div className="border border-gray-300 rounded-lg w-full">
         <DataGrid
-          rowHeight={43}
-          // headerHeight={38}
+          rowHeight={isMobile ? 50 : 43}
           rows={submissions}
           columns={columns}
           rowCount={total}
@@ -119,12 +152,13 @@ const SubmissionTable = () => {
           pageSizeOptions={[5, 10, 20, 50]}
           autoHeight={false}
           sx={{
-            height: "78.8vh",
+            height: isMobile ? "63vh" : "78.8vh",
             width: "100%",
             overflowX: "auto",
-            text: "bold"
+            fontWeight: "bold"
           }}
         />
+
       </div>
 
       {showForm && (
