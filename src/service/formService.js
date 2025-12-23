@@ -16,6 +16,16 @@ export const getSubmissionsService = async (page = 1, limit = 10, search = "", f
 };
 
 export const updateSubmissionService = async (id, updatedData) => {
-    const res = await axiosFormInstance.patch(`/update-submission/${id}`, updatedData)
+    const res = await axiosFormInstance.patch(`/update-submission/${id}`, updatedData);
+    return res.data.data;
+}
+
+export const acceptSubmissionService = async (id) => {
+    const res = await axiosFormInstance.patch(`/accept/${id}`);
+    return res.data.data;
+}
+
+export const getAllacceptedSubmissionService = async () => {
+    const res = await axiosFormInstance.get(`/all-accepted-submissions`);
     return res.data.data;
 }

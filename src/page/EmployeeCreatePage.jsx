@@ -1,5 +1,4 @@
-import CreateEmployeeForm from "../component/CreateEmployeeForm"
-
+import CreateEmployeeForm from "../component/CreateEmployeeForm";
 const EmployeeCreatePage = () => {
   return (
     <>

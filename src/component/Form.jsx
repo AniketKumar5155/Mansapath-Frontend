@@ -8,7 +8,15 @@ import {
   formUpdateSchema
 } from "../validator/formSchema";
 
-const Form = ({ overlay = false, onClose = () => { }, id }) => {
+const removeEmpty = (obj) =>
+  Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, v]) => v !== undefined && v !== null
+    )
+  );
+
+
+const Form = ({ overlay = false, onClose = () => {}, id }) => {
   const [formData, setFormData] = useState({
     first_name: "",
     middle_name: "",
@@ -48,15 +56,16 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const cleanedData = Object.fromEntries(
-      Object.entries(formData).filter(([_, value]) => {
-        if (isEditing) {
-          return value !== "" && value !== null && value !== undefined;
-        }
-        return true;
-      })
-    );
-
+    const cleanedData = removeEmpty({
+  ...formData,
+  age: formData.age === "" ? undefined : Number(formData.age),
+  category: formData.category === "" ? undefined : formData.category,
+  status: formData.status === "" ? undefined : formData.status,
+  email: formData.email === "" ? undefined : formData.email,
+  middle_name: formData.middle_name === "" ? undefined : formData.middle_name,
+  problem_description:
+    formData.problem_description === "" ? undefined : formData.problem_description,
+});
 
     const validatedData = isEditing
       ? formUpdateSchema.safeParse(cleanedData)
@@ -64,11 +73,15 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
 
     if (!validatedData.success) {
       const errorsMap = {};
+
       validatedData.error.issues.forEach((issue) => {
-        const fieldName = issue.path?.[0];
-        errorsMap[fieldName] = issue.message;
+        const field = issue.path?.[0] || "form";
+        errorsMap[field] = issue.message;
       });
+
       setFieldErrors(errorsMap);
+      console.log("Validation errors:", errorsMap);
+      toast.error("Please fix the errors");
       return;
     }
 
@@ -105,7 +118,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
               </button>
 
               <div className="grid md:grid-cols-2">
-
                 <div className="hidden md:flex flex-col justify-center p-10 bg-amber-50">
                   <h2 className="text-3xl font-bold text-gray-800 mb-4">
                     Begin Your Healing Journey
@@ -115,7 +127,8 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
                     Mental health is just as important as physical health.
                   </p>
 
-                  <div className="w-full h-64 bg-white border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
+                  <div className="w-full h-64 bg-white border-2 border-dashed border-gray-300
+                   rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
                     Add Poster / Illustration Here
                   </div>
                 </div>
@@ -130,7 +143,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
                     isEditing={isEditing}
                   />
                 </div>
-
               </div>
             </div>
 
@@ -142,13 +154,14 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
               buttonText="OK"
               onClose={() => setSubmitted(false)}
             />
-
           </div>
         </div>
       )}
 
       {!overlay && (
-        <div className="min-h-screen w-full bg-linear-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center px-4 py-16">
+        <div className="min-h-screen w-full bg-linear-to-br from-blue-50 via-white to-blue-100 
+        flex items-center justify-center px-4 py-16">
+
           <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid md:grid-cols-2">
 
             <div className="hidden md:flex flex-col justify-between p-12 bg-blue-500/10">
@@ -162,8 +175,13 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
                 </p>
               </div>
 
-              <div className="w-full h-80 bg-white border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
-                <img src="src\assets\confi.jpg" alt="" className="h-full w-full obtain-contain" />
+              <div className="w-full h-80 bg-white border-2 border-dashed border-gray-300 
+              rounded-2xl flex items-center justify-center text-gray-400 overflow-hidden">
+                <img
+                  src="src/assets/confi.jpg"
+                  alt=""
+                  className="h-full w-full object-contain"
+                />
               </div>
 
               <p className="text-sm text-gray-500 mt-6">
@@ -184,8 +202,8 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
               <SuccessModal
                 isOpen={submitted}
                 title={isEditing ? "Form Updated" : "Form Submitted"}
-                message1="Your form has been submitted."
-                message2="We will contact you soon."
+                messageline1="Your form has been submitted."
+                messageline2="We will contact you during working hours."
                 buttonText="OK"
                 onClose={() => setSubmitted(false)}
               />
@@ -282,9 +300,9 @@ const InnerForm = ({
           onChange={handleChange}
         >
           <option value="">Select status</option>
-          <option value="OPEN">OPEN</option>
-          <option value="PENDING">PENDING</option>
-          <option value="CLOSED">CLOSED</option>
+          <option value="OPEN">Accepted</option>
+          <option value="PENDING">Pending</option>
+          <option value="CLOSED">Rejected</option>
         </select>
 
         <label className="block mb-1 mt-6 font-medium">Category</label>
@@ -297,6 +315,7 @@ const InnerForm = ({
           <option value="">Select Category</option>
           <option value="MENTAL FITNESS">Mental Fitness</option>
           <option value="MENTAL THERAPY">Mental Therapy</option>
+          <option value="CHAITAINYA">CHAITAINYA</option>
         </select>
       </>
     )}
@@ -309,7 +328,7 @@ const InnerForm = ({
       onChange={handleChange}
     />
 
-    <label className="block mb-1 mt-6 font-medium">Phone number*</label>
+    <label className="block mb-1 mt-6 font-medium">Phone number* (Whatsapp)</label>
     <InputField
       name="phone_number"
       value={formData.phone_number}
@@ -333,7 +352,8 @@ const InnerForm = ({
 
     <button
       type="submit"
-      className="mt-8 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold tracking-wide transition"
+      className="mt-8 w-full bg-blue-500 hover:bg-blue-600 text-white py-3
+      rounded-xl font-semibold tracking-wide transition"
     >
       {loading ? "Submitting..." : isEditing ? "Update" : "Submit"}
     </button>

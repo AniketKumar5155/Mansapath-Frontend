@@ -2,30 +2,30 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 import { useEffect, useMemo } from "react";
 import useFormStore from "../store/formStore";
 
-const COLORS = ["#3B82F6", "#FACC15", "#22C55E"];
+const COLORS = [
+  "#3B82F6", "#FACC15", "#22C55E", "#EF4444", "#8B5CF6", "#10B981", "#F472B6"
+];
 
-const SubmissionStatusDonutChart = () => {
-  const { allSubmissions, getAllSubmissions } = useFormStore();
+const SubmissionCategoryDonutChart = () => {
+  const { getAllAcceptedSubmissions, acceptedSubmissions } = useFormStore();
 
   useEffect(() => {
-    getAllSubmissions();
+    getAllAcceptedSubmissions();
   }, []);
 
-
   const chartData = useMemo(() => {
-    const statusCounts = { OPEN: 0, PENDING: 0, CLOSED: 0 };
+    const categoryCounts = {};
 
-    allSubmissions?.forEach((item) => {
-      const s = item?.status?.toUpperCase();
-      if (statusCounts[s] !== undefined) statusCounts[s] += 1;
+    acceptedSubmissions?.forEach((item) => {
+      const category = item?.category || "Unknown";
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
 
-    return [
-      { name: "Open", value: statusCounts.OPEN },
-      { name: "Pending", value: statusCounts.PENDING },
-      { name: "Closed", value: statusCounts.CLOSED },
-    ];
-  }, [allSubmissions]);
+    return Object.keys(categoryCounts).map((key) => ({
+      name: key,
+      value: categoryCounts[key],
+    }));
+  }, [acceptedSubmissions]);
 
   return (
     <div className="w-full h-70 flex justify-center items-center p-4">
@@ -44,7 +44,7 @@ const SubmissionStatusDonutChart = () => {
             strokeWidth={2}
           >
             {chartData.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index]} />
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
 
@@ -55,7 +55,7 @@ const SubmissionStatusDonutChart = () => {
             dominantBaseline="middle"
             className="text-2xl font-bold fill-gray-800"
           >
-            {allSubmissions?.length || 0}
+            {acceptedSubmissions?.length || 0}
           </text>
 
           <text
@@ -72,9 +72,8 @@ const SubmissionStatusDonutChart = () => {
 
           <Legend
             verticalAlign="bottom"
-            iconType="circale"
+            iconType="circle"
             iconSize={12}
-            wrapperStyle={{ paddingTop: "15px" }}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -82,4 +81,4 @@ const SubmissionStatusDonutChart = () => {
   );
 };
 
-export default SubmissionStatusDonutChart;
+export default SubmissionCategoryDonutChart;

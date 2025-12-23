@@ -26,11 +26,12 @@ const AdminSidebar = ({ open, onClose }) => {
   const items = [
     { icon: <Home size={18} />, label: "Home", path: "/" },
     { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/superadmin/dashboard", adminOnly: true },
-    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee", adminOnly: true },
-    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees", adminOnly: true },
+    { icon: <Folder size={18} />, label: "Enrolled", path: "/superadmin/enrolled" , adminOnly: true },
     { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/book-session" },
     { icon: <Folder size={18} />, label: "Submissions", path: "/admin/submissions" },
-    // { icon: <User size={18} />, label: "Profile", path: "/admin/profile" },
+    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee", adminOnly: true },
+    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees", adminOnly: true },
+    { icon: <User size={18} />, label: "Profile", path: "/profile/me" },
   ];
 
   const handleLogout = () => {

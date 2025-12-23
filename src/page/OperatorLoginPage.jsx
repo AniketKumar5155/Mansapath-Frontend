@@ -45,7 +45,7 @@ const OperatorLogin = () => {
                 }
                 
             } else {
-                toast.error("Invalid email or password");
+                toast.error("Login failed: Invalid credentials");
             }
         } catch (error) {
             toast.error("Unexpected error occurred");

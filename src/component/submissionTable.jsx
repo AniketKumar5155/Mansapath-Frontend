@@ -1,23 +1,33 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import useFormStore from "../store/formStore";
-import CustomButton from "./CustomButton";
-import Form from "./Form";
+import { Select, MenuItem, InputLabel, FormControl, useTheme, useMediaQuery } from "@mui/material";
 import { CiEdit } from "react-icons/ci";
 import ToolBar from "./ToolBar";
-import { useTheme, useMediaQuery } from "@mui/material";
+import CustomButton from "./CustomButton";
+import Form from "./Form";
+import useFormStore from "../store/formStore";
+
+const STATUS_OPTIONS = [
+  { value: "OPEN", label: "Accepted" },
+  { value: "PENDING", label: "Pending" },
+  { value: "CLOSED", label: "Rejected" },
+];
+
+const CATEGORY_OPTIONS = ["Mental Fitness", "Mental Therapy", "Chaitanya"];
+
+const STATUS_COLOR_MAP = {
+  OPEN: { bg: "bg-green-100", text: "text-green-700" },
+  PENDING: { bg: "bg-yellow-100", text: "text-yellow-700" },
+  CLOSED: { bg: "bg-red-100", text: "text-red-700" },
+  NOT_SET: { bg: "bg-gray-100", text: "text-gray-600" },
+};
 
 const SubmissionTable = () => {
   const { submissions, getSubmissions, loading, total } = useFormStore();
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10,
-  });
-
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [sortType, setSortType] = useState("");
@@ -25,6 +35,7 @@ const SubmissionTable = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [editingSubmission, setEditingSubmission] = useState(null);
+  const [editingCell, setEditingCell] = useState({ id: null, field: null });
 
   useEffect(() => {
     getSubmissions(
@@ -43,38 +54,100 @@ const SubmissionTable = () => {
     { field: "last_name", headerName: "Last Name", width: 130 },
     { field: "gender", headerName: "Gender", width: 90 },
     { field: "age", headerName: "Age", width: 80 },
+
     {
       field: "status",
       headerName: "Status",
-      width: 110,
+      width: 140,
       renderCell: (params) => {
-        const value = params.value;
+        const isEditing = editingCell.id === params.row.id && editingCell.field === "status";
+        const value = params.value || "NOT_SET";
 
-        let bgColor = "";
-        let textColor = "";
+        if (isEditing) {
+          return (
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Status</InputLabel>
+              <Select
+                autoFocus
+                defaultValue={value === "NOT_SET" ? "" : value}
+                onBlur={() => setEditingCell({ id: null, field: null })}
+                onChange={(e) => {
+                  console.log("Status changed:", e.target.value);
+                  setEditingCell({ id: null, field: null });
+                }}
+                className="border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <MenuItem value="" disabled>Select status</MenuItem>
+                {STATUS_OPTIONS.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          );
+        }
 
-        if (value === "OPEN") {
-          bgColor = "bg-green-100";
-          textColor = "text-green-700";
-        } else if (value === "PENDING") {
-          bgColor = "bg-yellow-100";
-          textColor = "text-yellow-700";
-        } else if (value === "CLOSED") {
-          bgColor = "bg-red-100";
-          textColor = "text-red-700";
+        const { bg, text } = STATUS_COLOR_MAP[value];
+        return (
+          <span
+            onClick={() => setEditingCell({ id: params.row.id, field: "status" })}
+            className={`cursor-pointer px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}
+          >
+            {value === "NOT_SET"
+              ? "Not Set"
+              : STATUS_OPTIONS.find((o) => o.value === value)?.label}
+          </span>
+        );
+      },
+    },
+
+    {
+      field: "category",
+      headerName: "Category",
+      width: 170,
+      renderCell: (params) => {
+        const isEditing = editingCell.id === params.row.id && editingCell.field === "category";
+        const value = params.value || "NOT_ASSIGNED";
+
+        if (isEditing) {
+          return (
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Category</InputLabel>
+              <Select
+                autoFocus
+                defaultValue={value === "NOT_ASSIGNED" ? "" : value}
+                onBlur={() => setEditingCell({ id: null, field: null })}
+                onChange={(e) => {
+                  console.log("Category changed:", e.target.value);
+                  setEditingCell({ id: null, field: null });
+                }}
+                className="border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <MenuItem value="" disabled>Select category</MenuItem>
+                {CATEGORY_OPTIONS.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          );
         }
 
         return (
           <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${bgColor} ${textColor}`}
+            onClick={() => setEditingCell({ id: params.row.id, field: "category" })}
+            className={`cursor-pointer px-3 py-1 rounded-full text-xs font-semibold ${
+              value === "NOT_ASSIGNED" ? "bg-gray-100 text-gray-600" : "bg-blue-100 text-blue-700"
+            }`}
           >
-            {value}
+            {value === "NOT_ASSIGNED" ? "Not Assigned" : value}
           </span>
         );
-      }
+      },
     },
 
-    { field: "category", headerName: "Category", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone_number", headerName: "Phone", width: 150 },
     { field: "address", headerName: "Address", width: 220 },
@@ -107,9 +180,9 @@ const SubmissionTable = () => {
         onSearchChange={setSearch}
         filters={[
           { value: "", label: "All" },
-          { value: "OPEN", label: "OPEN" },
-          { value: "CLOSED", label: "CLOSED" },
-          { value: "PENDING", label: "PENDING" },
+          { value: "OPEN", label: "Accepted" },
+          { value: "PENDING", label: "Pending" },
+          { value: "CLOSED", label: "Rejected" },
         ]}
         selectedFilter={filter}
         onFilterChange={setFilter}
@@ -138,7 +211,6 @@ const SubmissionTable = () => {
           />
         }
       />
-
       <div className="border border-gray-300 rounded-lg w-full">
         <DataGrid
           rowHeight={isMobile ? 50 : 43}
@@ -155,18 +227,13 @@ const SubmissionTable = () => {
             height: isMobile ? "63vh" : "78.8vh",
             width: "100%",
             overflowX: "auto",
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         />
-
       </div>
 
       {showForm && (
-        <Form
-          overlay={true}
-          onClose={() => setShowForm(false)}
-          id={editingSubmission}
-        />
+        <Form overlay onClose={() => setShowForm(false)} id={editingSubmission} />
       )}
     </>
   );

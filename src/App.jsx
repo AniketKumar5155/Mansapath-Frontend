@@ -10,8 +10,10 @@ import AdminDashboard from "./page/adminDashboard";
 import EmployeesPage from "./page/EmployeesPage";
 import EmployeeCreatePage from "./page/EmployeeCreatePage";
 import HomePage from "./page/HomePage";
+import ProfilePage from "./page/ProfilePage";
 
 import AdminRoute from "./component/AdminRoute";
+import AcceptedSubmissionsPage from "./page/acceptedSubmissionsPage";
 
 const App = () => {
   const { accessToken, getProfile } = useAuthStore();
@@ -32,6 +34,7 @@ const App = () => {
           <Route path="/book-session" element={<FormPage />} />
           <Route path="/operator-login" element={<OperatorLogin />} />
           <Route path="/admin/submissions" element={<SubmissionsPage />} />
+          <Route path="/profile/me" element={<ProfilePage />} />
 
           <Route
             path="/superadmin/dashboard"
@@ -56,6 +59,15 @@ const App = () => {
             element={
               <AdminRoute>
                 <EmployeesPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/superadmin/enrolled"
+            element={
+              <AdminRoute>
+                <AcceptedSubmissionsPage />
               </AdminRoute>
             }
           />
