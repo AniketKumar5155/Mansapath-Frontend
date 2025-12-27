@@ -57,7 +57,7 @@ const AdminDashboardInfoSection = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Card label="Total Submissions" value={totalSubmissions} icon={<LuClipboardList />} />
-                    <Card label="Accepted" value={openCount} icon={<LuFolder />} />
+                    <Card label="Enrolled" value={openCount} icon={<LuFolder />} />
                     <Card label="Pending" value={pendingCount} icon={<LuClock />} />
                     <Card label="Rejected" value={closedCount} icon={<LuClipboardList />} />
                 </div>

@@ -1,8 +1,7 @@
 import { useState } from "react";
-import AdminSidebar from "../component/AdminSidebar";
 import EmployeesTable from "../component/EmployeesTable";
+import AdminSidebar from "../component/AdminSidebar";
 import AdminHeader from "../component/AdminHeader";
-
 const EmployeesPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -30,7 +29,7 @@ const EmployeesPage = () => {
 
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="EMPLOYEES"
+          message="|MANASPATH EMPLOYEES|"
         />
 
         <div className="flex-1 overflow-y-auto p-3 sm:p-4">

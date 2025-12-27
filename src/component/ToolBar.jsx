@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Search, Filter, ArrowUpDown } from "lucide-react";
+import useAuthStore from "../store/useAuthStore";
 
 const ToolBar = ({
   searchValue,
   onSearchChange,
-  filters = [],
-  selectedFilter,
-  onFilterChange,
+  status = [],
+  selectedStatus,
+  onStatusChange,
+  category = [],
+  selectedCategory,
+  onCategoryChange,
   sortTypes = [],
   selectedSortType,
   onSortTypeChange,
@@ -35,11 +39,9 @@ const ToolBar = ({
   return (
     <div className="w-full mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between p-5 rounded-2xl bg-white shadow-md border border-gray-200">
 
-      {/* Left section */}
       <div className="flex flex-wrap items-center gap-3">
 
-        {/* Search */}
-        <div className="relative min-w-[240px]">
+        <div className="relative min-w-60">
           <Search
             size={18}
             className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -59,26 +61,42 @@ const ToolBar = ({
           />
         </div>
 
-        {/* Filter */}
-        {filters.length > 0 && (
+        {status.length > 0 && (
           <div className="relative">
             <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <select
-              value={selectedFilter}
-              onChange={(e) => onFilterChange(e.target.value)}
+              value={selectedStatus}
+              onChange={(e) => onStatusChange(e.target.value)}
               className={`${baseSelect} pl-9`}
             >
               <option value="">Filter</option>
-              {filters.map((f) => (
-                <option key={f.value} value={f.value}>
-                  {f.label}
+              {status.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
                 </option>
               ))}
             </select>
           </div>
         )}
 
-        {/* Sort type */}
+        {category.length > 0 && (
+          <div className="relative">
+            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => onCategoryChange(e.target.value)}
+              className={`${baseSelect} pl-9`}
+            >
+              <option value="">Category</option>
+              {category.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {sortTypes.length > 0 && (
           <div className="relative">
             <ArrowUpDown size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -97,7 +115,6 @@ const ToolBar = ({
           </div>
         )}
 
-        {/* Sort direction */}
         {sortDirections.length > 0 && (
           <select
             value={selectedSortDirection}
@@ -114,7 +131,6 @@ const ToolBar = ({
         )}
       </div>
 
-      {/* Actions */}
       {actions && (
         <div className="flex items-center gap-2">
           {actions}

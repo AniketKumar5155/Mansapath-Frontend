@@ -57,7 +57,7 @@ const AdminSidebar = ({ open, onClose }) => {
         `}
       >
         <div className="flex items-center justify-between px-2 pb-4">
-          <h1 className="text-2xl font-bold text-[#2C7BA0]">Manasapath</h1>
+          <h1 className="text-2xl font-bold text-[#2C7BA0]">Manaspath</h1>
 
           <button className="lg:hidden p-1" onClick={onClose}>
             <X size={26} className="text-gray-700" />

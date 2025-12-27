@@ -300,7 +300,7 @@ const InnerForm = ({
           onChange={handleChange}
         >
           <option value="">Select status</option>
-          <option value="OPEN">Accepted</option>
+          <option value="OPEN">Enrolled</option>
           <option value="PENDING">Pending</option>
           <option value="CLOSED">Rejected</option>
         </select>

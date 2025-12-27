@@ -7,10 +7,10 @@ const COLORS = [
 ];
 
 const SubmissionCategoryDonutChart = () => {
-  const { getAllAcceptedSubmissions, acceptedSubmissions } = useFormStore();
+  const { getAllEnrolledSubmissions, acceptedSubmissions } = useFormStore();
 
   useEffect(() => {
-    getAllAcceptedSubmissions();
+    getAllEnrolledSubmissions();
   }, []);
 
   const chartData = useMemo(() => {

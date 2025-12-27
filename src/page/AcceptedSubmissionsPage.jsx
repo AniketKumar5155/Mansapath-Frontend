@@ -1,9 +1,9 @@
 import { useState } from "react";
 import AdminSidebar from "../component/AdminSidebar";
 import AdminHeader from "../component/AdminHeader";
-import AcceptedSubmissionTable from "../component/AcceptedSubmissionTable";
+import EnrolledSubmissionTable from "../component/EnrolledSubmissionTable";
 
-const AcceptedSubmissionsPage = () => {
+const EnrolledSubmissionsPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -29,15 +29,15 @@ const AcceptedSubmissionsPage = () => {
 
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="FORM SUBMISSIONS"
+          message="|ENROLLED SUBMISSIONS|"
         />
 
         <div className="flex-1 overflow-y-auto p-3 sm:p-4">
-          <AcceptedSubmissionTable />
+          <EnrolledSubmissionTable />
         </div>
       </div>
     </div>
   );
 };
 
-export default AcceptedSubmissionsPage;
+export default EnrolledSubmissionsPage;

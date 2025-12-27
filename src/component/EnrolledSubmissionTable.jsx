@@ -4,10 +4,10 @@ import useFormStore from "../store/formStore";
 import ToolBar from "./ToolBar";
 import { useTheme, useMediaQuery } from "@mui/material";
 
-const AcceptedSubmissionTable = () => {
+const EnrolledSubmissionTable = () => {
   const {
     acceptedSubmissions,
-    getAllAcceptedSubmissions,
+    getAllEnrolledSubmissions,
     loading,
   } = useFormStore();
 
@@ -20,7 +20,7 @@ const AcceptedSubmissionTable = () => {
   const [sortDirection, setSortDirection] = useState("");
 
   useEffect(() => {
-    getAllAcceptedSubmissions();
+    getAllEnrolledSubmissions();
   }, []);
 
   const columns = [
@@ -37,7 +37,7 @@ const AcceptedSubmissionTable = () => {
         const value = params.value;
 
         const labelMap = {
-          OPEN: "Accepted",
+          OPEN: "Enrolled",
           PENDING: "Pending",
           CLOSED: "Rejected",
         };
@@ -68,8 +68,8 @@ const AcceptedSubmissionTable = () => {
       headerName: "Description",
       width: 260,
     },
-    { field: "accepted_by", headerName: "Accepted By", width: 180 },
-    { field: "accepted_at", headerName: "Accepted At", width: 180 },
+    { field: "accepted_by", headerName: "Enrolled By", width: 180 },
+    { field: "accepted_at", headerName: "Enrolled At", width: 180 },
     { field: "created_at", headerName: "Created At", width: 150 },
   ];
 
@@ -80,7 +80,7 @@ const AcceptedSubmissionTable = () => {
         onSearchChange={setSearch}
         filters={[
           { value: "", label: "All" },
-          { value: "OPEN", label: "Accepted" },
+          { value: "OPEN", label: "Enrolled" },
           { value: "PENDING", label: "Pending" },
           { value: "CLOSED", label: "Rejected" },
         ]}
@@ -88,7 +88,7 @@ const AcceptedSubmissionTable = () => {
         onFilterChange={setFilter}
         sortTypes={[
           { value: "", label: "Default" },
-          { value: "accepted_at", label: "Accepted At" },
+          { value: "accepted_at", label: "Enrolled At" },
           { value: "created_at", label: "Created At" },
         ]}
         selectedSortType={sortType}
@@ -122,4 +122,4 @@ const AcceptedSubmissionTable = () => {
   );
 };
 
-export default AcceptedSubmissionTable;
+export default EnrolledSubmissionTable;

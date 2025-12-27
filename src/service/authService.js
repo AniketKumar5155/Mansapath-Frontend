@@ -6,6 +6,6 @@ export const operatorLoginService = async (formData) => {
 };
 
 export const getProfileService = async () => {
-    const res = await axiosAuthInstance.get("/profile/me")
+    const res = await axiosAuthInstance.get("/profile")
     return res.data.data;
 }

@@ -13,22 +13,26 @@ import HomePage from "./page/HomePage";
 import ProfilePage from "./page/ProfilePage";
 
 import AdminRoute from "./component/AdminRoute";
-import AcceptedSubmissionsPage from "./page/acceptedSubmissionsPage";
+import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
 
 const App = () => {
-  const { accessToken, getProfile } = useAuthStore();
+  const { accessToken, user, getProfile } = useAuthStore();
 
   useEffect(() => {
-    if (accessToken) {
+    if (accessToken && !user) {
       getProfile();
     }
-  }, [accessToken]);
+  }, [accessToken, user, getProfile]);
 
   return (
-    <>
-      <BrowserRouter>
-        <ToastContainer />
+    <BrowserRouter>
+      <ToastContainer />
 
+      {accessToken && !user ? (
+        <div className="h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      ) : (
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/book-session" element={<FormPage />} />
@@ -67,13 +71,13 @@ const App = () => {
             path="/superadmin/enrolled"
             element={
               <AdminRoute>
-                <AcceptedSubmissionsPage />
+                <EnrolledSubmissionsPage />
               </AdminRoute>
             }
           />
         </Routes>
-      </BrowserRouter>
-    </>
+      )}
+    </BrowserRouter>
   );
 };
 

@@ -1,6 +1,7 @@
 // src\assets\Banner.jpeg --> Banner
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { FaInstagram } from "react-icons/fa";
 import {
     HeartPulse,
     Brain,
@@ -81,8 +82,8 @@ const HomePage = () => {
 
             <section
                 className={`py-16 transition ${dark
-                        ? "bg-linear-to-r from-gray-900 to-gray-800"
-                        : "bg-linear-to-r from-blue-50 to-blue-100"
+                    ? "bg-linear-to-r from-gray-900 to-gray-800"
+                    : "bg-linear-to-r from-blue-50 to-blue-100"
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
@@ -115,8 +116,8 @@ const HomePage = () => {
                 </div>
                 <hr
                     className={`my-10 border-0 h-px ${dark
-                            ? "bg-linear-to-r from-transparent via-gray-600 to-transparent"
-                            : "bg-linear-to-r from-transparent via-gray-400 to-transparent"
+                        ? "bg-linear-to-r from-transparent via-gray-600 to-transparent"
+                        : "bg-linear-to-r from-transparent via-gray-400 to-transparent"
                         }`}
                 />
 
@@ -131,8 +132,8 @@ const HomePage = () => {
                     <a href="#services">
                         <button
                             className={`border px-6 py-3 rounded-2xl shadow transition cursor-pointer ${dark
-                                    ? "border-gray-600 text-gray-200 hover:bg-gray-700"
-                                    : "border-blue-600 text-blue-600 hover:bg-blue-50"
+                                ? "border-gray-600 text-gray-200 hover:bg-gray-700"
+                                : "border-blue-600 text-blue-600 hover:bg-blue-50"
                                 }`}
                         >
                             Learn More
@@ -209,12 +210,32 @@ const HomePage = () => {
                                 <Phone size={18} /> +91 00000 00000
                             </li>
                             <li className="flex items-center gap-3">
-                                <Mail size={18} /> support@manasapath.com
+                                <Mail size={18} /> support@manaspath.com
                             </li>
                             <li className="flex items-center gap-3">
                                 <MapPin size={18} /> Motihari, Bihar, India
                             </li>
                         </ul>
+                        <div className=" flex flex-col py-2 text-[40px] space-y-2 mt-4 text-gray-700">
+                            <p className="text-[24px] font-bold text-gray-800">SOCIALS</p>
+                            <div className="flex items-center gap-2  cursor-pointer">
+                                <img
+                                    src="src/assets/icons8-instagram-logo-94.png"
+                                    alt="Instagram"
+                                    className="h-7 w-7"
+                                />
+                                <p className="text-[15px] font-semibold">Instagram</p>
+                            </div>
+
+                            <div className="flex items-center gap-2 cursor-pointer">
+                                <img
+                                    src="src/assets/icons8-facebook-48.png"
+                                    alt="Facebook"
+                                    className="h-7 w-7"
+                                />
+                                <p className="text-[15px] font-semibold">Facebook</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div
@@ -256,11 +277,11 @@ const OfferCard = ({ title, dark }) => (
             className={`mt-6 h-32 rounded-xl flex items-center justify-center ${dark ? "bg-gray-900 border-gray-700" : "bg-gray-100 border-gray-300"
                 }`}
         >
-           <img
-    src="src\assets\Banner.jpeg"
-    alt="Manasapath Logo"
-    className="object-contain h-full"
-/>
+            <img
+                src="src\assets\Banner.jpeg"
+                alt="Manasapath Logo"
+                className="object-contain h-full"
+            />
         </div>
     </motion.div>
 );
@@ -272,7 +293,7 @@ const Footer = ({ dark }) => (
     >
         <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
             <div>
-                <h4 className="text-lg font-semibold mb-4">Manasapath</h4>
+                <h4 className="text-lg font-semibold mb-4">Manaspath</h4>
                 <p className="text-sm">
                     Dedicated to improving mental health with compassionate support.
                 </p>
@@ -314,7 +335,7 @@ const Footer = ({ dark }) => (
         </div>
 
         <div className="text-center py-2 border-t border-gray-700 text-sm">
-            © 2025 Manasapath. All rights reserved.
+            © 2025 Manaspath. All rights reserved.
         </div>
     </footer>
 );

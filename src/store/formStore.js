@@ -60,7 +60,8 @@ const useFormStore = create((set) => ({
         page = 1,
         limit = 10,
         search = "",
-        filter = "",
+        status = "",
+        category = "",
         sortType = "",
         sortDirection = ""
     ) => {
@@ -70,7 +71,8 @@ const useFormStore = create((set) => ({
                 page,
                 limit,
                 search,
-                filter,
+                status,
+                category,
                 sortType,
                 sortDirection
             );
@@ -142,7 +144,7 @@ const useFormStore = create((set) => ({
         }
     },
 
-    getAllAcceptedSubmissions: async () => {
+    getAllEnrolledSubmissions: async () => {
         set({ loading: true, error: null });
         try {
             const submissions =
