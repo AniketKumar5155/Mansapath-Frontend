@@ -1,5 +1,5 @@
-const buildFullName = (user) => {
-    return [user.first_name, user.middle_name, user.last_name]
+const buildFullName = (first_name, middle_name, last_name) => {
+    return [first_name, middle_name, last_name]
         .filter(Boolean)
         .join(" ");
 };

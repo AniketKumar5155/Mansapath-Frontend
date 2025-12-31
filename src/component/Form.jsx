@@ -107,14 +107,18 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     if (!existing) return;
 
     setFormData({
-      ...existing,
-      age: existing.age ?? "",
+      first_name: existing.first_name ?? "",
       middle_name: existing.middle_name ?? "",
+      last_name: existing.last_name ?? "",
+      gender: existing.gender ?? "",
+      age: existing.age ?? "",
       status: existing.status ?? "",
       category: existing.category ?? "",
       email: existing.email ?? "",
+      phone_number: existing.phone_number ?? "",
+      address: existing.address ?? "",
       problem_description: existing.problem_description ?? "",
-      issues: (existing.issues || []).map(Number),
+      issues: (existing.Issues || []).map((issue) => issue.id),
     });
   }, [id, submissions]);
 

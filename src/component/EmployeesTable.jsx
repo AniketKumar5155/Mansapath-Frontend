@@ -5,6 +5,7 @@ import { CiEdit } from "react-icons/ci";
 import ToolBar from "./ToolBar";
 import CustomButton from "./CustomButton";
 import CreateEmployeeForm from "./CreateEmployeeForm";
+import EmployeeInfo from "./EmployeeInfo";
 
 const EmployeesTable = () => {
   const { employees, getAllEmployees, loading, total } = useEmployeeStore();
@@ -21,6 +22,16 @@ const EmployeesTable = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [editingSubmission, setEditingSubmission] = useState(null);
+
+  const [showEmployeeInfoOverlay, setShowFormDetailsOverlay] = useState(false);
+  const [showEmployeeInfo, setShowEmployeeInfo] = useState(null)
+
+  const handleRowClick = (params) => {
+    setShowEmployeeInfo(params.id);
+    console.log("params", params)
+    console.log("params.id", params.id)
+    setShowFormDetailsOverlay(true);
+  }
 
   useEffect(() => {
     getAllEmployees(
@@ -62,6 +73,8 @@ const EmployeesTable = () => {
     },
   ];
 
+  console.log("showEmployeeInfo",showEmployeeInfo);
+
   return (
     <>
       <ToolBar
@@ -100,6 +113,7 @@ const EmployeesTable = () => {
           columns={columns}
           rowCount={total}
           loading={loading}
+          onRowClick={handleRowClick}
           paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
@@ -119,6 +133,14 @@ const EmployeesTable = () => {
           overlay={true}
           onClose={() => setShowForm(false)}
           id={editingSubmission}
+        />
+      )}
+
+      {showEmployeeInfoOverlay&& (
+        <EmployeeInfo
+        overlay = {true}
+        id={showEmployeeInfo}
+        onClose = {() => setShowFormDetailsOverlay(false)}
         />
       )}
     </>
