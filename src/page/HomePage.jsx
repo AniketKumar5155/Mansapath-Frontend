@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaInstagram } from "react-icons/fa";
+import Navbar from "../component/NavBar";
 import {
     HeartPulse,
     Brain,
@@ -42,47 +44,13 @@ const HomePage = () => {
             className={`min-h-screen transition-colors duration-500 scroll-smooth ${dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
                 }`}
         >
-            <header
-                className={`shadow-sm sticky top-0 z-50 transition ${dark ? "bg-gray-800" : "bg-white"
-                    }`}
-            >
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <img
-                        src="src/assets/helloUpdated.png"
-                        alt="Manasapath Logo"
-                        className="h-12 w-12 cursor-pointer"
-                        onClick={() => navigate("/")}
-                    />
 
-                    <nav className="space-x-8 hidden md:block">
-                        <a href="#" className="hover:text-blue-600 hover:font-bold">Home</a>
-                        <a href="/services" className="hover:text-blue-600 hover:font-bold">Services</a>
-                        <a href="#about" className="hover:text-blue-600 hover:font-bold">About</a>
-                        <a href="#contact" className="hover:text-blue-600 hover:font-bold">Contact</a>
-                    </nav>
-
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={toggleDark}
-                            className={`p-2 rounded-full transition hover:scale-110 ${dark ? "bg-gray-700 text-yellow-400" : "bg-gray-100"
-                                }`}
-                        >
-                            {dark ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-
-                        <a href="#contact">
-                            <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl shadow hover:bg-blue-700 transition">
-                                Get Help
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </header>
+            <Navbar dark={dark} toggleDark={toggleDark} />
 
             <section
                 className={`py-16 transition ${dark
-                    ? "bg-linear-to-r from-gray-900 to-gray-800"
-                    : "bg-linear-to-r from-blue-50 to-blue-100"
+                    ? "bg-linear-to-br from-blue-500/20 via-transparent to-blue-500/30"
+                    : "bg-linear-to-br from-blue-50 to-blue-100"
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
@@ -216,24 +184,39 @@ const HomePage = () => {
                             </li>
                         </ul>
                         <div className=" flex flex-col py-2 text-[40px] space-y-2 mt-4 text-gray-700">
-                            <p className="text-[24px] font-bold text-gray-800">SOCIALS</p>
-                            <div className="flex items-center gap-2  cursor-pointer">
-                                <img
-                                    src="src/assets/icons8-instagram-logo-94.png"
-                                    alt="Instagram"
-                                    className="h-7 w-7"
-                                />
-                                <p className="text-[15px] font-semibold">Instagram</p>
+                            <p className={`text-[24px] font-bold ${dark ? "text-gray-300" : "text-gray-800"}`}>SOCIALS</p>
+                            <div className="flex flex-col py-2 text-[40px] space-y-2 mt-4 text-gray-700">
+                                <p className={`text-[24px] font-bold ${dark ? "text-gray-300" : "text-gray-800"}`}>SOCIALS</p>
+
+                                <a
+                                    href="https://www.instagram.com/manaspath25/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <img
+                                        src="src/assets/icons8-instagram-logo-94.png"
+                                        alt="Instagram"
+                                        className="h-7 w-7"
+                                    />
+                                    <p className="text-[15px] font-semibold">Instagram</p>
+                                </a>
+
+                                <a
+                                    href="https://www.facebook.com/manaspath25/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <img
+                                        src="src/assets/icons8-facebook-48.png"
+                                        alt="Facebook"
+                                        className="h-7 w-7"
+                                    />
+                                    <p className="text-[15px] font-semibold">Facebook</p>
+                                </a>
                             </div>
 
-                            <div className="flex items-center gap-2 cursor-pointer">
-                                <img
-                                    src="src/assets/icons8-facebook-48.png"
-                                    alt="Facebook"
-                                    className="h-7 w-7"
-                                />
-                                <p className="text-[15px] font-semibold">Facebook</p>
-                            </div>
                         </div>
                     </div>
 
@@ -259,7 +242,7 @@ const Card = ({ icon, title, desc, dark }) => (
     >
         <div className="text-blue-600 mb-4">{icon}</div>
         <h4 className="font-semibold mb-2">{title}</h4>
-        <p className="text-gray-500 text-sm">{desc}</p>
+        <p className="text-gray-400 text-sm">{desc}</p>
     </motion.div>
 );
 
@@ -281,7 +264,7 @@ const OfferCard = ({ title, dark }) => (
                 alt="Manasapath Logo"
                 className="object-contain h-full"
             />
-        </div>
+        </div>c
     </motion.div>
 );
 

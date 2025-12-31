@@ -15,6 +15,8 @@ import ProfilePage from "./page/ProfilePage";
 import AdminRoute from "./component/AdminRoute";
 import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
 import ServicePage from "./page/ServicePage";
+import AboutPage from "./page/AboutPage";
+import ContactPage from "./page/ContactPage";
 
 const App = () => {
   const { accessToken, user, getProfile } = useAuthStore();
@@ -31,6 +33,8 @@ const App = () => {
       <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/services" element={<ServicePage />} />
+                  <Route path="/about-us" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
                   <Route path="/operator-login" element={<OperatorLogin />} />
                   <Route path="/book-session" element={<FormPage />} />
       </Routes>

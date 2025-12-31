@@ -19,7 +19,7 @@ const ToolBar = ({
   actions,
 }) => {
   const [query, setQuery] = useState(searchValue || "");
-  const [open, setOpen] = useState(false); // 🔥 MOBILE TOGGLE
+  const [open, setOpen] = useState(false);
 
   const handleInput = (e) => {
     const val = e.target.value;
@@ -32,10 +32,8 @@ const ToolBar = ({
 
   return (
     <div className="w-full mb-4 p-4 rounded-2xl bg-white shadow-md border border-gray-200">
-      {/* TOP ROW (ALWAYS VISIBLE) */}
       <div className="flex flex-wrap items-center gap-3 justify-between">
         <div className="flex items-center gap-3 flex-1">
-          {/* SEARCH */}
           <div className="relative w-full sm:min-w-60">
             <Search
               size={18}
@@ -50,7 +48,6 @@ const ToolBar = ({
             />
           </div>
 
-          {/* MOBILE FILTER TOGGLE */}
           <button
             onClick={() => setOpen((p) => !p)}
             className="lg:hidden h-10 px-4 rounded-xl border border-gray-300 flex items-center gap-2 text-sm bg-white"
@@ -60,11 +57,9 @@ const ToolBar = ({
           </button>
         </div>
 
-        {/* ACTIONS (DESKTOP) */}
         {actions && <div className="hidden lg:flex gap-2">{actions}</div>}
       </div>
 
-      {/* COLLAPSIBLE FILTERS */}
       <div
         className={`
           mt-4 flex flex-wrap items-center gap-3
@@ -140,7 +135,6 @@ const ToolBar = ({
           </select>
         )}
 
-        {/* ACTIONS (MOBILE) */}
         {actions && <div className="flex lg:hidden gap-2">{actions}</div>}
       </div>
     </div>

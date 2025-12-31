@@ -64,7 +64,6 @@ const AdminSidebar = ({ open, onClose }) => {
 
   return (
     <>
-      {/* MOBILE OVERLAY */}
       {open && (
         <div
           className="fixed inset-0 bg-black/40 lg:hidden z-40"
@@ -72,7 +71,6 @@ const AdminSidebar = ({ open, onClose }) => {
         />
       )}
 
-      {/* SIDEBAR */}
       <div
         className={`
           fixed lg:static top-0 left-0 h-screen w-60] min-w-60 max-w-60 bg-white shadow-md px-3 py-4 z-50
@@ -80,7 +78,6 @@ const AdminSidebar = ({ open, onClose }) => {
           ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between px-2 pb-4">
           <h1 className="text-2xl font-bold text-[#2C7BA0]">Manaspath</h1>
 
@@ -89,7 +86,6 @@ const AdminSidebar = ({ open, onClose }) => {
           </button>
         </div>
 
-        {/* MENU */}
         <ul className="flex flex-col gap-2">
           {items
             .filter(
@@ -111,7 +107,6 @@ const AdminSidebar = ({ open, onClose }) => {
 
         <div className="grow" />
 
-        {/* LOGOUT */}
         <ul className="pb-4">
           <SidebarItem
             icon={<LogOut size={18} />}

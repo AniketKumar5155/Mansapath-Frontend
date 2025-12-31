@@ -24,7 +24,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
     }
   }, [id, getSubmissionById]);
 
-  // 🔥 GROUP ISSUES BY CATEGORY
   const groupedIssues = useMemo(() => {
     if (!submission?.Issues || submission.Issues.length === 0) return null;
 
@@ -40,19 +39,16 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
 
   return (
     <>
-      {/* OVERLAY */}
       <div
         className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* MODAL */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
           className="w-full max-w-2xl bg-white rounded-2xl shadow-xl relative animate-scaleIn"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* HEADER */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
             <h2 className="text-xl font-semibold text-gray-800">
               Submission Details
@@ -65,7 +61,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
             </button>
           </div>
 
-          {/* CONTENT */}
           <div className="p-6 max-h-[70vh] overflow-y-auto">
             {loading ? (
               <div className="text-center text-gray-500">Loading...</div>
@@ -75,7 +70,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
               </div>
             ) : (
               <>
-                {/* BASIC INFO */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <Info
                     label="Full Name"
@@ -99,7 +93,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                   />
                   <Info label="Address" value={submission.address} />
 
-                  {/* PROBLEM */}
                   <div className="sm:col-span-2">
                     <p className="text-gray-500 mb-1">
                       Problem Description
@@ -110,7 +103,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                   </div>
                 </div>
 
-                {/* ISSUES SECTION */}
                 <div className="mt-6">
                   <h3 className="text-base font-semibold text-gray-800 mb-2">
                     Issues
@@ -143,7 +135,6 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
             )}
           </div>
 
-          {/* FOOTER */}
           <div className="flex justify-end px-6 py-4 border-t">
             <button
               onClick={onClose}

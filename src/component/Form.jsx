@@ -9,8 +9,6 @@ import {
   formUpdateSchema,
 } from "../validator/formSchema";
 
-/* -------------------- helpers -------------------- */
-
 const removeEmpty = (obj) =>
   Object.fromEntries(
     Object.entries(obj).filter(([_, v]) => v !== undefined && v !== null)
@@ -24,8 +22,6 @@ const mapZodErrors = (zodError) => {
   });
   return errors;
 };
-
-/* -------------------- issues -------------------- */
 
 const ISSUE_CATEGORIES = {
   Addictions: [
@@ -78,8 +74,6 @@ const CATEGORY_LABELS = {
   BODH: "Bodh",
 };
 
-/* -------------------- main form -------------------- */
-
 const Form = ({ overlay = false, onClose = () => { }, id }) => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -124,8 +118,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     });
   }, [id, submissions]);
 
-  /* ---------- change handler ---------- */
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -141,8 +133,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
       return updated;
     });
   };
-
-  /* ---------- submit ---------- */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -179,8 +169,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     }
   };
 
-  /* ---------- scroll to error ---------- */
-
   useEffect(() => {
     const firstError = Object.keys(fieldErrors)[0];
     if (firstError) {
@@ -190,7 +178,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     }
   }, [fieldErrors]);
 
-  /* -------------------- UI -------------------- */
   return (
     <div
       className={
@@ -217,7 +204,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
         )}
 
         <div className={`grid ${overlay ? "" : "md:grid-cols-2"} gap-10`}>
-          {/* ---------- RIGHT / INFO SECTION ---------- */}
           {!overlay && (
             <div className="bg-white rounded-xl shadow-sm p-8 flex flex-col justify-center space-y-6">
               <h1 className="text-4xl font-bold text-blue-600 tracking-wide">
@@ -238,7 +224,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
             </div>
           )}
 
-          {/* ---------- FORM SECTION ---------- */}
           <div className="bg-white rounded-xl shadow-sm p-8">
             <InnerForm
               formData={formData}
@@ -266,8 +251,6 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
     </div>
   );
 };
-
-/* -------------------- inner form -------------------- */
 
 const InnerForm = ({
   formData,
