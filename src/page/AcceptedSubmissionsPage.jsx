@@ -8,7 +8,6 @@ const EnrolledSubmissionsPage = () => {
 
   return (
     <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
-
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"
@@ -26,7 +25,6 @@ const EnrolledSubmissionsPage = () => {
       </div>
 
       <div className="flex flex-col w-full min-w-0 max-h-screen">
-
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
           message="|ENROLLED SUBMISSIONS|"

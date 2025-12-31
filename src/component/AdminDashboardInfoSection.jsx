@@ -39,9 +39,9 @@ const AdminDashboardInfoSection = () => {
         setClosedCount(closed.length);
         setPendingCount(pending.length);
 
-        setOpenMentalFitness(open.filter((s) => s.category === "MENTAL FITNESS").length);
-        setOpenMentalTherapy(open.filter((s) => s.category === "MENTAL THERAPY").length);
-        setOpenChaitainya(open.filter((s) => s.category === "CHAITAINYA").length);
+        setOpenMentalFitness(open.filter((s) => s.category === "CHAITANYA").length);
+        setOpenMentalTherapy(open.filter((s) => s.category === "BRAIN GYM").length);
+        setOpenChaitainya(open.filter((s) => s.category === "BODH").length);
     }, [allSubmissions]);
 
     useEffect(() => {
@@ -65,9 +65,9 @@ const AdminDashboardInfoSection = () => {
                 <div className="bg-white rounded-xl shadow p-6 w-full">
                     <h2 className="text-lg font-semibold mb-4">ENROLLED Requests by Category</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <Card label="Mental Fitness" value={openMentalFitness} icon={<LuClipboardList />} />
-                        <Card label="Mental Therapy" value={openMentalTherapy} icon={<LuClipboardList />} />
-                        <Card label="Chaitainya" value={openChaitainya} icon={<LuClipboardList />} />
+                        <Card label="Chaitanya" value={openMentalTherapy} icon={<LuClipboardList />} />
+                        <Card label="Brain Gym" value={openMentalFitness} icon={<LuClipboardList />} />
+                        <Card label="Bodh" value={openChaitainya} icon={<LuClipboardList />} />
                     </div>
                 </div>
 

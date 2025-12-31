@@ -6,7 +6,11 @@ export const formSubmissionSchema = z.object({
     .min(1, "First name cannot be empty")
     .max(50, "First name must be at most 50 characters"),
 
-  middle_name: z.string().max(50).optional(),
+  middle_name: z
+    .string()
+    .max(50, "Middle name must be at most 50 characters")
+    .optional()
+    .or(z.literal("").optional()),
 
   last_name: z
     .string({ required_error: "Last name is required" })
@@ -18,12 +22,17 @@ export const formSubmissionSchema = z.object({
   }),
 
   age: z
-    .number({ required_error: "Age is required" })
-    .int("Age must be an integer")
-    .min(1, "Age must be at least 1")
-    .max(120, "Age cannot be greater than 120"),
+  .coerce.number({ required_error: "Age is required" })
+  .int("Age must be an integer")
+  .min(1, "Age cannot be empty")
+  .max(120, "Age cannot be greater than 120"),
 
-  email: z.string().email("Invalid email format").max(100).optional(),
+  email: z
+    .string()
+    .email("Invalid email format")
+    .max(100, "Email must be at most 100 characters")
+    .optional()
+    .or(z.literal("").optional()),
 
   phone_number: z
     .string({ required_error: "Phone number is required" })
@@ -31,23 +40,68 @@ export const formSubmissionSchema = z.object({
 
   address: z
     .string({ required_error: "Address is required" })
-    .min(1)
-    .max(300),
+    .min(1, "Address cannot be empty")
+    .max(300, "Address must be at most 300 characters"),
 
+  problem_description: z
+    .string()
+    .max(2000, "Problem description too long")
+    .optional()
+    .or(z.literal("").optional()),
+
+    issues: z
+  .array(
+    z.coerce.number().int().positive("Invalid issue id")
+  )
+  .min(1, "Please select at least one issue")
+  .optional(),
+
+  status: z
+    .enum(["ENROLLED", "PENDING", "REJECTED"], {
+      required_error: "Status is required",
+    })
+    .optional(),
+
+  category: z
+    .enum(["CHAITANYA", "BRAIN GYM", "BODH"], {
+      required_error: "Category is required",
+    })
+    .optional(),
+
+});
+
+export const formUpdateSchema = z.object({
+  first_name: z.string().min(1).max(50).optional(),
+  middle_name: z.string().max(50).optional(),
+  last_name: z.string().min(1).max(50).optional(),
+
+  gender: z.enum(["MALE", "FEMALE", "OTHER", "RATHER NOT SAY"]).optional(),
+
+  age: z
+    .number()
+    .int("Age must be an integer")
+    .min(1, "Age cannot be empty")
+    .max(120, "Age cannot be greater than 120")
+    .optional(),
+
+  email: z.string().email().max(100).optional(),
+  phone_number: z.string().regex(/^[0-9+\-() ]{7,15}$/).optional(),
+  address: z.string().max(300).optional(),
   problem_description: z.string().max(2000).optional(),
 
-  status: z.enum([
-    "PENDING",
-    "IN_PROGRESS",
-    "RESOLVED",
-    "CLOSED",
-    "OPEN",
-  ]),
+  status: z
+    .enum(["ENROLLED", "PENDING", "REJECTED"])
+    .optional(),
 
-  category: z.enum([
-    "MENTAL FITNESS",
-    "MENTAL THERAPY",
-    "CHAITAINYA",
-  ]),
+  category: z
+    .enum(["CHAITANYA", "BRAIN GYM", "BODH"])
+    .optional(),
+
+  issues: z
+    .array(z.number().int().positive())
+    .optional(),
+
+  payment_method: z
+    .enum(["FULL", "INSTALLMENT"])
+    .optional(),
 });
-export const formUpdateSchema = formSubmissionSchema.partial();

@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { CiEdit } from "react-icons/ci";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import ToolBar from "./ToolBar";
 import CustomButton from "./CustomButton";
 import Form from "./Form";
+import SubmissionInfo from "./SubmissionInfo";
+
 import useFormStore from "../store/formStore";
 import useAuthStore from "../store/useAuthStore";
-import { useNavigate } from "react-router-dom";
 
-const CATEGORY_OPTIONS = [
-  { value: "", label: "All" },
-  { value: "MENTAL THERAPY", label: "Mental Therapy" },
-  { value: "MENTAL FITNESS", label: "Mental Fitness" },
-  { value: "CHAITAINYA", label: "Chaitanya" },
-];
+const STATUS_LABELS = {
+  ENROLLED: "Enrolled",
+  PENDING: "Pending",
+  REJECTED: "Rejected",
+};
+
+const CATEGORY_LABELS = {
+  CHAITANYA: "Chaitanya",
+  "BRAIN GYM": "Brain Gym",
+  BODH: "Bodh",
+};
 
 const SORT_TYPES = [
   { value: "", label: "Default" },
@@ -29,35 +37,22 @@ const SORT_DIRECTIONS = [
 ];
 
 const STATUS_COLOR_MAP = {
-  OPEN: { bg: "bg-green-100", text: "text-green-700" },
+  ENROLLED: { bg: "bg-green-100", text: "text-green-700" },
   PENDING: { bg: "bg-yellow-100", text: "text-yellow-700" },
-  CLOSED: { bg: "bg-red-100", text: "text-red-700" },
+  REJECTED: { bg: "bg-red-100", text: "text-red-700" },
   NOT_SET: { bg: "bg-gray-100", text: "text-gray-600" },
 };
 
 const SubmissionTable = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const hydratedRef = useRef(false);
+
   const { submissions, getSubmissions, loading, total } = useFormStore();
   const { accessToken, user } = useAuthStore();
-  console.log(user)
 
-  const STATUS_OPTIONS = user.role === "SUPERADMIN" ? [
-    { value: "", label: "All" },
-    { value: "OPEN", label: "Enrolled" },
-    { value: "PENDING", label: "Pending" },
-    { value: "CLOSED", label: "Rejected" },
-  ] : [
-    { value: "", label: "Default (Not set and pending)" },
-    { value: "PENDING", label: "Pending" },
-    { value: "CLOSED", label: "Not set" },
-  ];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10,
-  });
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -65,14 +60,63 @@ const SubmissionTable = () => {
   const [sortType, setSortType] = useState("");
   const [sortDirection, setSortDirection] = useState("");
 
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+
   const [showForm, setShowForm] = useState(false);
   const [editingSubmission, setEditingSubmission] = useState(null);
+
+  const [showFormDetailsOverlay, setShowFormDetailsOverlay] = useState(false);
+  const [submissionDetailsId, setSubmissionDetailsId] = useState(null);
+
+  const STATUS_OPTIONS = [
+    { value: "", label: "All" },
+    { value: "ENROLLED", label: STATUS_LABELS.ENROLLED },
+    { value: "PENDING", label: STATUS_LABELS.PENDING },
+    { value: "REJECTED", label: STATUS_LABELS.REJECTED },
+  ];
+
+  const CATEGORY_OPTIONS = [
+    { value: "", label: "All" },
+    { value: "CHAITANYA", label: CATEGORY_LABELS.CHAITANYA },
+    { value: "BRAIN GYM", label: CATEGORY_LABELS["BRAIN GYM"] },
+    { value: "BODH", label: CATEGORY_LABELS.BODH },
+  ];
 
   useEffect(() => {
     if (!accessToken) {
       navigate("/operator-login");
     }
   }, [accessToken, navigate]);
+
+  useEffect(() => {
+    setStatus(searchParams.get("status") || "");
+    setCategory(searchParams.get("category") || "");
+    setSortType(searchParams.get("sortType") || "");
+    setSortDirection(searchParams.get("sortDirection") || "");
+
+    setPaginationModel({
+      page: Number(searchParams.get("page") || 1) - 1,
+      pageSize: Number(searchParams.get("pageSize") || 10),
+    });
+
+    hydratedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+
+    setSearchParams({
+      status,
+      category,
+      sortType,
+      sortDirection,
+      page: String(paginationModel.page + 1),
+      pageSize: String(paginationModel.pageSize),
+    });
+  }, [status, category, sortType, sortDirection, paginationModel]);
 
   useEffect(() => {
     getSubmissions(
@@ -92,21 +136,20 @@ const SubmissionTable = () => {
     { field: "last_name", headerName: "Last Name", width: 130 },
     { field: "gender", headerName: "Gender", width: 90 },
     { field: "age", headerName: "Age", width: 80 },
+
     {
       field: "status",
       headerName: "Status",
       width: 140,
-      renderCell: (params) => {
-        const value = params.value || "NOT_SET";
-        const { bg, text } = STATUS_COLOR_MAP[value];
+      renderCell: ({ value }) => {
+        const statusValue = value || "NOT_SET";
+        const { bg, text } = STATUS_COLOR_MAP[statusValue];
 
         return (
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}
-          >
-            {value === "NOT_SET"
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}>
+            {statusValue === "NOT_SET"
               ? "Not Set"
-              : STATUS_OPTIONS.find((o) => o.value === value)?.label}
+              : STATUS_LABELS[statusValue] || statusValue}
           </span>
         );
       },
@@ -116,30 +159,21 @@ const SubmissionTable = () => {
       field: "category",
       headerName: "Category",
       width: 170,
-      renderCell: (params) => {
-        const value = params.value || "NOT_ASSIGNED";
-
-        return (
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${value === "NOT_ASSIGNED"
-              ? "bg-gray-100 text-gray-600"
-              : "bg-blue-100 text-blue-700"
-              }`}
-          >
-            {value === "NOT_ASSIGNED" ? "Not Assigned" : value}
-          </span>
-        );
-      },
+      renderCell: ({ value }) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            value ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {value ? CATEGORY_LABELS[value] || value : "Not Assigned"}
+        </span>
+      ),
     },
 
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone_number", headerName: "Phone", width: 150 },
     { field: "address", headerName: "Address", width: 220 },
-    {
-      field: "problem_description",
-      headerName: "Description",
-      width: 260,
-    },
+    { field: "problem_description", headerName: "Description", width: 260 },
     { field: "created_at", headerName: "Created At", width: 150 },
 
     {
@@ -149,7 +183,8 @@ const SubmissionTable = () => {
       sortable: false,
       renderCell: (params) => (
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setEditingSubmission(params.row.id);
             setShowForm(true);
           }}
@@ -160,6 +195,11 @@ const SubmissionTable = () => {
       ),
     },
   ];
+
+  const handleRowClick = (params) => {
+    setSubmissionDetailsId(params.id);
+    setShowFormDetailsOverlay(true);
+  };
 
   return (
     <>
@@ -194,6 +234,7 @@ const SubmissionTable = () => {
         <DataGrid
           rows={submissions}
           columns={columns}
+          onRowClick={handleRowClick}
           rowCount={total}
           loading={loading}
           paginationMode="server"
@@ -214,6 +255,14 @@ const SubmissionTable = () => {
           overlay
           id={editingSubmission}
           onClose={() => setShowForm(false)}
+        />
+      )}
+
+      {showFormDetailsOverlay && (
+        <SubmissionInfo
+          overlay
+          id={submissionDetailsId}
+          onClose={() => setShowFormDetailsOverlay(false)}
         />
       )}
     </>

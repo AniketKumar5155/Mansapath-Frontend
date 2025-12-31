@@ -14,6 +14,7 @@ import ProfilePage from "./page/ProfilePage";
 
 import AdminRoute from "./component/AdminRoute";
 import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
+import ServicePage from "./page/ServicePage";
 
 const App = () => {
   const { accessToken, user, getProfile } = useAuthStore();
@@ -27,16 +28,19 @@ const App = () => {
   return (
     <BrowserRouter>
       <ToastContainer />
+      <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/services" element={<ServicePage />} />
+                  <Route path="/operator-login" element={<OperatorLogin />} />
+                  <Route path="/book-session" element={<FormPage />} />
+      </Routes>
 
       {accessToken && !user ? (
         <div className="h-screen flex items-center justify-center">
           Loading...
         </div>
       ) : (
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/book-session" element={<FormPage />} />
-          <Route path="/operator-login" element={<OperatorLogin />} />
+        <Routes>          
           <Route path="/admin/submissions" element={<SubmissionsPage />} />
           <Route path="/profile/me" element={<ProfilePage />} />
 

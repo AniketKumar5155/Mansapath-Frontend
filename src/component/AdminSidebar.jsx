@@ -5,7 +5,7 @@ import {
   LogOut,
   Folder,
   X,
-  LayoutDashboard
+  LayoutDashboard,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -25,12 +25,34 @@ const AdminSidebar = ({ open, onClose }) => {
 
   const items = [
     { icon: <Home size={18} />, label: "Home", path: "/" },
-    { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/superadmin/dashboard", adminOnly: true },
-    { icon: <Folder size={18} />, label: "Enrolled", path: "/superadmin/enrolled" , adminOnly: true },
-    { icon: <PlusSquare size={18} />, label: "Create Submission", path: "/book-session" },
-    { icon: <Folder size={18} />, label: "Submissions", path: "/admin/submissions" },
-    { icon: <PlusSquare size={18} />, label: "Create Employee", path: "/superadmin/create-employee", adminOnly: true },
-    { icon: <Folder size={18} />, label: "Employees", path: "/superadmin/employees", adminOnly: true },
+    {
+      icon: <LayoutDashboard size={18} />,
+      label: "Dashboard",
+      path: "/superadmin/dashboard",
+      adminOnly: true,
+    },
+    {
+      icon: <PlusSquare size={18} />,
+      label: "Create Submission",
+      path: "/book-session",
+    },
+    {
+      icon: <Folder size={18} />,
+      label: "Submissions",
+      path: "/admin/submissions",
+    },
+    {
+      icon: <PlusSquare size={18} />,
+      label: "Create Employee",
+      path: "/superadmin/create-employee",
+      adminOnly: true,
+    },
+    {
+      icon: <Folder size={18} />,
+      label: "Employees",
+      path: "/superadmin/employees",
+      adminOnly: true,
+    },
     { icon: <User size={18} />, label: "Profile", path: "/profile/me" },
   ];
 
@@ -42,6 +64,7 @@ const AdminSidebar = ({ open, onClose }) => {
 
   return (
     <>
+      {/* MOBILE OVERLAY */}
       {open && (
         <div
           className="fixed inset-0 bg-black/40 lg:hidden z-40"
@@ -49,13 +72,15 @@ const AdminSidebar = ({ open, onClose }) => {
         />
       )}
 
+      {/* SIDEBAR */}
       <div
         className={`
-          fixed lg:static top-0 left-0 h-screen w-60 bg-white shadow-md px-3 py-4 z-50
+          fixed lg:static top-0 left-0 h-screen w-60] min-w-60 max-w-60 bg-white shadow-md px-3 py-4 z-50
           flex flex-col transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
+        {/* HEADER */}
         <div className="flex items-center justify-between px-2 pb-4">
           <h1 className="text-2xl font-bold text-[#2C7BA0]">Manaspath</h1>
 
@@ -64,10 +89,11 @@ const AdminSidebar = ({ open, onClose }) => {
           </button>
         </div>
 
+        {/* MENU */}
         <ul className="flex flex-col gap-2">
           {items
             .filter(
-              item => !item.adminOnly || user?.role === "SUPERADMIN"
+              (item) => !item.adminOnly || user?.role === "SUPERADMIN"
             )
             .map((item) => (
               <SidebarItem
@@ -85,6 +111,7 @@ const AdminSidebar = ({ open, onClose }) => {
 
         <div className="grow" />
 
+        {/* LOGOUT */}
         <ul className="pb-4">
           <SidebarItem
             icon={<LogOut size={18} />}

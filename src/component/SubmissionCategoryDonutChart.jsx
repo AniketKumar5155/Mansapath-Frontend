@@ -6,6 +6,12 @@ const COLORS = [
   "#3B82F6", "#FACC15", "#22C55E", "#EF4444", "#8B5CF6", "#10B981", "#F472B6"
 ];
 
+const CATEGORY_LABELS = {
+  "CHAITANYA": "CHAITANYA",
+  "BRAIN GYM": "BRAIN GYM",
+  "BODH": "BODH",
+};
+
 const SubmissionCategoryDonutChart = () => {
   const { getAllEnrolledSubmissions, acceptedSubmissions } = useFormStore();
 
@@ -17,8 +23,10 @@ const SubmissionCategoryDonutChart = () => {
     const categoryCounts = {};
 
     acceptedSubmissions?.forEach((item) => {
-      const category = item?.category || "Unknown";
-      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      if (item?.category && CATEGORY_LABELS[item.category]) {
+        const category = CATEGORY_LABELS[item.category];
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      }
     });
 
     return Object.keys(categoryCounts).map((key) => ({

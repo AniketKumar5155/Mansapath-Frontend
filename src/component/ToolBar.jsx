@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, ArrowUpDown } from "lucide-react";
-import useAuthStore from "../store/useAuthStore";
+import { Search, Filter, ArrowUpDown, SlidersHorizontal } from "lucide-react";
 
 const ToolBar = ({
   searchValue,
@@ -20,6 +19,7 @@ const ToolBar = ({
   actions,
 }) => {
   const [query, setQuery] = useState(searchValue || "");
+  const [open, setOpen] = useState(false); // 🔥 MOBILE TOGGLE
 
   const handleInput = (e) => {
     const val = e.target.value;
@@ -27,40 +27,50 @@ const ToolBar = ({
     onSearchChange && onSearchChange(val);
   };
 
-  const baseSelect = `
-    h-10 px-4 text-sm rounded-xl
-    bg-white
-    border border-gray-300
-    hover:border-gray-400
-    focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-    cursor-pointer outline-none transition-all
-  `;
+  const baseSelect =
+    "h-10 px-4 text-sm rounded-xl bg-white border border-gray-300 hover:border-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 cursor-pointer outline-none transition-all";
 
   return (
-    <div className="w-full mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between p-5 rounded-2xl bg-white shadow-md border border-gray-200">
+    <div className="w-full mb-4 p-4 rounded-2xl bg-white shadow-md border border-gray-200">
+      {/* TOP ROW (ALWAYS VISIBLE) */}
+      <div className="flex flex-wrap items-center gap-3 justify-between">
+        <div className="flex items-center gap-3 flex-1">
+          {/* SEARCH */}
+          <div className="relative w-full sm:min-w-60">
+            <Search
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              value={query}
+              onChange={handleInput}
+              type="text"
+              placeholder="Search records"
+              className="h-10 w-full pl-11 pr-4 text-sm rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+            />
+          </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-
-        <div className="relative min-w-60">
-          <Search
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-          <input
-            value={query}
-            onChange={handleInput}
-            type="text"
-            placeholder="Search records"
-            className="
-              h-10 w-full pl-11 pr-4 text-sm
-              rounded-xl bg-gray-50
-              border border-gray-300
-              focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-              outline-none transition-all
-            "
-          />
+          {/* MOBILE FILTER TOGGLE */}
+          <button
+            onClick={() => setOpen((p) => !p)}
+            className="lg:hidden h-10 px-4 rounded-xl border border-gray-300 flex items-center gap-2 text-sm bg-white"
+          >
+            <SlidersHorizontal size={16} />
+            Filters
+          </button>
         </div>
 
+        {/* ACTIONS (DESKTOP) */}
+        {actions && <div className="hidden lg:flex gap-2">{actions}</div>}
+      </div>
+
+      {/* COLLAPSIBLE FILTERS */}
+      <div
+        className={`
+          mt-4 flex flex-wrap items-center gap-3
+          ${open ? "flex" : "hidden"} lg:flex
+        `}
+      >
         {status.length > 0 && (
           <div className="relative">
             <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -69,7 +79,7 @@ const ToolBar = ({
               onChange={(e) => onStatusChange(e.target.value)}
               className={`${baseSelect} pl-9`}
             >
-              <option value="">Filter</option>
+              <option value="">Status</option>
               {status.map((s) => (
                 <option key={s.value} value={s.value}>
                   {s.label}
@@ -129,13 +139,10 @@ const ToolBar = ({
             ))}
           </select>
         )}
-      </div>
 
-      {actions && (
-        <div className="flex items-center gap-2">
-          {actions}
-        </div>
-      )}
+        {/* ACTIONS (MOBILE) */}
+        {actions && <div className="flex lg:hidden gap-2">{actions}</div>}
+      </div>
     </div>
   );
 };

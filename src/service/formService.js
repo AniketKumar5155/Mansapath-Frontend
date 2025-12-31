@@ -12,8 +12,14 @@ export const getAllSubmissionsService = async () => {
 
 export const getSubmissionsService = async (page = 1, limit = 10, search = "", status = "", category = "", sortType = "", sortDirection) => {
     const res = await axiosFormInstance.get(`/submissions?page=${page}&limit=${limit}&search=${search}&status=${status}&category=${category}&sortType=${sortType}&sortDirection=${sortDirection}`);
+    console.log(res.data);
     return res.data;
 };
+
+export const getSubmissionByIdService = async (id) => {
+    const res = await axiosFormInstance.get(`/submission/${id}`);
+    return res.data.data;
+}
 
 export const updateSubmissionService = async (id, updatedData) => {
     const res = await axiosFormInstance.patch(`/update-submission/${id}`, updatedData);
@@ -25,7 +31,7 @@ export const acceptSubmissionService = async (id) => {
     return res.data.data;
 }
 
-export const getAllacceptedSubmissionService = async () => {
+export const getAllAcceptedSubmissionService = async () => {
     const res = await axiosFormInstance.get(`/all-accepted-submissions`);
     return res.data.data;
 }

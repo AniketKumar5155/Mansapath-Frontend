@@ -4,6 +4,12 @@ import useFormStore from "../store/formStore";
 
 const COLORS = ["#3B82F6", "#FACC15", "#22C55E"];
 
+const STATUS_LABELS = {
+  ENROLLED: "Enrolled",
+  PENDING: "Pending",
+  REJECTED: "Rejected",
+};
+
 const SubmissionStatusDonutChart = () => {
   const { allSubmissions, getAllSubmissions } = useFormStore();
 
@@ -11,9 +17,8 @@ const SubmissionStatusDonutChart = () => {
     getAllSubmissions();
   }, []);
 
-
   const chartData = useMemo(() => {
-    const statusCounts = { OPEN: 0, PENDING: 0, CLOSED: 0 };
+    const statusCounts = { ENROLLED: 0, PENDING: 0, REJECTED: 0 };
 
     allSubmissions?.forEach((item) => {
       const s = item?.status?.toUpperCase();
@@ -21,9 +26,9 @@ const SubmissionStatusDonutChart = () => {
     });
 
     return [
-      { name: "Open", value: statusCounts.OPEN },
-      { name: "Pending", value: statusCounts.PENDING },
-      { name: "Closed", value: statusCounts.CLOSED },
+      { name: STATUS_LABELS.ENROLLED, value: statusCounts.ENROLLED },
+      { name: STATUS_LABELS.PENDING, value: statusCounts.PENDING },
+      { name: STATUS_LABELS.REJECTED, value: statusCounts.REJECTED },
     ];
   }, [allSubmissions]);
 

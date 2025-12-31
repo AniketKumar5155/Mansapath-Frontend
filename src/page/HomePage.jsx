@@ -1,4 +1,3 @@
-// src\assets\Banner.jpeg --> Banner
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaInstagram } from "react-icons/fa";
@@ -57,7 +56,7 @@ const HomePage = () => {
 
                     <nav className="space-x-8 hidden md:block">
                         <a href="#" className="hover:text-blue-600 hover:font-bold">Home</a>
-                        <a href="#services" className="hover:text-blue-600 hover:font-bold">Services</a>
+                        <a href="/services" className="hover:text-blue-600 hover:font-bold">Services</a>
                         <a href="#about" className="hover:text-blue-600 hover:font-bold">About</a>
                         <a href="#contact" className="hover:text-blue-600 hover:font-bold">Contact</a>
                     </nav>

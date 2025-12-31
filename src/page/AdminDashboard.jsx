@@ -21,7 +21,7 @@ const AdminDashboard = () => {
                     ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
-                <AdminSidebar open={true} onClose={() => setSidebarOpen(false)} />
+                <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
             </aside>
 
             <main className="flex flex-col w-full min-w-0 max-h-screen">
