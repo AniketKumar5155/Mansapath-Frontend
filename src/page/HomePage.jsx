@@ -264,7 +264,7 @@ const OfferCard = ({ title, dark }) => (
                 alt="Manasapath Logo"
                 className="object-contain h-full"
             />
-        </div>c
+        </div>
     </motion.div>
 );
 

@@ -92,7 +92,7 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                                     </span>
                                 </div>
 
-=                                <Section title="Personal Information">
+                                <Section title="Personal Information">
                                     <InfoGrid>
                                         <Info
                                             label="Full Name"
