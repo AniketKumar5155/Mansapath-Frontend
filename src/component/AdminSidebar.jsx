@@ -72,13 +72,15 @@ const AdminSidebar = ({ open, onClose }) => {
       )}
       <div
         className={`
-    fixed lg:static top-0 left-0 h-screen min-w-60 max-w-60
-    bg-white shadow-md px-3 py-4
-    z-45 lg:z-10
-    flex flex-col transform transition-transform duration-300
-    ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-  `}
+        fixed lg:static top-0 left-0 h-screen min-w-60 max-w-60
+      bg-white
+        px-3 py-4
+        z-40 lg:z-10
+        flex flex-col transform transition-transform duration-300
+        ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}
       >
+
         <div className="flex items-center justify-between px-2 pb-4">
           <h1 className="text-2xl font-bold text-[#2C7BA0]">Manaspath</h1>
 
