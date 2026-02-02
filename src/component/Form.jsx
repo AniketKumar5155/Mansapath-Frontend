@@ -9,6 +9,7 @@ import {
   formUpdateSchema,
 } from "../validator/formSchema";
 
+/* ---------- utils ---------- */
 const removeEmpty = (obj) =>
   Object.fromEntries(
     Object.entries(obj).filter(([_, v]) => v !== undefined && v !== null)
@@ -23,6 +24,7 @@ const mapZodErrors = (zodError) => {
   return errors;
 };
 
+/* ---------- constants ---------- */
 const ISSUE_CATEGORIES = {
   Addictions: [
     { id: 1, name: "Alcohol Addiction" },
@@ -74,7 +76,14 @@ const CATEGORY_LABELS = {
   BODH: "Bodh",
 };
 
-const Form = ({ overlay = false, onClose = () => { }, id }) => {
+const Form = ({
+  overlay = false,
+  onClose = () => {},
+  id,
+  dark = false,
+}) => {
+  const isDark = overlay ? false : dark;
+
   const [formData, setFormData] = useState({
     first_name: "",
     middle_name: "",
@@ -94,8 +103,7 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
   const [submitted, setSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { loading, submitForm, updateSubmission, submissions } =
-    useFormStore();
+  const { loading, submitForm, updateSubmission, submissions } = useFormStore();
 
   useEffect(() => {
     setIsEditing(!!id);
@@ -124,11 +132,7 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     setFieldErrors((prev) => {
       if (!prev[name]) return prev;
@@ -161,47 +165,37 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
       return;
     }
 
-    try {
-      const res = isEditing
-        ? await updateSubmission(id, cleanedData)
-        : await submitForm(cleanedData);
+    const res = isEditing
+      ? await updateSubmission(id, cleanedData)
+      : await submitForm(cleanedData);
 
-      if (res?.success) setSubmitted(true);
-      else toast.error(res?.message || "Action failed");
-    } catch {
-      toast.error("Unexpected error occurred");
-    }
+    if (res?.success) setSubmitted(true);
+    else toast.error(res?.message || "Action failed");
   };
-
-  useEffect(() => {
-    const firstError = Object.keys(fieldErrors)[0];
-    if (firstError) {
-      const el = document.querySelector(`[name="${firstError}"]`);
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      el?.focus?.();
-    }
-  }, [fieldErrors]);
 
   return (
     <div
       className={
         overlay
-          ? "fixed inset-0 z-50 bg-black/50 flex items-start justify-center overflow-y-auto"
-          : "min-h-screen w-full bg-linear-to-br from-blue-50 via-white to-blue-100"
+          ? "fixed inset-0 z-50 bg-black/50 flex justify-center overflow-y-auto"
+          : isDark
+          ? "min-h-screen w-full bg-gray-900 text-gray-200"
+          : "min-h-screen w-full bg-linear-to-br from-blue-50 via-white to-blue-100 text-gray-800"
       }
       onClick={overlay ? onClose : undefined}
     >
       <div
-        className={`w-full ${overlay
-          ? "max-w-5xl mx-auto px-6 pt-16 pb-10"
-          : "max-w-6xl mx-auto px-4 md:px-8 py-10"
-          }`}
+        className={`w-full ${
+          overlay
+            ? "max-w-5xl mx-auto px-6 pt-16 pb-10"
+            : "max-w-6xl mx-auto px-4 md:px-8 py-10"
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         {overlay && (
           <button
             onClick={onClose}
-            className="fixed top-6 right-6 z-50 bg-white rounded-full p-2 shadow"
+            className="fixed top-6 right-6 z-50 bg-white dark:bg-gray-800 rounded-full p-2 shadow"
           >
             <X size={22} />
           </button>
@@ -209,13 +203,16 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
 
         <div className={`grid ${overlay ? "" : "md:grid-cols-2"} gap-10`}>
           {!overlay && (
-            <div className="bg-white rounded-xl shadow-sm p-8 flex flex-col justify-center space-y-6">
-              <h1 className="text-4xl font-bold text-blue-600 tracking-wide">
+            <div
+              className={`rounded-xl shadow-sm p-8 flex flex-col justify-center space-y-6 ${
+                isDark ? "bg-gray-800 text-gray-200" : "bg-white text-gray-800"
+              }`}
+            >
+              <h1 className="text-4xl font-bold text-blue-500 tracking-wide">
                 MANASPATH
               </h1>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                Begin your journey towards better mental health. Fill out the
-                form and our team will guide you through personalized support.
+              <p className="text-lg text-gray-400">
+                Begin your journey towards better mental health.
               </p>
               <img
                 src="src/assets/Homepage_Image.jpeg"
@@ -223,12 +220,16 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
                 className="w-full rounded-xl"
               />
               <p className="text-sm text-gray-500">
-                All information remains confidential and secure.
+                All information remains confidential.
               </p>
             </div>
           )}
 
-          <div className="bg-white rounded-xl shadow-sm p-8">
+          <div
+            className={`rounded-xl shadow-sm p-8 ${
+              isDark ? "bg-gray-800 text-gray-200" : "bg-white text-gray-800"
+            }`}
+          >
             <InnerForm
               formData={formData}
               handleChange={handleChange}
@@ -236,6 +237,7 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
               handleSubmit={handleSubmit}
               loading={loading}
               isEditing={isEditing}
+              dark={isDark}
             />
           </div>
         </div>
@@ -248,7 +250,7 @@ const Form = ({ overlay = false, onClose = () => { }, id }) => {
           buttonText="OK"
           onClose={() => {
             setSubmitted(false);
-            if (overlay) onClose();
+            overlay && onClose();
           }}
         />
       </div>
@@ -263,213 +265,214 @@ const InnerForm = ({
   handleSubmit,
   loading,
   isEditing,
+  dark,
 }) => (
   <form onSubmit={handleSubmit} className="space-y-5">
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {["first_name", "middle_name", "last_name"].map((field) => (
-        <div key={field}>
-          <label className="block mb-1 text-sm font-semibold text-gray-700 capitalize">
-            {field.replace("_", " ")} {field !== "middle_name" && "*"}
-          </label>
-          <InputField
-            name={field}
-            value={formData[field]}
-            onChange={handleChange}
-            className="w-full"
-          />
-          {fieldErrors[field] && (
-            <p className="text-red-500 text-xs mt-1">
-              {fieldErrors[field]}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label className="block mb-1 text-sm font-semibold text-gray-700">
-          Gender*
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    {["first_name", "middle_name", "last_name"].map((field) => (
+      <div key={field}>
+        <label className="block mb-1 text-sm font-semibold text-gray-700 capitalize">
+          {field.replace("_", " ")} {field !== "middle_name" && "*"}
         </label>
-        <select
-          name="gender"
-          value={formData.gender}
+        <InputField
+          name={field}
+          value={formData[field]}
           onChange={handleChange}
-          className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value="">Select gender</option>
-          <option value="MALE">Male</option>
-          <option value="FEMALE">Female</option>
-          <option value="OTHER">Other</option>
-          <option value="RATHER NOT SAY">Rather not say</option>
-        </select>
-        {fieldErrors.gender && (
+          className="w-full"
+        />
+        {fieldErrors[field] && (
           <p className="text-red-500 text-xs mt-1">
-            {fieldErrors.gender}
+            {fieldErrors[field]}
           </p>
         )}
       </div>
-      <div>
-        <label className="block mb-1 text-sm font-semibold text-gray-700">
-          Age*
-        </label>
-        <InputField
-          type="number"
-          name="age"
-          value={formData.age}
-          onChange={(e) =>
-            handleChange({
-              target: {
-                name: "age",
-                value:
-                  e.target.value === "" ? "" : Number(e.target.value),
-              },
-            })
-          }
-        />
-        {fieldErrors.age && (
-          <p className="text-red-500 text-xs mt-1">
-            Enter a valid age
-          </p>
-        )}
-      </div>
-    </div>
-    {isEditing && (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-1 text-sm font-semibold text-gray-700">
-            Status
-          </label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="">Select status</option>
-            <option value="ENROLLED">{STATUS_LABELS.ENROLLED}</option>
-            <option value="PENDING">{STATUS_LABELS.PENDING}</option>
-            <option value="REJECTED">{STATUS_LABELS.REJECTED}</option>
-          </select>
-        </div>
-        <div>
-          <label className="block mb-1 text-sm font-semibold text-gray-700">
-            Category
-          </label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="">Select Category</option>
-            <option value="CHAITANYA">{CATEGORY_LABELS.CHAITANYA}</option>
-            <option value="BRAIN GYM">{CATEGORY_LABELS["BRAIN GYM"]}</option>
-            <option value="BODH">{CATEGORY_LABELS.BODH}</option>
-          </select>
-        </div>
-      </div>
-    )}
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label className="block mb-1 text-sm font-semibold text-gray-700">
-          Email
-        </label>
-        <InputField
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label className="block mb-1 text-sm font-semibold text-gray-700">
-          Phone number* (Whatsapp)
-        </label>
-        <InputField
-          name="phone_number"
-          value={formData.phone_number}
-          onChange={handleChange}
-        />
-        {fieldErrors.phone_number && (
-          <p className="text-red-500 text-xs mt-1">
-            {fieldErrors.phone_number}
-          </p>
-        )}
-      </div>
-    </div>
+    ))}
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div>
       <label className="block mb-1 text-sm font-semibold text-gray-700">
-        Address*
+        Gender*
       </label>
-      <InputField
-        name="address"
-        value={formData.address}
+      <select
+        name="gender"
+        value={formData.gender}
         onChange={handleChange}
-      />
-      {fieldErrors.address && (
+        className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        <option value="">Select gender</option>
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+        <option value="OTHER">Other</option>
+        <option value="RATHER NOT SAY">Rather not say</option>
+      </select>
+      {fieldErrors.gender && (
         <p className="text-red-500 text-xs mt-1">
-          {fieldErrors.address}
+          {fieldErrors.gender}
         </p>
       )}
     </div>
     <div>
-      <label className="block mb-2 text-sm font-semibold text-gray-700">
-        Issues (optional)
+      <label className="block mb-1 text-sm font-semibold text-gray-700">
+        Age*
       </label>
-      {Object.entries(ISSUE_CATEGORIES).map(([category, issues]) => (
-        <div key={category} className="mt-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-blue-500 text-xl">•</span>
-            <span className="font-semibold text-gray-800">
-              {category}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {issues.map((issue) => (
-              <label
-                key={issue.id}
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  value={issue.id}
-                  checked={formData.issues.includes(issue.id)}
-                  onChange={(e) => {
-                    const id = Number(e.target.value);
-                    const updated = e.target.checked
-                      ? [...formData.issues, id]
-                      : formData.issues.filter((i) => i !== id);
-                    handleChange({
-                      target: { name: "issues", value: updated },
-                    });
-                  }}
-                  className="accent-blue-500"
-                />
-                {issue.name}
-              </label>
-            ))}
-          </div>
-        </div>
-      ))}
+      <InputField
+        type="number"
+        name="age"
+        value={formData.age}
+        onChange={(e) =>
+          handleChange({
+            target: {
+              name: "age",
+              value:
+                e.target.value === "" ? "" : Number(e.target.value),
+            },
+          })
+        }
+      />
+      {fieldErrors.age && (
+        <p className="text-red-500 text-xs mt-1">
+          Enter a valid age
+        </p>
+      )}
+    </div>
+  </div>
+  {isEditing && (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-1 text-sm font-semibold text-gray-700">
+          Status
+        </label>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Select status</option>
+          <option value="ENROLLED">{STATUS_LABELS.ENROLLED}</option>
+          <option value="PENDING">{STATUS_LABELS.PENDING}</option>
+          <option value="REJECTED">{STATUS_LABELS.REJECTED}</option>
+        </select>
+      </div>
+      <div>
+        <label className="block mb-1 text-sm font-semibold text-gray-700">
+          Category
+        </label>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Select Category</option>
+          <option value="CHAITANYA">{CATEGORY_LABELS.CHAITANYA}</option>
+          <option value="BRAIN GYM">{CATEGORY_LABELS["BRAIN GYM"]}</option>
+          <option value="BODH">{CATEGORY_LABELS.BODH}</option>
+        </select>
+      </div>
+    </div>
+  )}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label className="block mb-1 text-sm font-semibold text-gray-700">
+        Email
+      </label>
+      <InputField
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+      />
     </div>
     <div>
       <label className="block mb-1 text-sm font-semibold text-gray-700">
-        Problem description
+        Phone number* (Whatsapp)
       </label>
-      <textarea
-        name="problem_description"
-        value={formData.problem_description}
+      <InputField
+        name="phone_number"
+        value={formData.phone_number}
         onChange={handleChange}
-        className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none h-24"
       />
+      {fieldErrors.phone_number && (
+        <p className="text-red-500 text-xs mt-1">
+          {fieldErrors.phone_number}
+        </p>
+      )}
     </div>
-    <button
-      type="submit"
-      className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition text-white font-semibold"
-    >
-      {loading ? "Submitting..." : isEditing ? "Update" : "Submit"}
-    </button>
-  </form>
+  </div>
+  <div>
+    <label className="block mb-1 text-sm font-semibold text-gray-700">
+      Address*
+    </label>
+    <InputField
+      name="address"
+      value={formData.address}
+      onChange={handleChange}
+    />
+    {fieldErrors.address && (
+      <p className="text-red-500 text-xs mt-1">
+        {fieldErrors.address}
+      </p>
+    )}
+  </div>
+  <div>
+    <label className="block mb-2 text-sm font-semibold text-gray-700">
+      Issues (optional)
+    </label>
+    {Object.entries(ISSUE_CATEGORIES).map(([category, issues]) => (
+      <div key={category} className="mt-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-blue-500 text-xl">•</span>
+          <span className="font-semibold text-gray-800">
+            {category}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {issues.map((issue) => (
+            <label
+              key={issue.id}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                value={issue.id}
+                checked={formData.issues.includes(issue.id)}
+                onChange={(e) => {
+                  const id = Number(e.target.value);
+                  const updated = e.target.checked
+                    ? [...formData.issues, id]
+                    : formData.issues.filter((i) => i !== id);
+                  handleChange({
+                    target: { name: "issues", value: updated },
+                  });
+                }}
+                className="accent-blue-500"
+              />
+              {issue.name}
+            </label>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <div>
+    <label className="block mb-1 text-sm font-semibold text-gray-700">
+      Problem description
+    </label>
+    <textarea
+      name="problem_description"
+      value={formData.problem_description}
+      onChange={handleChange}
+      className="px-3 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400 resize-non h-24"
+    />
+  </div>
+  <button
+    type="submit"
+    className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition text-white font-semibold"
+  >
+    {loading ? "Submitting..." : isEditing ? "Update" : "Submit"}
+  </button>
+</form>
 );
 
 export default Form;

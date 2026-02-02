@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { CiEdit } from "react-icons/ci";
@@ -71,6 +71,8 @@ const SubmissionTable = () => {
   const [showFormDetailsOverlay, setShowFormDetailsOverlay] = useState(false);
   const [submissionDetailsId, setSubmissionDetailsId] = useState(null);
 
+  const isSuperAdmin = user?.role === "SUPERADMIN";
+
   const STATUS_OPTIONS = [
     { value: "", label: "All" },
     { value: "ENROLLED", label: STATUS_LABELS.ENROLLED },
@@ -86,9 +88,7 @@ const SubmissionTable = () => {
   ];
 
   useEffect(() => {
-    if (!accessToken) {
-      navigate("/operator-login");
-    }
+    if (!accessToken) navigate("/operator-login");
   }, [accessToken, navigate]);
 
   useEffect(() => {
@@ -130,53 +130,73 @@ const SubmissionTable = () => {
     );
   }, [paginationModel, search, status, category, sortType, sortDirection]);
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 80 },
-    { field: "first_name", headerName: "First Name", width: 130 },
-    { field: "last_name", headerName: "Last Name", width: 130 },
-    { field: "gender", headerName: "Gender", width: 90 },
-    { field: "age", headerName: "Age", width: 80 },
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { field: "id", headerName: "ID", width: 80 },
+      { field: "first_name", headerName: "First Name", width: 130 },
+      { field: "last_name", headerName: "Last Name", width: 130 },
+      { field: "gender", headerName: "Gender", width: 90 },
+      { field: "age", headerName: "Age", width: 80 },
 
-    {
-      field: "status",
-      headerName: "Status",
-      width: 140,
-      renderCell: ({ value }) => {
-        const statusValue = value || "NOT_SET";
-        const { bg, text } = STATUS_COLOR_MAP[statusValue];
+      {
+        field: "status",
+        headerName: "Status",
+        width: 140,
+        renderCell: ({ value }) => {
+          const statusValue = value || "NOT_SET";
+          const { bg, text } = STATUS_COLOR_MAP[statusValue];
 
-        return (
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}>
-            {statusValue === "NOT_SET"
-              ? "Not Set"
-              : STATUS_LABELS[statusValue] || statusValue}
-          </span>
-        );
+          return (
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}>
+              {STATUS_LABELS[statusValue] || "Not Set"}
+            </span>
+          );
+        },
       },
-    },
 
-    {
-      field: "category",
-      headerName: "Category",
-      width: 170,
-      renderCell: ({ value }) => (
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            value ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-600"
-          }`}
-        >
-          {value ? CATEGORY_LABELS[value] || value : "Not Assigned"}
-        </span>
-      ),
-    },
+      {
+        field: "category",
+        headerName: "Category",
+        width: 170,
+        renderCell: ({ value }) => (
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${value ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-600"}`}>
+            {value ? CATEGORY_LABELS[value] || value : "Not Assigned"}
+          </span>
+        ),
+      },
 
-    { field: "email", headerName: "Email", width: 220 },
-    { field: "phone_number", headerName: "Phone", width: 150 },
-    { field: "address", headerName: "Address", width: 220 },
-    { field: "problem_description", headerName: "Description", width: 260 },
-    { field: "created_at", headerName: "Created At", width: 150 },
+      { field: "email", headerName: "Email", width: 220 },
+      { field: "phone_number", headerName: "Phone", width: 150 },
+      { field: "address", headerName: "Address", width: 220 },
+      { field: "problem_description", headerName: "Description", width: 260 },
+      { field: "created_at", headerName: "Created At", width: 150 },
+    ];
 
-    {
+    if (isSuperAdmin) {
+      baseColumns.push(
+        {
+          field: "payment_method",
+          headerName: "Payment",
+          width: 130,
+          renderCell: ({ value }) => value || "—",
+        },
+        {
+          field: "accepted_by",
+          headerName: "Accepted By",
+          width: 160,
+          renderCell: ({ value }) => value?.username || "—",
+        },
+        {
+          field: "accepted_at",
+          headerName: "Accepted At",
+          width: 160,
+          renderCell: ({ value }) =>
+            value ? new Date(value).toLocaleString() : "—",
+        }
+      );
+    }
+
+    baseColumns.push({
       field: "action",
       headerName: "Action",
       width: 80,
@@ -193,8 +213,10 @@ const SubmissionTable = () => {
           <CiEdit size={22} className="text-blue-600" />
         </button>
       ),
-    },
-  ];
+    });
+
+    return baseColumns;
+  }, [isSuperAdmin]);
 
   const handleRowClick = (params) => {
     setSubmissionDetailsId(params.id);
@@ -251,11 +273,7 @@ const SubmissionTable = () => {
       </div>
 
       {showForm && (
-        <Form
-          overlay
-          id={editingSubmission}
-          onClose={() => setShowForm(false)}
-        />
+        <Form overlay id={editingSubmission} onClose={() => setShowForm(false)} />
       )}
 
       {showFormDetailsOverlay && (

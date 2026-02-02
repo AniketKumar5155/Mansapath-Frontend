@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaInstagram } from "react-icons/fa";
@@ -180,7 +181,7 @@ const HomePage = () => {
                                 <Mail size={18} /> support@manaspath.com
                             </li>
                             <li className="flex items-center gap-3">
-                                <MapPin size={18} /> Motihari, Bihar, India
+                                <MapPin Pin size={18} /> Motihari, Bihar, India
                             </li>
                         </ul>
                         <div className=" flex flex-col py-2 text-[40px] space-y-2 mt-4 text-gray-700">
@@ -219,12 +220,8 @@ const HomePage = () => {
 
                         </div>
                     </div>
-
-                    <div
-                        className={`h-64 border-2 border-dashed rounded-2xl flex items-center justify-center ${dark ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"
-                            }`}
-                    >
-                        Map
+                    <div className="h-64 rounded-2xl overflow-hidden shadow-lg">
+                        //.....
                     </div>
                 </div>
             </section>

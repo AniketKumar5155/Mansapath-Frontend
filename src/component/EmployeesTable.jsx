@@ -61,7 +61,8 @@ const EmployeesTable = () => {
       sortable: false,
       renderCell: (params) => (
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation(); 
             setEditingSubmission(params.row.id);
             setShowForm(true);
           }}
@@ -72,8 +73,6 @@ const EmployeesTable = () => {
       ),
     },
   ];
-
-  console.log("showEmployeeInfo",showEmployeeInfo);
 
   return (
     <>

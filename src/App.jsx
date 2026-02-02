@@ -17,6 +17,8 @@ import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
 import ServicePage from "./page/ServicePage";
 import AboutPage from "./page/AboutPage";
 import ContactPage from "./page/ContactPage";
+import AuthGate from "./component/AuthGate";
+
 
 const App = () => {
   const { accessToken, user, getProfile } = useAuthStore();
@@ -31,20 +33,14 @@ const App = () => {
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/services" element={<ServicePage />} />
-                  <Route path="/about-us" element={<AboutPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/operator-login" element={<OperatorLogin />} />
-                  <Route path="/book-session" element={<FormPage />} />
-      </Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/services" element={<ServicePage />} />
+        <Route path="/about-us" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/operator-login" element={<OperatorLogin />} />
+        <Route path="/book-session" element={<FormPage />} />
 
-      {accessToken && !user ? (
-        <div className="h-screen flex items-center justify-center">
-          Loading...
-        </div>
-      ) : (
-        <Routes>          
+        <Route element={<AuthGate/>} >
           <Route path="/admin/submissions" element={<SubmissionsPage />} />
           <Route path="/profile/me" element={<ProfilePage />} />
 
@@ -83,8 +79,9 @@ const App = () => {
               </AdminRoute>
             }
           />
-        </Routes>
-      )}
+        </Route>
+      </Routes>
+
     </BrowserRouter>
   );
 };

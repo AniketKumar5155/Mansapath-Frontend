@@ -16,7 +16,7 @@ const SubmissionsPage = () => {
       <div className="flex flex-col w-full min-w-0 max-h-screen">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="FORM SUBMISSIONS"
+          message="|FORM SUBMISSIONS|"
         />
 
         <div className="flex-1 overflow-y-auto p-3 sm:p-4">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../component/NavBar";
+import SuccessModal from "../component/SuccessModal";
 import {
   Phone,
   Mail,
@@ -8,6 +9,7 @@ import {
   Send,
   MessageCircle,
 } from "lucide-react";
+import useUserQueryStore from "../store/useUserQueryStore";
 
 const ContactPage = () => {
   const [dark, setDark] = useState(() => {
@@ -28,11 +30,42 @@ const ContactPage = () => {
     });
   };
 
+  const { createUserQuery, loading, error } = useUserQueryStore();
+
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone_number: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const success = await createUserQuery(formData);
+
+    if (success) {
+      setShowSuccess(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+      });
+    }
+  };
+
   return (
     <div
-      className={`min-h-screen transition-colors duration-500 ${
-        dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
-      }`}
+      className={`min-h-screen transition-colors duration-500 ${dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
+        }`}
     >
       <Navbar dark={dark} toggleDark={toggleDark} />
 
@@ -66,37 +99,18 @@ const ContactPage = () => {
               Let’s Start a Conversation
             </h2>
             <p className="text-gray-500 text-lg">
-              Whether you’re seeking guidance, have a question, or simply want
-              to understand our programs better — we’re just a message away.
+              Whether you’re seeking guidance or have a question — we’re just a
+              message away.
             </p>
           </div>
 
           <div className="space-y-6">
-            <InfoItem
-              dark={dark}
-              icon={Phone}
-              title="Phone"
-              value="+91 00000 00000"
-            />
-            <InfoItem
-              dark={dark}
-              icon={Mail}
-              title="Email"
-              value="support@manaspath.com"
-            />
-            <InfoItem
-              dark={dark}
-              icon={MapPin}
-              title="Location"
-              value="Motihari, Bihar, India"
-            />
+            <InfoItem dark={dark} icon={Phone} title="Phone" value="+91 00000 00000" />
+            <InfoItem dark={dark} icon={Mail} title="Email" value="support@manaspath.com" />
+            <InfoItem dark={dark} icon={MapPin} title="Location" value="Motihari, Bihar, India" />
           </div>
 
-          <div
-            className={`rounded-3xl p-8 ${
-              dark ? "bg-gray-800" : "bg-white"
-            } shadow-lg`}
-          >
+          <div className={`rounded-3xl p-8 ${dark ? "bg-gray-800" : "bg-white"} shadow-lg`}>
             <MessageCircle className="text-blue-600 mb-4" size={28} />
             <p className="text-lg italic text-gray-500">
               “Sometimes, reaching out is the bravest step towards healing.”
@@ -109,51 +123,48 @@ const ContactPage = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className={`rounded-3xl p-10 shadow-xl ${
-            dark ? "bg-gray-800" : "bg-white"
-          }`}
+          className={`rounded-3xl p-10 shadow-xl ${dark ? "bg-gray-800" : "bg-white"}`}
         >
           <h3 className="text-2xl font-semibold mb-8">Send Us a Message</h3>
 
-          <form className="space-y-6">
-            <Input dark={dark} placeholder="Your Name" />
-            <Input dark={dark} placeholder="Email Address" type="email" />
-            <Input dark={dark} placeholder="Phone Number" />
-            <Textarea dark={dark} placeholder="Your Message" />
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <Input dark={dark} name="name" value={formData.name} onChange={handleChange} placeholder="Your Name" />
+            <Input dark={dark} type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email Address" />
+            <Input dark={dark} name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number" />
+            <Textarea dark={dark} name="message" value={formData.message} onChange={handleChange} placeholder="Your Message" />
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-4 rounded-2xl font-medium hover:bg-blue-700 transition"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-4 rounded-2xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
               <Send size={18} />
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
+
+            {error && (
+              <p className="text-red-500 text-sm">
+                {error.message}
+              </p>
+            )}
           </form>
         </motion.div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 pb-24">
-        <div
-          className={`h-72 rounded-3xl flex items-center justify-center border-2 border-dashed ${
-            dark
-              ? "border-gray-700 bg-gray-800"
-              : "border-gray-300 bg-white"
-          }`}
-        >
-          <p className="text-gray-500">Map Integration Here</p>
-        </div>
-      </section>
+      <SuccessModal
+        isOpen={showSuccess}
+        title="Message Sent Successfully!"
+        message1="Thank you for reaching out to us."
+        message2="Our team will get back to you shortly."
+        onClose={() => setShowSuccess(false)}
+      />
     </div>
   );
 };
 
 const InfoItem = ({ icon: Icon, title, value, dark }) => (
   <div className="flex items-start gap-4">
-    <div
-      className={`p-4 rounded-2xl ${
-        dark ? "bg-blue-600/20" : "bg-blue-100"
-      } text-blue-600`}
-    >
+    <div className={`p-4 rounded-2xl ${dark ? "bg-blue-600/20" : "bg-blue-100"} text-blue-600`}>
       <Icon size={22} />
     </div>
     <div>
@@ -163,27 +174,31 @@ const InfoItem = ({ icon: Icon, title, value, dark }) => (
   </div>
 );
 
-const Input = ({ placeholder, type = "text", dark }) => (
+const Input = ({ placeholder, type = "text", dark, name, value, onChange }) => (
   <input
     type={type}
+    name={name}
+    value={value}
+    onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-5 py-4 rounded-2xl border outline-none transition ${
-      dark
+    className={`w-full px-5 py-4 rounded-2xl border outline-none transition ${dark
         ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-blue-600"
         : "bg-gray-50 border-gray-300 focus:border-blue-600"
-    }`}
+      }`}
   />
 );
 
-const Textarea = ({ placeholder, dark }) => (
+const Textarea = ({ placeholder, dark, name, value, onChange }) => (
   <textarea
     rows="5"
+    name={name}
+    value={value}
+    onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-5 py-4 rounded-2xl border outline-none transition resize-none ${
-      dark
+    className={`w-full px-5 py-4 rounded-2xl border outline-none transition resize-none ${dark
         ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-blue-600"
         : "bg-gray-50 border-gray-300 focus:border-blue-600"
-    }`}
+      }`}
   />
 );
 
