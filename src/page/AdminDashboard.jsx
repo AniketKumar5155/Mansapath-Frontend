@@ -7,7 +7,7 @@ const AdminDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+        <div className="flex h-screen w-full overflow-hidden bg-slate-100">
             <AdminSidebar
                 open={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
@@ -17,10 +17,10 @@ const AdminDashboard = () => {
 
                 <AdminHeader
                     onToggleSidebar={() => setSidebarOpen(true)}
-                    message="|MANASPATH DASHBOARD|"
+                    message="Manaspath Admin"
                 />
 
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                <div className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6">
                     <AdminDashboardInfoSection />
                 </div>
             </main>

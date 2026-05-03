@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import InputField from "./Input";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import useFormStore from "../store/formStore";
 import SuccessModal from "./SuccessModal";
 import { X } from "lucide-react";
@@ -9,22 +9,26 @@ import {
   formUpdateSchema,
 } from "../validator/formSchema";
 
-/* ---------- utils ---------- */
+function mapZodIssuesToFieldErrors(zodError) {
+  const fieldErrors = {};
+  if (zodError && Array.isArray(zodError.issues)) {
+    zodError.issues.forEach((issue) => {
+      const field = issue.path[0];
+      if (field && !fieldErrors[field]) {
+        fieldErrors[field] = issue.message;
+      }
+    });
+  }
+  return fieldErrors;
+}
+
 const removeEmpty = (obj) =>
   Object.fromEntries(
     Object.entries(obj).filter(([_, v]) => v !== undefined && v !== null)
   );
 
-const mapZodErrors = (zodError) => {
-  const errors = {};
-  zodError.issues.forEach((issue) => {
-    const field = issue.path[0];
-    if (!errors[field]) errors[field] = issue.message;
-  });
-  return errors;
-};
 
-/* ---------- constants ---------- */
+
 const ISSUE_CATEGORIES = {
   Addictions: [
     { id: 1, name: "Alcohol Addiction" },
@@ -159,8 +163,9 @@ const Form = ({
       ? formUpdateSchema.safeParse(cleanedData)
       : formSubmissionSchema.safeParse(cleanedData);
 
+
     if (!parsed.success) {
-      setFieldErrors(mapZodErrors(parsed.error));
+      setFieldErrors(mapZodIssuesToFieldErrors(parsed.error));
       toast.error("Please fix the highlighted errors");
       return;
     }
@@ -454,6 +459,9 @@ const InnerForm = ({
         </div>
       </div>
     ))}
+    {fieldErrors.issues && (
+      <p className="text-red-500 text-xs mt-1">{fieldErrors.issues}</p>
+    )}
   </div>
   <div>
     <label className="block mb-1 text-sm font-semibold text-gray-700">

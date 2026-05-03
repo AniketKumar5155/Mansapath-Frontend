@@ -62,4 +62,17 @@ export const employeeSchema = z.object({
         })
         .optional()
         .default("EMPLOYEE"),
-});``
+});
+
+export function mapZodIssuesToFieldErrors(zodError) {
+    const fieldErrors = {};
+    if (zodError && Array.isArray(zodError.issues)) {
+        zodError.issues.forEach((issue) => {
+            const field = issue.path[0];
+            if (field && !fieldErrors[field]) {
+                fieldErrors[field] = issue.message;
+            }
+        });
+    }
+    return fieldErrors;
+}

@@ -50,8 +50,12 @@ const Section = ({ icon: Icon, title, subtitle, children, reverse, dark }) => (
             : "bg-white/70 border-gray-200 text-gray-600"
         }`}
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        <p className="text-lg leading-relaxed">
+          Our programs are thoughtfully designed to combine practical tools,
+          reflective exercises, and guided sessions that support emotional
+          well-being. Each experience is structured to be simple, accessible,
+          and meaningful — helping individuals grow with clarity and confidence.
+        </p>
       </div>
     </div>
   </motion.section>
@@ -86,6 +90,7 @@ const ServicePage = () => {
     >
       <Navbar dark={dark} toggleDark={toggleDark} />
 
+      {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-blue-500/20 via-transparent to-blue-500/30" />
         <div className="relative max-w-7xl mx-auto px-6 py-32 text-center">
@@ -95,7 +100,7 @@ const ServicePage = () => {
             transition={{ duration: 0.7 }}
             className="text-5xl md:text-6xl font-bold"
           >
-            About <span className="text-blue-600">Us</span>
+            Our <span className="text-blue-600">Services</span>
           </motion.h1>
 
           <motion.p
@@ -106,23 +111,31 @@ const ServicePage = () => {
               dark ? "text-gray-400" : "text-gray-600"
             }`}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            We are dedicated to nurturing mental wellness across every stage of life.
+            Our programs are built on empathy, science-backed practices, and
+            practical techniques that help individuals develop clarity,
+            confidence, and emotional strength.
           </motion.p>
         </div>
       </section>
 
       <main className="max-w-7xl mx-auto px-6">
+        {/* Brain Gym */}
         <Section
           icon={Brain}
           title="Brain Gym"
           subtitle="Strengthening the mind"
           dark={dark}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-          lacinia odio vitae vestibulum vestibulum.
+          Brain Gym 360 supports teenagers in managing academic pressure,
+          improving focus, and understanding their emotions better.
+          Through structured activities and interactive sessions, students
+          learn how to regulate stress, build self-confidence, and develop
+          resilience. The program equips them with lifelong mental skills
+          to navigate exams, relationships, and future ambitions calmly and confidently.
         </Section>
 
+        {/* Bodh */}
         <Section
           icon={Eye}
           title="Bodh"
@@ -130,20 +143,31 @@ const ServicePage = () => {
           reverse
           dark={dark}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi.
-          Nulla quis sem at nibh elementum imperdiet.
+          Bodh focuses on cultivating awareness — of thoughts, emotions,
+          and behavioral patterns. It encourages individuals to pause,
+          reflect, and respond mindfully rather than react impulsively.
+          By strengthening emotional intelligence and self-understanding,
+          Bodh empowers participants to build healthier relationships
+          and make balanced, thoughtful decisions in everyday life.
         </Section>
 
+        {/* Chaitanya */}
         <Section
           icon={Sparkles}
           title="Chaitanya"
           subtitle="Awakening inner potential"
           dark={dark}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ipsum.
+          Chaitanya is a gentle and supportive mental wellness course
+          designed especially for older adults. It promotes mental clarity,
+          emotional balance, and inner calm through simple daily practices.
+          Participants experience improved confidence, reduced anxiety,
+          and a renewed sense of purpose — encouraging peaceful,
+          active, and fulfilling ageing.
         </Section>
       </main>
 
+      {/* CTA Section */}
       <section className="relative mt-32">
         <div className="absolute inset-0 bg-linear-to-r from-blue-500/30 via-blue-500/10 to-blue-500/30" />
         <div className="relative max-w-5xl mx-auto px-6 py-24 text-center">
@@ -152,12 +176,14 @@ const ServicePage = () => {
           </h3>
 
           <p className={`mt-4 text-lg ${dark ? "text-gray-400" : "text-gray-600"}`}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Begin your journey toward mental clarity, emotional balance,
+            and personal growth. Small daily practices can create
+            meaningful lifelong change.
           </p>
 
-          <button 
-          className="mt-10 px-10 py-4 rounded-2xl bg-blue-600 text-white font-medium shadow-lg hover:scale-[1.03] transition cursor-pointer"
-          onClick={() => navigate("/")}
+          <button
+            className="mt-10 px-10 py-4 rounded-2xl bg-blue-600 text-white font-medium shadow-lg hover:scale-[1.03] transition cursor-pointer"
+            onClick={() => navigate("/")}
           >
             Get Started
           </button>

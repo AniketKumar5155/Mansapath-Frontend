@@ -133,9 +133,15 @@ const SubmissionTable = () => {
   const columns = useMemo(() => {
     const baseColumns = [
       { field: "id", headerName: "ID", width: 80 },
-      { field: "first_name", headerName: "First Name", width: 130 },
-      { field: "last_name", headerName: "Last Name", width: 130 },
-      { field: "gender", headerName: "Gender", width: 90 },
+      {
+        field: "full_name",
+        headerName: "Name",
+        width: 200,
+        valueGetter: (_, row) => {
+          const { first_name, middle_name, last_name } = row || {};
+          return [first_name, middle_name, last_name].filter(Boolean).join(" ");
+        },
+      },
       { field: "age", headerName: "Age", width: 80 },
 
       {
@@ -167,8 +173,6 @@ const SubmissionTable = () => {
 
       { field: "email", headerName: "Email", width: 220 },
       { field: "phone_number", headerName: "Phone", width: 150 },
-      { field: "address", headerName: "Address", width: 220 },
-      { field: "problem_description", headerName: "Description", width: 260 },
       { field: "created_at", headerName: "Created At", width: 150 },
     ];
 
@@ -224,7 +228,7 @@ const SubmissionTable = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-full min-h-0">
       <ToolBar
         searchValue={search}
         onSearchChange={setSearch}
@@ -252,24 +256,28 @@ const SubmissionTable = () => {
         }
       />
 
-      <div className="border border-gray-300 rounded-lg w-full">
-        <DataGrid
-          rows={submissions}
-          columns={columns}
-          onRowClick={handleRowClick}
-          rowCount={total}
-          loading={loading}
-          paginationMode="server"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 20, 50]}
-          rowHeight={isMobile ? 50 : 43}
-          sx={{
-            height: isMobile ? "63vh" : "78.8vh",
-            width: "100%",
-            fontWeight: "bold",
-          }}
-        />
+      <div className="flex-1 min-h-0 border border-gray-300 rounded-lg w-full overflow-x-auto">
+        <div className="h-full w-full min-w-0 sm:min-w-[700px]">
+          <DataGrid
+            rows={submissions}
+            columns={columns}
+            onRowClick={handleRowClick}
+            rowCount={total}
+            loading={loading}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[5, 10, 20, 50]}
+            rowHeight={isMobile ? 38 : 37.9}
+            sx={{
+              height: '100%',
+              width: '100%',
+              maxWidth: '100vw',
+              fontWeight: 'bold',
+              overflowX: 'auto',
+            }}
+          />
+        </div>
       </div>
 
       {showForm && (
@@ -283,7 +291,7 @@ const SubmissionTable = () => {
           onClose={() => setShowFormDetailsOverlay(false)}
         />
       )}
-    </>
+    </div>
   );
 };
 

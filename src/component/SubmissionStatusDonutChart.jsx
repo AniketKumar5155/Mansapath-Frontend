@@ -1,8 +1,8 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import useFormStore from "../store/formStore";
 
-const COLORS = ["#3B82F6", "#FACC15", "#22C55E"];
+const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
 
 const STATUS_LABELS = {
   ENROLLED: "Enrolled",
@@ -11,11 +11,7 @@ const STATUS_LABELS = {
 };
 
 const SubmissionStatusDonutChart = () => {
-  const { allSubmissions, getAllSubmissions } = useFormStore();
-
-  useEffect(() => {
-    getAllSubmissions();
-  }, []);
+  const { allSubmissions } = useFormStore();
 
   const chartData = useMemo(() => {
     const statusCounts = { ENROLLED: 0, PENDING: 0, REJECTED: 0 };
@@ -33,15 +29,15 @@ const SubmissionStatusDonutChart = () => {
   }, [allSubmissions]);
 
   return (
-    <div className="w-full h-70 flex justify-center items-center p-4">
+    <div className="h-[260px] w-full sm:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             // labelLine={{ strokeDasharray: "0" }}
             // label={({ name, value }) => `${name}: ${value}`}
             data={chartData}
-            innerRadius="55%"
-            outerRadius="80%"
+            innerRadius="58%"
+            outerRadius="78%"
             paddingAngle={3}
             dataKey="value"
             nameKey="name"
@@ -77,9 +73,9 @@ const SubmissionStatusDonutChart = () => {
 
           <Legend
             verticalAlign="bottom"
-            iconType="circale"
+            iconType="circle"
             iconSize={12}
-            wrapperStyle={{ paddingTop: "15px" }}
+            wrapperStyle={{ paddingTop: "12px", fontSize: "12px" }}
           />
         </PieChart>
       </ResponsiveContainer>

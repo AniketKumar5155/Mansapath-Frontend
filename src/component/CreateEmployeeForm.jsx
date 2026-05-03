@@ -6,8 +6,7 @@ import SuccessModal from "./SuccessModal";
 import { employeeSchema } from "../validator/employeeSchema";
 
 const CreateEmployeeForm = ({ overlay = false, onClose = () => {}, id }) => {
-  const { createEmployee, updateEmployee, employees, loading } =
-    useEmployeeStore();
+  const { createEmployee, updateEmployee, employees, loading } = useEmployeeStore();
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -235,6 +234,9 @@ const EmployeeInnerForm = ({
             value={formData.username}
             onChange={handleChange}
           />
+          {fielderrors.username && (
+            <p className="text-red-500 text-xs mt-1">{fielderrors.username}</p>
+          )}
         </div>
 
         <div>
@@ -247,6 +249,9 @@ const EmployeeInnerForm = ({
             value={formData.email}
             onChange={handleChange}
           />
+          {fielderrors.email && (
+            <p className="text-red-500 text-xs mt-1">{fielderrors.email}</p>
+          )}
         </div>
       </div>
 
@@ -260,6 +265,9 @@ const EmployeeInnerForm = ({
             value={formData.phone_number}
             onChange={handleChange}
           />
+          {fielderrors.phone_number && (
+            <p className="text-red-500 text-xs mt-1">{fielderrors.phone_number}</p>
+          )}
         </div>
 
         {!isEditing && (
@@ -273,6 +281,9 @@ const EmployeeInnerForm = ({
               value={formData.password}
               onChange={handleChange}
             />
+            {fielderrors.password && (
+              <p className="text-red-500 text-xs mt-1">{fielderrors.password}</p>
+            )}
           </div>
         )}
       </div>
@@ -304,6 +315,9 @@ const EmployeeInnerForm = ({
               )
             )}
           </select>
+          {fielderrors.blood_group && (
+            <p className="text-red-500 text-xs mt-1">{fielderrors.blood_group}</p>
+          )}
         </div>
 
         <div>
@@ -316,6 +330,9 @@ const EmployeeInnerForm = ({
             value={formData.age}
             onChange={handleChange}
           />
+          {fielderrors.age && (
+            <p className="text-red-500 text-xs mt-1">{fielderrors.age}</p>
+          )}
         </div>
       </div>
 
@@ -328,6 +345,9 @@ const EmployeeInnerForm = ({
           value={formData.address}
           onChange={handleChange}
         />
+        {fielderrors.address && (
+          <p className="text-red-500 text-xs mt-1">{fielderrors.address}</p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -339,32 +359,16 @@ const EmployeeInnerForm = ({
           value={formData.aadhar_number}
           onChange={handleChange}
         />
+        {fielderrors.aadhar_number && (
+          <p className="text-red-500 text-xs mt-1">{fielderrors.aadhar_number}</p>
+        )}
       </div>
     </div>
 
 
-    <button
-      type="submit"
-      className="
-        mt-8 
-        w-full 
-        bg-linear-to-r from-amber-400 to-amber-600 
-        hover:from-amber-500 hover:to-amber-700
-        text-white 
-        py-3 
-        rounded-xl 
-        font-semibold
-        tracking-wide
-        transition
-        disabled:opacity-60
-      "
-      disabled={loading}
+    <button type="submit" className="mt-8 w-full bg-linear-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white py-3 rounded-xl font-semibold tracking-wide transition disabled:opacity-60 " disabled={loading}
     >
-      {loading
-        ? "Please wait..."
-        : isEditing
-        ? "Update Employee"
-        : "Create Employee"}
+      {loading ? "Please wait..." : isEditing ? "Update Employee" : "Create Employee"}
     </button>
   </form>
 );

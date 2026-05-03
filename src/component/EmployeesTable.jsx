@@ -28,8 +28,6 @@ const EmployeesTable = () => {
 
   const handleRowClick = (params) => {
     setShowEmployeeInfo(params.id);
-    console.log("params", params)
-    console.log("params.id", params.id)
     setShowFormDetailsOverlay(true);
   }
 

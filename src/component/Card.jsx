@@ -1,26 +1,55 @@
 import React from "react";
 
-const Card = ({ label, value, icon }) => {
-  return (
-    <div className="
-      bg-white shadow-md rounded-lg 
-      p-4 sm:p-5 
-      w-full 
-      flex items-center gap-4 
-      hover:shadow-xl transition-shadow
-      min-h-[90px] sm:min-h-[110px]
-    ">
-      {icon && (
-        <div className="text-[#3B98C4] text-3xl sm:text-4xl lg:text-5xl">
-          {icon}
-        </div>
-      )}
+const Card = ({
+  label,
+  value,
+  icon,
+  onClick,
+  className,
+  subtitle,
+  accent = "blue",
+}) => {
+  const accents = {
+    blue: "bg-blue-50 text-blue-700 ring-blue-100",
+    green: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+    amber: "bg-amber-50 text-amber-700 ring-amber-100",
+    red: "bg-rose-50 text-rose-700 ring-rose-100",
+    indigo: "bg-indigo-50 text-indigo-700 ring-indigo-100",
+    slate: "bg-slate-50 text-slate-700 ring-slate-100",
+  };
 
-      <div>
-        <p className="text-gray-500 text-xs sm:text-sm">{label}</p>
-        <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
-          {value}
-        </p>
+  return (
+    <div
+      className={`
+        group w-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm
+        transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md
+        ${onClick ? "cursor-pointer" : ""}
+        ${className || ""}
+      `}
+      onClick={onClick}
+    >
+      <div className="flex min-h-[92px] items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            {label}
+          </p>
+          <div className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            {value}
+          </div>
+          {subtitle && (
+            <p className="mt-2 text-sm leading-5 text-slate-500">{subtitle}</p>
+          )}
+        </div>
+
+        {icon && (
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ring-1 ${
+              accents[accent] || accents.blue
+            }`}
+          >
+            <span className="text-2xl">{icon}</span>
+          </div>
+        )}
       </div>
     </div>
   );

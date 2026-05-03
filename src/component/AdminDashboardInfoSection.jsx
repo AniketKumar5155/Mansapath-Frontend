@@ -1,218 +1,313 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "../component/Card";
 import {
-    LuClipboardList,
-    LuFolder,
-    LuClock,
-    LuUsersRound,
+  LuChartPie,
+  LuClipboardList,
+  LuClock,
+  LuFolder,
+  LuShieldCheck,
+  LuTrendingUp,
 } from "react-icons/lu";
 import useFormStore from "../store/formStore";
 import useEmployeeStore from "../store/useEmployeeStore";
 import SubmissionStatusDonutChart from "../component/SubmissionStatusDonutChart";
 import SubmissionCategoryDonutChart from "../component/SubmissionCategoryDonutChart";
 
+const percent = (part, total) => {
+  if (!total) return 0;
+  return Math.round((part / total) * 100);
+};
+
+const normalize = (value) => value?.trim().toUpperCase();
+
 const AdminDashboardInfoSection = () => {
-    const { allSubmissions, getSubmissions } = useFormStore();
-    const { employees } = useEmployeeStore();
+  const { allSubmissions, getAllSubmissions } = useFormStore();
+  const { employees, getAllEmployees } = useEmployeeStore();
+  const navigate = useNavigate();
 
-    const [totalSubmissions, setTotalSubmissions] = useState(0);
-    const [enrolledCount, setEnrolledCount] = useState(0);
-    const [pendingCount, setPendingCount] = useState(0);
-    const [rejectedCount, setRejectedCount] = useState(0);
-    const [notEntertainedCount, setNotEntertainedCount] = useState(0);
-    const [totalEmployeesCount, setTotalEmployeesCount] = useState(0);
+  useEffect(() => {
+    getAllSubmissions();
+    getAllEmployees();
+  }, [getAllSubmissions, getAllEmployees]);
 
-    const [enrolledBrainGymCount, setEnrolledBrainGymCount] = useState(0);
-    const [enrolledChaitanyaCount, setEnrolledChaitanyaCount] = useState(0);
-    const [enrolledBodhCount, setEnrolledBodhCount] = useState(0);
-
-    useEffect(() => {
-        getSubmissions();
-    }, [getSubmissions]);
-
-    useEffect(() => {
-        const enrolled = allSubmissions.filter(
-            (s) => s.status?.trim().toUpperCase() === "ENROLLED"
-        );
-        const pending = allSubmissions.filter(
-            (s) => s.status?.trim().toUpperCase() === "PENDING"
-        );
-        const rejected = allSubmissions.filter(
-            (s) => s.status?.trim().toUpperCase() === "REJECTED"
-        );
-
-        const total = allSubmissions.length;
-        setTotalSubmissions(total);
-        setEnrolledCount(enrolled.length);
-        setPendingCount(pending.length);
-        setRejectedCount(rejected.length);
-
-        const entertainedCount = enrolled.length + pending.length + rejected.length;
-        setNotEntertainedCount(total - entertainedCount);
-
-        const categoryCounts = enrolled.reduce((acc, curr) => {
-            const category = curr.category?.trim().toUpperCase();
-            if (!category) return acc;
-            acc[category] = (acc[category] || 0) + 1;
-            return acc;
-        }, {});
-
-        setEnrolledBrainGymCount(categoryCounts["BRAIN GYM"] || 0);
-        setEnrolledChaitanyaCount(categoryCounts["CHAITANYA"] || 0);
-        setEnrolledBodhCount(categoryCounts["BODH"] || 0);
-    }, [allSubmissions]);
-
-    useEffect(() => {
-        setTotalEmployeesCount(employees.length);
-    }, [employees]);
-
-    return (
-        <>
-            <div className="flex flex-col lg:flex-row gap-8 w-full">
-                <div className="flex flex-col gap-6 w-full lg:w-[60%]">
-                    <Card label="Total Submissions" value={totalSubmissions} icon={<LuClipboardList />} />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                        <Card label="Not Entertained" value={notEntertainedCount} icon={<LuClipboardList />} />
-                        <Card label="Enrolled" value={enrolledCount} icon={<LuFolder />} />
-                        <Card label="Pending" value={pendingCount} icon={<LuClock />} />
-                        <Card label="Rejected" value={rejectedCount} icon={<LuClipboardList />} />
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow p-6 w-full mt-4">
-                        <h2 className="text-lg font-semibold mb-4">Enrolled Requests by Category</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <Card label="Brain Gym" value={enrolledBrainGymCount} icon={<LuClipboardList />} />
-                            <Card label="Chaitanya" value={enrolledChaitanyaCount} icon={<LuClipboardList />} />
-                            <Card label="Bodh" value={enrolledBodhCount} icon={<LuClipboardList />} />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-6 w-full lg:w-[40%]">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Card label="Total Employees" value={totalEmployeesCount} icon={<LuUsersRound />} />
-                        <Card label="Total Managers" value={1} icon={<LuClipboardList />} />
-                    </div>
-                    <Card
-                        label="Quick Insights"
-                        icon={<LuClipboardList />}
-                        value={
-                            <div className="flex flex-col justify-between h-[164px] mt-3">
-                                <div className="flex flex-col gap-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Not Entertained</span>
-                                        <span className="font-semibold text-gray-700">
-                                            {totalSubmissions
-                                                ? `${Math.round((notEntertainedCount / totalSubmissions) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100" />
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Enrollment Rate</span>
-                                        <span className="font-semibold text-green-600">
-                                            {totalSubmissions
-                                                ? `${Math.round((enrolledCount / totalSubmissions) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100" />
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Pending Rate</span>
-                                        <span className="font-semibold text-yellow-600">
-                                            {totalSubmissions
-                                                ? `${Math.round((pendingCount / totalSubmissions) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100" />
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Rejected Rate</span>
-                                        <span className="font-semibold text-red-600">
-                                            {totalSubmissions
-                                                ? `${Math.round((rejectedCount / totalSubmissions) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="border-t pt-2 text-xs text-gray-400 text-center">
-                                    Based on total submissions
-                                </div>
-                            </div>
-                        }
-                    />
-                    <Card
-                        label="Category Insights"
-                        icon={<LuFolder />}
-                        value={
-                            <div className="flex flex-col justify-between h-[140px] mt-3">
-                                <div className="flex flex-col gap-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Brain Gym</span>
-                                        <span className="font-semibold text-indigo-600">
-                                            {enrolledCount
-                                                ? `${Math.round((enrolledBrainGymCount / enrolledCount) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100" />
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Chaitanya</span>
-                                        <span className="font-semibold text-purple-600">
-                                            {enrolledCount
-                                                ? `${Math.round((enrolledChaitanyaCount / enrolledCount) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100" />
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Bodh</span>
-                                        <span className="font-semibold text-teal-600">
-                                            {enrolledCount
-                                                ? `${Math.round((enrolledBodhCount / enrolledCount) * 100)}%`
-                                                : "0%"}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="border-t pt-2 text-xs text-gray-400 text-center">
-                                    Based on enrolled submissions
-                                </div>
-                            </div>
-                        }
-                    />
-
-                </div>
-            </div>
-
-
-            <div className="flex flex-col sm:flex-row gap-6 bg-white rounded-xl shadow p-6 w-full min-h-[350px] mt-10">
-                <div className="flex-1 flex flex-col items-center">
-                    <h2 className="text-lg font-semibold mb-4 text-center">Submission Status Overview</h2>
-                    <div className="flex justify-center items-center flex-1 w-full" style={{ minHeight: 400 }}>
-                        <SubmissionStatusDonutChart />
-                    </div>
-                </div>
-                <div className="flex-1 flex flex-col items-center">
-                    <h2 className="text-lg font-semibold mb-4 text-center">Category Overview</h2>
-                    <div className="flex justify-center items-center flex-1 w-full" style={{ minHeight: 400 }}>
-                        <SubmissionCategoryDonutChart />
-                    </div>
-                </div>
-            </div>
-        </>
+  const metrics = useMemo(() => {
+    const submissions = Array.isArray(allSubmissions) ? allSubmissions : [];
+    const enrolled = submissions.filter(
+      (submission) => normalize(submission.status) === "ENROLLED"
     );
+    const pending = submissions.filter(
+      (submission) => normalize(submission.status) === "PENDING"
+    );
+    const rejected = submissions.filter(
+      (submission) => normalize(submission.status) === "REJECTED"
+    );
+    const total = submissions.length;
+    const notEntertained = Math.max(
+      total - enrolled.length - pending.length - rejected.length,
+      0
+    );
+
+    const enrolledCategories = enrolled.reduce((acc, submission) => {
+      const category = normalize(submission.category);
+      if (!category) return acc;
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {});
+
+    return {
+      total,
+      enrolled: enrolled.length,
+      pending: pending.length,
+      rejected: rejected.length,
+      notEntertained,
+      brainGym: enrolledCategories["BRAIN GYM"] || 0,
+      chaitanya: enrolledCategories.CHAITANYA || 0,
+      bodh: enrolledCategories.BODH || 0,
+    };
+  }, [allSubmissions]);
+
+  const totalEmployees = Array.isArray(employees) ? employees.length : 0;
+
+  const statusCards = [
+    {
+      label: "Not Reviewed",
+      value: metrics.notEntertained,
+      icon: <LuClipboardList />,
+      accent: "slate",
+      path: "/admin/submissions?status=NOT_ENTERTAINED",
+      subtitle: `${percent(metrics.notEntertained, metrics.total)}%`,
+    },
+    {
+      label: "Enrolled",
+      value: metrics.enrolled,
+      icon: <LuFolder />,
+      accent: "green",
+      path: "/admin/submissions?status=ENROLLED",
+      subtitle: `${percent(metrics.enrolled, metrics.total)}%`,
+    },
+    {
+      label: "Pending",
+      value: metrics.pending,
+      icon: <LuClock />,
+      accent: "amber",
+      path: "/admin/submissions?status=PENDING",
+      subtitle: `${percent(metrics.pending, metrics.total)}%`,
+    },
+    {
+      label: "Rejected",
+      value: metrics.rejected,
+      icon: <LuClipboardList />,
+      accent: "red",
+      path: "/admin/submissions?status=REJECTED",
+      subtitle: `${percent(metrics.rejected, metrics.total)}%`,
+    },
+  ];
+
+  const categoryCards = [
+    {
+      label: "Brain Gym",
+      value: metrics.brainGym,
+      path: "/admin/submissions?status=ENROLLED&category=BRAIN GYM",
+      accent: "indigo",
+    },
+    {
+      label: "Chaitanya",
+      value: metrics.chaitanya,
+      path: "/admin/submissions?status=ENROLLED&category=CHAITANYA",
+      accent: "blue",
+    },
+    {
+      label: "Bodh",
+      value: metrics.bodh,
+      path: "/admin/submissions?status=ENROLLED&category=BODH",
+      accent: "green",
+    },
+  ];
+
+  return (
+    <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-6">
+      <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="grid gap-6 p-5 sm:p-6 xl:grid-cols-[1.5fr_1fr]">
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700 ring-1 ring-blue-100">
+              <LuTrendingUp />
+              Live Operations
+            </div>
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
+              Manaspath Dashboard
+            </h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
+              Monitor submissions, enrollment movement, and team capacity from
+              one focused workspace.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
+            <SummaryPill label="Total" value={metrics.total} />
+            <SummaryPill label="Enrolled" value={`${percent(metrics.enrolled, metrics.total)}%`} tone="green" />
+            <SummaryPill label="Pending" value={`${percent(metrics.pending, metrics.total)}%`} tone="amber" />
+            <SummaryPill label="Staff" value={totalEmployees} tone="indigo" />
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <SectionHeader
+          icon={<LuClipboardList />}
+          title="Submission Numbers By Status"
+        />
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <Card
+            label="Total Submissions"
+            value={metrics.total}
+            icon={<LuClipboardList />}
+            accent="blue"
+            onClick={() => navigate("/admin/submissions")}
+          />
+          {statusCards.map((card) => (
+            <Card
+              key={card.label}
+              {...card}
+              onClick={() => navigate(card.path)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <SectionHeader
+          icon={<LuFolder />}
+          title="Submission Numbers By Category"
+        />
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {categoryCards.map((card) => (
+            <Card
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              icon={<LuFolder />}
+              accent={card.accent}
+              subtitle={`${percent(card.value, metrics.enrolled)}%`}
+              onClick={() => navigate(card.path)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <SectionHeader
+          icon={<LuShieldCheck />}
+          title="Percentage By Status"
+        />
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <InsightRow label="Not Reviewed" value={percent(metrics.notEntertained, metrics.total)} tone="slate" />
+          <InsightRow label="Enrolled" value={percent(metrics.enrolled, metrics.total)} tone="green" />
+          <InsightRow label="Pending" value={percent(metrics.pending, metrics.total)} tone="amber" />
+          <InsightRow label="Rejected" value={percent(metrics.rejected, metrics.total)} tone="red" />
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <SectionHeader
+          icon={<LuFolder />}
+          title="Percentage By Category"
+        />
+        <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {categoryCards.map((card) => (
+            <InsightRow
+              key={card.label}
+              label={card.label}
+              value={percent(card.value, metrics.enrolled)}
+              tone={card.accent}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <SectionHeader
+          icon={<LuChartPie />}
+          title="Charts By Status And By Category"
+        />
+        <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <ChartPanel title="Chart By Status">
+            <SubmissionStatusDonutChart />
+          </ChartPanel>
+          <ChartPanel title="Chart By Category">
+            <SubmissionCategoryDonutChart />
+          </ChartPanel>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const SummaryPill = ({ label, value, tone = "blue" }) => {
+  const tones = {
+    blue: "bg-blue-50 text-blue-700 ring-blue-100",
+    green: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+    amber: "bg-amber-50 text-amber-700 ring-amber-100",
+    indigo: "bg-indigo-50 text-indigo-700 ring-indigo-100",
+  };
+
+  return (
+    <div className={`rounded-lg px-4 py-3 ring-1 ${tones[tone] || tones.blue}`}>
+      <p className="text-xs font-semibold uppercase tracking-wide opacity-75">
+        {label}
+      </p>
+      <p className="mt-1 text-2xl font-bold tracking-tight">{value}</p>
+    </div>
+  );
+};
+
+const SectionHeader = ({ icon, title, subtitle }) => (
+  <div className="flex items-start gap-3">
+    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+      {icon}
+    </div>
+    <div>
+      <h2 className="text-lg font-bold text-slate-950">{title}</h2>
+      {subtitle && (
+        <p className="text-sm leading-5 text-slate-500">{subtitle}</p>
+      )}
+    </div>
+  </div>
+);
+
+const ChartPanel = ({ title, children }) => (
+  <div className="min-w-0 rounded-lg border border-slate-100 bg-slate-50/70 p-3 sm:p-4">
+    <h3 className="text-center text-sm font-semibold uppercase tracking-wide text-slate-600">
+      {title}
+    </h3>
+    <div className="mt-3 min-h-[270px] sm:min-h-[320px]">{children}</div>
+  </div>
+);
+
+const InsightRow = ({ label, value, tone }) => {
+  const tones = {
+    slate: "bg-slate-500",
+    blue: "bg-blue-500",
+    green: "bg-emerald-500",
+    indigo: "bg-indigo-500",
+    amber: "bg-amber-500",
+    red: "bg-rose-500",
+  };
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between gap-4 text-sm">
+        <span className="font-medium text-slate-600">{label}</span>
+        <span className="font-bold text-slate-950">{value}%</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+        <div
+          className={`h-full rounded-full ${tones[tone] || tones.slate}`}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default AdminDashboardInfoSection;

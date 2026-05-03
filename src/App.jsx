@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import useAuthStore from "./store/useAuthStore";
+import { Toaster } from "react-hot-toast"
 
 import FormPage from "./page/FormPage";
 import OperatorLogin from "./page/OperatorLoginPage";
@@ -31,6 +32,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Toaster position="top-right" />
       <ToastContainer />
       <Routes>
         <Route path="/" element={<HomePage />} />

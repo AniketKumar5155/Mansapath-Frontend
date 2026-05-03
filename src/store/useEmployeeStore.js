@@ -27,7 +27,7 @@ const useEmployeeStore = create((set => ({
             const message = error.response?.data?.message || error.message || "Failed to create employee"
             set({ error: message });
         } finally {
-            set({ laoding: false, error: {} });
+            set({ loading: false, error: {} });
         }
     },
 
