@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { useTheme, useMediaQuery } from "@mui/material";
-import { CiEdit } from "react-icons/ci";
+import { Eye, Pencil, Plus, RefreshCw, UserRound } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import ToolBar from "./ToolBar";
@@ -11,6 +10,7 @@ import SubmissionInfo from "./SubmissionInfo";
 
 import useFormStore from "../store/formStore";
 import useAuthStore from "../store/useAuthStore";
+import buildFullName from "../utils/buildFullName";
 
 const STATUS_LABELS = {
   ENROLLED: "Enrolled",
@@ -37,32 +37,85 @@ const SORT_DIRECTIONS = [
 ];
 
 const STATUS_COLOR_MAP = {
-  ENROLLED: { bg: "bg-green-100", text: "text-green-700" },
-  PENDING: { bg: "bg-yellow-100", text: "text-yellow-700" },
-  REJECTED: { bg: "bg-red-100", text: "text-red-700" },
-  NOT_SET: { bg: "bg-gray-100", text: "text-gray-600" },
+  ENROLLED: { bg: "bg-emerald-50", text: "text-emerald-700", ring: "ring-emerald-100" },
+  PENDING: { bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-100" },
+  REJECTED: { bg: "bg-rose-50", text: "text-rose-700", ring: "ring-rose-100" },
+  NOT_SET: { bg: "bg-slate-100", text: "text-slate-600", ring: "ring-slate-200" },
+};
+
+const getFullName = (submission) =>
+  buildFullName(
+    submission?.first_name,
+    submission?.middle_name,
+    submission?.last_name
+  ) || "Unnamed";
+
+const getAcceptedByLabel = (submission) => {
+  const acceptedBy =
+    submission?.accepted_by ??
+    submission?.acceptedBy ??
+    submission?.accepted_by_user ??
+    submission?.acceptedByUser;
+
+  if (!acceptedBy) {
+    return (
+      submission?.accepted_by_username ??
+      submission?.acceptedByUsername ??
+      submission?.accepted_by_name ??
+      submission?.acceptedByName ??
+      "—"
+    );
+  }
+
+  if (typeof acceptedBy === "string" || typeof acceptedBy === "number") {
+    return acceptedBy;
+  }
+
+  return (
+    acceptedBy.username ||
+    buildFullName(
+      acceptedBy.first_name,
+      acceptedBy.middle_name,
+      acceptedBy.last_name
+    ) ||
+    acceptedBy.name ||
+    acceptedBy.email ||
+    "—"
+  );
+};
+
+const getAcceptedAtLabel = (submission) => {
+  const acceptedAt =
+    submission?.accepted_at ??
+    submission?.acceptedAt ??
+    submission?.enrolled_at ??
+    submission?.enrolledAt;
+
+  return acceptedAt ? new Date(acceptedAt).toLocaleString() : "—";
 };
 
 const SubmissionTable = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const hydratedRef = useRef(false);
 
   const { submissions, getSubmissions, loading, total } = useFormStore();
   const { accessToken, user } = useAuthStore();
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [category, setCategory] = useState("");
-  const [sortType, setSortType] = useState("");
-  const [sortDirection, setSortDirection] = useState("");
+  const [status, setStatus] = useState(() => searchParams.get("status") || "");
+  const [category, setCategory] = useState(
+    () => searchParams.get("category") || ""
+  );
+  const [sortType, setSortType] = useState(
+    () => searchParams.get("sortType") || ""
+  );
+  const [sortDirection, setSortDirection] = useState(
+    () => searchParams.get("sortDirection") || ""
+  );
 
   const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10,
+    page: Number(searchParams.get("page") || 1) - 1,
+    pageSize: Number(searchParams.get("pageSize") || 10),
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -72,6 +125,14 @@ const SubmissionTable = () => {
   const [submissionDetailsId, setSubmissionDetailsId] = useState(null);
 
   const isSuperAdmin = user?.role === "SUPERADMIN";
+
+  const visibleRows = Array.isArray(submissions) ? submissions : [];
+  const currentPageStart = total ? paginationModel.page * paginationModel.pageSize + 1 : 0;
+  const currentPageEnd = Math.min(
+    (paginationModel.page + 1) * paginationModel.pageSize,
+    total || 0
+  );
+  const currentPageLabel = `${currentPageStart}-${currentPageEnd}`;
 
   const STATUS_OPTIONS = [
     { value: "", label: "All" },
@@ -92,22 +153,6 @@ const SubmissionTable = () => {
   }, [accessToken, navigate]);
 
   useEffect(() => {
-    setStatus(searchParams.get("status") || "");
-    setCategory(searchParams.get("category") || "");
-    setSortType(searchParams.get("sortType") || "");
-    setSortDirection(searchParams.get("sortDirection") || "");
-
-    setPaginationModel({
-      page: Number(searchParams.get("page") || 1) - 1,
-      pageSize: Number(searchParams.get("pageSize") || 10),
-    });
-
-    hydratedRef.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydratedRef.current) return;
-
     setSearchParams({
       status,
       category,
@@ -136,11 +181,22 @@ const SubmissionTable = () => {
       {
         field: "full_name",
         headerName: "Name",
-        width: 200,
-        valueGetter: (_, row) => {
-          const { first_name, middle_name, last_name } = row || {};
-          return [first_name, middle_name, last_name].filter(Boolean).join(" ");
-        },
+        minWidth: 220,
+        flex: 1,
+        valueGetter: (_, row) => getFullName(row),
+        renderCell: ({ row }) => (
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+              <UserRound size={17} />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-slate-900">
+                {getFullName(row)}
+              </p>
+              <p className="truncate text-xs text-slate-500">{row?.email || "No email"}</p>
+            </div>
+          </div>
+        ),
       },
       { field: "age", headerName: "Age", width: 80 },
 
@@ -150,10 +206,10 @@ const SubmissionTable = () => {
         width: 140,
         renderCell: ({ value }) => {
           const statusValue = value || "NOT_SET";
-          const { bg, text } = STATUS_COLOR_MAP[statusValue];
+          const { bg, text, ring } = STATUS_COLOR_MAP[statusValue] || STATUS_COLOR_MAP.NOT_SET;
 
           return (
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text}`}>
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${bg} ${text} ${ring}`}>
               {STATUS_LABELS[statusValue] || "Not Set"}
             </span>
           );
@@ -165,13 +221,12 @@ const SubmissionTable = () => {
         headerName: "Category",
         width: 170,
         renderCell: ({ value }) => (
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${value ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-600"}`}>
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${value ? "bg-blue-50 text-blue-700 ring-blue-100" : "bg-slate-100 text-slate-600 ring-slate-200"}`}>
             {value ? CATEGORY_LABELS[value] || value : "Not Assigned"}
           </span>
         ),
       },
 
-      { field: "email", headerName: "Email", width: 220 },
       { field: "phone_number", headerName: "Phone", width: 150 },
       { field: "created_at", headerName: "Created At", width: 150 },
     ];
@@ -188,33 +243,32 @@ const SubmissionTable = () => {
           field: "accepted_by",
           headerName: "Accepted By",
           width: 160,
-          renderCell: ({ value }) => value?.username || "—",
+          renderCell: ({ row }) => getAcceptedByLabel(row),
         },
         {
           field: "accepted_at",
           headerName: "Accepted At",
           width: 160,
-          renderCell: ({ value }) =>
-            value ? new Date(value).toLocaleString() : "—",
+          renderCell: ({ row }) => getAcceptedAtLabel(row),
         }
       );
     }
 
     baseColumns.push({
       field: "action",
-      headerName: "Action",
-      width: 80,
+      headerName: "",
+      width: 72,
       sortable: false,
       renderCell: (params) => (
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setEditingSubmission(params.row.id);
-            setShowForm(true);
+            openEdit(params.row.id);
           }}
-          className="p-1 rounded-md hover:bg-gray-200"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition hover:bg-blue-50"
+          aria-label="Edit submission"
         >
-          <CiEdit size={22} className="text-blue-600" />
+          <Pencil size={17} />
         </button>
       ),
     });
@@ -227,8 +281,26 @@ const SubmissionTable = () => {
     setShowFormDetailsOverlay(true);
   };
 
+  function openEdit(id) {
+    setEditingSubmission(id);
+    setShowFormDetailsOverlay(false);
+    setShowForm(true);
+  }
+
+  const refreshSubmissions = () => {
+    getSubmissions(
+      paginationModel.page + 1,
+      paginationModel.pageSize,
+      search,
+      status,
+      category,
+      sortType,
+      sortDirection
+    );
+  };
+
   return (
-    <div className="flex flex-col h-full min-h-0">
+    <div className="flex h-full min-h-0 flex-col gap-3">
       <ToolBar
         searchValue={search}
         onSearchChange={setSearch}
@@ -245,21 +317,39 @@ const SubmissionTable = () => {
         selectedSortDirection={sortDirection}
         onSortDirectionChange={setSortDirection}
         actions={
-          <CustomButton
-            label="NEW +"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
-            onClick={() => {
-              setEditingSubmission(null);
-              setShowForm(true);
-            }}
-          />
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <span className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-600">
+              {currentPageLabel} / {total || 0}
+            </span>
+            <button
+              type="button"
+              onClick={refreshSubmissions}
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-slate-700 shadow-sm transition hover:bg-slate-50"
+              aria-label="Refresh submissions"
+            >
+              <RefreshCw size={16} />
+            </button>
+            <CustomButton
+              label={
+                <span className="inline-flex items-center gap-2">
+                  <Plus size={16} />
+                  New
+                </span>
+              }
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              onClick={() => {
+                setEditingSubmission(null);
+                setShowForm(true);
+              }}
+            />
+          </div>
         }
       />
 
-      <div className="flex-1 min-h-0 border border-gray-300 rounded-lg w-full overflow-x-auto">
-        <div className="h-full w-full min-w-0 sm:min-w-[700px]">
+      <div className="hidden min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm sm:block">
+        <div className="h-full w-full min-w-[760px]">
           <DataGrid
-            rows={submissions}
+            rows={visibleRows}
             columns={columns}
             onRowClick={handleRowClick}
             rowCount={total}
@@ -268,15 +358,95 @@ const SubmissionTable = () => {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[5, 10, 20, 50]}
-            rowHeight={isMobile ? 38 : 37.9}
+            rowHeight={64}
             sx={{
-              height: '100%',
-              width: '100%',
-              maxWidth: '100vw',
-              fontWeight: 'bold',
-              overflowX: 'auto',
+              height: "100%",
+              width: "100%",
+              border: 0,
+              color: "#0f172a",
+              fontFamily: "inherit",
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#f8fafc",
+                borderBottom: "1px solid #e2e8f0",
+              },
+              "& .MuiDataGrid-columnHeaderTitle": {
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                color: "#475569",
+                textTransform: "uppercase",
+                letterSpacing: "0",
+              },
+              "& .MuiDataGrid-row": {
+                cursor: "pointer",
+              },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#f8fafc",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "1px solid #eef2f7",
+                outline: "none",
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "1px solid #e2e8f0",
+                backgroundColor: "#f8fafc",
+              },
             }}
           />
+        </div>
+      </div>
+
+      <div className="grid gap-3 sm:hidden">
+        {loading ? (
+          <div className="rounded-lg border border-slate-200 bg-white p-5 text-center text-sm text-slate-500">
+            Loading submissions...
+          </div>
+        ) : visibleRows.length === 0 ? (
+          <div className="rounded-lg border border-slate-200 bg-white p-5 text-center text-sm text-slate-500">
+            No submissions found
+          </div>
+        ) : (
+          visibleRows.map((submission) => (
+            <MobileSubmissionCard
+              key={submission.id}
+              submission={submission}
+              onView={() => handleRowClick({ id: submission.id })}
+              onEdit={() => openEdit(submission.id)}
+            />
+          ))
+        )}
+
+        <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+          <button
+            type="button"
+            disabled={paginationModel.page === 0}
+            onClick={() =>
+              setPaginationModel((model) => ({
+                ...model,
+                page: Math.max(model.page - 1, 0),
+              }))
+            }
+            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm font-semibold text-slate-600">
+            Page {paginationModel.page + 1}
+          </span>
+
+          <button
+            type="button"
+            disabled={currentPageEnd >= (total || 0)}
+            onClick={() =>
+              setPaginationModel((model) => ({
+                ...model,
+                page: model.page + 1,
+              }))
+            }
+            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -289,9 +459,73 @@ const SubmissionTable = () => {
           overlay
           id={submissionDetailsId}
           onClose={() => setShowFormDetailsOverlay(false)}
+          onEdit={() => openEdit(submissionDetailsId)}
         />
       )}
     </div>
+  );
+};
+
+const MobileSubmissionCard = ({ submission, onView, onEdit }) => {
+  const statusValue = submission?.status || "NOT_SET";
+  const statusTone = STATUS_COLOR_MAP[statusValue] || STATUS_COLOR_MAP.NOT_SET;
+  const category = submission?.category;
+
+  return (
+    <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-base font-bold text-slate-950">
+            {getFullName(submission)}
+          </p>
+          <p className="mt-1 text-sm text-slate-500">
+            #{submission?.id} - {submission?.phone_number || "No phone"}
+          </p>
+        </div>
+
+        <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ring-1 ${statusTone.bg} ${statusTone.text} ${statusTone.ring}`}>
+          {STATUS_LABELS[statusValue] || "Not Set"}
+        </span>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-400">Category</p>
+          <p className="mt-1 font-semibold text-slate-700">
+            {category ? CATEGORY_LABELS[category] || category : "Not Assigned"}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-400">Age</p>
+          <p className="mt-1 font-semibold text-slate-700">{submission?.age || "--"}</p>
+        </div>
+        <div className="col-span-2">
+          <p className="text-xs font-semibold uppercase text-slate-400">Email</p>
+          <p className="mt-1 truncate font-semibold text-slate-700">
+            {submission?.email || "No email"}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={onView}
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-700 shadow-sm"
+        >
+          <Eye size={16} />
+          View
+        </button>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-semibold text-white shadow-sm"
+        >
+          <Pencil size={16} />
+          Edit
+        </button>
+      </div>
+    </article>
   );
 };
 

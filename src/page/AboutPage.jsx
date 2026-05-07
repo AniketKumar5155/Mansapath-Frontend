@@ -1,7 +1,29 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion as Motion } from "framer-motion";
+import { Building2, Quote, Target, User } from "lucide-react";
 import Navbar from "../component/NavBar";
-import { Quote, Target, Building2, User } from "lucide-react";
+import Footer from "../component/Footer";
+
+const sections = [
+  {
+    icon: Building2,
+    title: "Who We Are",
+    text: "Manaspath creates a safe, structured, and compassionate space where mental well-being can be supported through practical tools and human connection.",
+    detail: "We focus on listening first, understanding the concern, and helping people take the next step with clarity.",
+  },
+  {
+    icon: Target,
+    title: "Our Vision & Goals",
+    text: "Our goal is to make mental wellness accessible across age groups, from children developing emotional awareness to seniors preserving cognitive vitality.",
+    detail: "We believe support should feel approachable, stigma-free, and useful in daily life.",
+  },
+  {
+    icon: User,
+    title: "Founder",
+    text: "Manaspath was shaped with the belief that empathy and expertise should work together. The foundation rests on trust, integrity, and personalized care.",
+    detail: "Every program is designed to help people feel understood before they are guided.",
+  },
+];
 
 const AboutPage = () => {
   const [dark, setDark] = useState(() => {
@@ -32,7 +54,7 @@ const AboutPage = () => {
 
       <section className="relative py-28 text-center">
         <div className="absolute inset-0 bg-linear-to-br from-blue-600/20 via-transparent to-blue-600/10" />
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -44,46 +66,29 @@ const AboutPage = () => {
           <p className="mt-6 text-xl text-gray-500">
             Guiding minds. Nurturing growth. Empowering lives.
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
 
-      <Section
-        dark={dark}
-        icon={Building2}
-        title="Who We Are"
-      >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Manaspath was
-        founded with a singular mission — to create a safe, structured, and
-        compassionate space where mental well-being is nurtured through
-        science-backed practices and human connection.
-      </Section>
+      {sections.map((section, index) => {
+        const SectionIcon = section.icon;
 
-      <Section
-        dark={dark}
-        icon={Target}
-        title="Our Vision & Goals"
-        reverse
-      >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Our goal is to
-        make mental wellness accessible across all age groups — from children
-        developing emotional awareness to seniors preserving cognitive vitality.
-        We believe growth is lifelong.
-      </Section>
-
-      <Section
-        dark={dark}
-        icon={User}
-        title="Founder"
-      >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. The founder of
-        Manaspath envisioned a platform where empathy meets expertise. With a
-        deep commitment to mental health advocacy, the foundation of Manaspath
-        rests on trust, integrity, and personalized care.
-      </Section>
+        return (
+          <Section
+            key={section.title}
+            dark={dark}
+            icon={<SectionIcon size={32} />}
+            title={section.title}
+            detail={section.detail}
+            reverse={index % 2 === 1}
+          >
+            {section.text}
+          </Section>
+        );
+      })}
 
       <section className="py-24 relative">
         <div className="absolute inset-0 bg-linear-to-r from-blue-600/20 via-transparent to-blue-600/20" />
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -94,25 +99,26 @@ const AboutPage = () => {
         >
           <Quote className="mx-auto mb-6 text-blue-600" size={40} />
           <p className="text-2xl font-medium leading-relaxed italic">
-            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Healing
-            begins when understanding meets compassion.”
+            Healing begins when understanding meets compassion.
           </p>
           <p className="mt-6 font-semibold text-blue-600">
-            — Founder, Manaspath
+            Manaspath care principle
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
+
+      <Footer dark={dark} />
     </div>
   );
 };
 
-const Section = ({ icon: Icon, title, children, dark, reverse }) => (
-  <motion.section
+const Section = ({ icon, title, children, detail, dark, reverse }) => (
+  <Motion.section
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.6 }}
-    className={`max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center ${
+    className={`max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center ${
       reverse ? "md:[&>*:first-child]:order-2" : ""
     }`}
   >
@@ -123,7 +129,7 @@ const Section = ({ icon: Icon, title, children, dark, reverse }) => (
             dark ? "bg-blue-600/20" : "bg-blue-100"
           } text-blue-600`}
         >
-          <Icon size={32} />
+          {icon}
         </div>
         <h2 className="text-3xl font-semibold">{title}</h2>
       </div>
@@ -131,17 +137,10 @@ const Section = ({ icon: Icon, title, children, dark, reverse }) => (
       <p className="text-lg leading-relaxed text-gray-500">{children}</p>
     </div>
 
-    <div
-      className={`rounded-3xl p-10 shadow-lg ${
-        dark ? "bg-gray-800" : "bg-white"
-      }`}
-    >
-      <p className="text-gray-500 leading-relaxed">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
-      </p>
+    <div className={`rounded-3xl p-8 shadow-lg ${dark ? "bg-gray-800" : "bg-white"}`}>
+      <p className="text-gray-500 leading-relaxed">{detail}</p>
     </div>
-  </motion.section>
+  </Motion.section>
 );
 
 export default AboutPage;

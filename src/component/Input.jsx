@@ -1,4 +1,12 @@
-const InputField = ({ type = "text", name, value, onChange, placeholder, className = "" }) => {
+const InputField = ({
+  type = "text",
+  name,
+  value,
+  onChange,
+  placeholder,
+  className = "",
+  ...props
+}) => {
     
   return (
     <input
@@ -7,7 +15,8 @@ const InputField = ({ type = "text", name, value, onChange, placeholder, classNa
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full ${className}`}
+      className={`w-full rounded-lg border px-3 py-2.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-blue-400 ${className}`}
+      {...props}
     />
   );
 };

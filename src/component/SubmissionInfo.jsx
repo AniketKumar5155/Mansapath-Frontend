@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { X, Hash } from "lucide-react";
+import { X, Hash, Pencil } from "lucide-react";
 import useFormStore from "../store/formStore";
 import buildFullName from "../utils/buildFullName";
 
@@ -15,7 +15,7 @@ const CATEGORY_LABELS = {
     BODH: "Bodh",
 };
 
-const SubmissionInfo = ({ id, overlay = false, onClose }) => {
+const SubmissionInfo = ({ id, overlay = false, onClose, onEdit }) => {
     const { submission, getSubmissionById, loading } = useFormStore();
 
     useEffect(() => {
@@ -44,14 +44,14 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                 onClick={onClose}
             />
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-2 sm:items-center sm:p-4">
                 <div
-                    className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-scaleIn"
+                    className="my-2 flex max-h-[calc(100dvh-1rem)] w-full max-w-3xl flex-col overflow-hidden rounded-lg bg-white shadow-2xl animate-scaleIn sm:my-0"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="flex items-start justify-between px-6 py-5 border-b bg-gray-50">
+                    <div className="flex items-start justify-between gap-4 px-4 py-4 border-b bg-slate-50 sm:px-6 sm:py-5">
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-800">
+                            <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
                                 Submission Details
                             </h2>
 
@@ -61,15 +61,28 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                             </div>
                         </div>
 
-                        <button
-                            onClick={onClose}
-                            className="p-2 rounded-full hover:bg-gray-200 transition"
-                        >
-                            <X size={20} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {submission && onEdit && (
+                                <button
+                                    type="button"
+                                    onClick={onEdit}
+                                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                                >
+                                    <Pencil size={16} />
+                                    Edit
+                                </button>
+                            )}
+
+                            <button
+                                onClick={onClose}
+                                className="p-2 rounded-full hover:bg-gray-200 transition"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6">
+                    <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-5 sm:p-6 sm:space-y-6">
                         {loading ? (
                             <div className="text-center text-gray-500">Loading...</div>
                         ) : !submission ? (
@@ -163,13 +176,25 @@ const SubmissionInfo = ({ id, overlay = false, onClose }) => {
                         )}
                     </div>
 
-                    <div className="flex justify-end px-6 py-4 border-t bg-gray-50">
-                        <button
-                            onClick={onClose}
-                            className="px-5 py-2 text-sm font-medium bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition"
-                        >
-                            Close
-                        </button>
+                    <div className="shrink-0 flex justify-end px-4 py-3 border-t bg-gray-50 sm:px-6 sm:py-4">
+                        <div className="flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row sm:items-center">
+                            {submission && onEdit && (
+                                <button
+                                    type="button"
+                                    onClick={onEdit}
+                                    className="inline-flex justify-center rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                                >
+                                    Edit Submission
+                                </button>
+                            )}
+
+                            <button
+                                onClick={onClose}
+                                className="px-5 py-2 text-sm font-medium bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

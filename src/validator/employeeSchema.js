@@ -64,6 +64,14 @@ export const employeeSchema = z.object({
         .default("EMPLOYEE"),
 });
 
+export const employeeUpdateSchema = employeeSchema.partial().extend({
+    password: z
+        .string()
+        .min(8, "Password must be at least 8 characters")
+        .max(255, "Password must be at most 255 characters")
+        .optional(),
+});
+
 export function mapZodIssuesToFieldErrors(zodError) {
     const fieldErrors = {};
     if (zodError && Array.isArray(zodError.issues)) {

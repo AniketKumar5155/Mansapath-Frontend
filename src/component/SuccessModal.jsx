@@ -1,11 +1,24 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { CheckCircle } from "lucide-react";
 
-const SuccessModal = ({ isOpen, title, message1, message2, onClose }) => {
+const SuccessModal = ({
+  isOpen,
+  title,
+  message1,
+  message2,
+  messageline1,
+  messageline2,
+  buttonText = "OK",
+  onClose,
+}) => {
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+  const primaryMessage = message1 || messageline1;
+  const secondaryMessage = message2 || messageline2;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 relative animate-[scaleIn_0.2s_ease-in-out]">
 
         <div className="flex justify-center -mt-14 mb-4">
@@ -22,15 +35,15 @@ const SuccessModal = ({ isOpen, title, message1, message2, onClose }) => {
           </h2>
         )}
 
-        {message1 && (
+        {primaryMessage && (
           <p className="mt-3 text-base text-gray-600 text-center leading-relaxed">
-            {message1}
+            {primaryMessage}
           </p>
         )}
 
-        {message2 && (
+        {secondaryMessage && (
           <p className="mt-1 text-sm text-gray-500 text-center leading-relaxed">
-            {message2}
+            {secondaryMessage}
           </p>
         )}
 
@@ -40,7 +53,7 @@ const SuccessModal = ({ isOpen, title, message1, message2, onClose }) => {
             onClick={onClose}
             className="px-10 py-2.5 rounded-xl bg-linear-to-r from-blue-600 to-blue-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
           >
-            OK
+            {buttonText}
           </button>
         </div>
       </div>
@@ -57,7 +70,8 @@ const SuccessModal = ({ isOpen, title, message1, message2, onClose }) => {
           }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navbar from "../component/NavBar";
 import Form from "../component/Form";
 

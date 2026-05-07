@@ -7,19 +7,19 @@ const SubmissionsPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-slate-100">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="flex flex-col flex-1 max-h-screen overflow-x-hidden">
+      <div className="flex min-w-0 flex-1 flex-col max-h-screen overflow-x-hidden">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="|FORM SUBMISSIONS|"
+          message="Form Submissions"
         />
 
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4">
           <SubmissionTable />
         </div>
       </div>

@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Brain, Sparkles, Eye } from "lucide-react";
-import Navbar from "../component/NavBar";
+import { useState } from "react";
+import { motion as Motion } from "framer-motion";
+import { Brain, Eye, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../component/NavBar";
+import Footer from "../component/Footer";
 
-const Section = ({ icon: Icon, title, subtitle, children, reverse, dark }) => (
-  <motion.section
+const programNotes = {
+  "Brain Gym": "Focus routines, stress regulation, confidence building, and study support for teenagers and young adults.",
+  Bodh: "Self-awareness, emotional regulation, and healthier responses to stress, anger, and overwhelm.",
+  Chaitanya: "Gentle practices for older adults that support calm, clarity, confidence, and purposeful daily rhythm.",
+};
+
+const Section = ({ icon, title, subtitle, children, reverse, dark }) => (
+  <Motion.section
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
@@ -16,20 +23,16 @@ const Section = ({ icon: Icon, title, subtitle, children, reverse, dark }) => (
   >
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        {Icon && (
-          <div
-            className={`p-4 rounded-2xl ${
-              dark ? "bg-blue-900/30 text-blue-400" : "bg-blue-100 text-blue-600"
-            }`}
-          >
-            <Icon size={32} />
-          </div>
-        )}
+        <div
+          className={`p-4 rounded-2xl ${
+            dark ? "bg-blue-900/30 text-blue-400" : "bg-blue-100 text-blue-600"
+          }`}
+        >
+          {icon}
+        </div>
 
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight">
-            {title}
-          </h2>
+          <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
           <p className={dark ? "text-gray-400" : "text-gray-500"}>
             {subtitle}
           </p>
@@ -41,24 +44,16 @@ const Section = ({ icon: Icon, title, subtitle, children, reverse, dark }) => (
       </p>
     </div>
 
-    <div className="relative">
-      <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-blue-500/20 via-transparent to-blue-500/30 blur-2xl" />
-      <div
-        className={`relative rounded-3xl border p-10 shadow-xl backdrop-blur ${
-          dark
-            ? "bg-gray-800/70 border-gray-700 text-gray-300"
-            : "bg-white/70 border-gray-200 text-gray-600"
-        }`}
-      >
-        <p className="text-lg leading-relaxed">
-          Our programs are thoughtfully designed to combine practical tools,
-          reflective exercises, and guided sessions that support emotional
-          well-being. Each experience is structured to be simple, accessible,
-          and meaningful — helping individuals grow with clarity and confidence.
-        </p>
-      </div>
+    <div
+      className={`rounded-3xl border p-8 shadow-lg ${
+        dark
+          ? "bg-gray-800/70 border-gray-700 text-gray-300"
+          : "bg-white border-gray-200 text-gray-600"
+      }`}
+    >
+      <p className="text-lg leading-relaxed">{programNotes[title]}</p>
     </div>
-  </motion.section>
+  </Motion.section>
 );
 
 const ServicePage = () => {
@@ -74,7 +69,7 @@ const ServicePage = () => {
   });
 
   const toggleDark = () => {
-    setDark(prev => {
+    setDark((prev) => {
       localStorage.setItem("theme", JSON.stringify(!prev));
       return !prev;
     });
@@ -90,20 +85,19 @@ const ServicePage = () => {
     >
       <Navbar dark={dark} toggleDark={toggleDark} />
 
-      {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-blue-500/20 via-transparent to-blue-500/30" />
-        <div className="relative max-w-7xl mx-auto px-6 py-32 text-center">
-          <motion.h1
+        <div className="relative max-w-7xl mx-auto px-6 py-28 text-center">
+          <Motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             className="text-5xl md:text-6xl font-bold"
           >
             Our <span className="text-blue-600">Services</span>
-          </motion.h1>
+          </Motion.h1>
 
-          <motion.p
+          <Motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
@@ -111,84 +105,57 @@ const ServicePage = () => {
               dark ? "text-gray-400" : "text-gray-600"
             }`}
           >
-            We are dedicated to nurturing mental wellness across every stage of life.
-            Our programs are built on empathy, science-backed practices, and
-            practical techniques that help individuals develop clarity,
-            confidence, and emotional strength.
-          </motion.p>
+            Mental wellness support for students, adults, and seniors through
+            practical tools, guided sessions, and compassionate follow-up.
+          </Motion.p>
+
+          <button
+            className="mt-8 px-8 py-3 rounded-2xl bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
+            onClick={() => navigate("/book-session")}
+          >
+            Book Session
+          </button>
         </div>
       </section>
 
       <main className="max-w-7xl mx-auto px-6">
-        {/* Brain Gym */}
-        <Section
-          icon={Brain}
-          title="Brain Gym"
-          subtitle="Strengthening the mind"
-          dark={dark}
-        >
+        <Section icon={<Brain size={32} />} title="Brain Gym" subtitle="Strengthening the mind" dark={dark}>
           Brain Gym 360 supports teenagers in managing academic pressure,
-          improving focus, and understanding their emotions better.
-          Through structured activities and interactive sessions, students
-          learn how to regulate stress, build self-confidence, and develop
-          resilience. The program equips them with lifelong mental skills
-          to navigate exams, relationships, and future ambitions calmly and confidently.
+          improving focus, and understanding emotions better. Students learn
+          stress regulation, self-confidence, and resilience for exams,
+          relationships, and future goals.
         </Section>
 
-        {/* Bodh */}
-        <Section
-          icon={Eye}
-          title="Bodh"
-          subtitle="Awareness and understanding"
-          reverse
-          dark={dark}
-        >
-          Bodh focuses on cultivating awareness — of thoughts, emotions,
-          and behavioral patterns. It encourages individuals to pause,
-          reflect, and respond mindfully rather than react impulsively.
-          By strengthening emotional intelligence and self-understanding,
-          Bodh empowers participants to build healthier relationships
-          and make balanced, thoughtful decisions in everyday life.
+        <Section icon={<Eye size={32} />} title="Bodh" subtitle="Awareness and understanding" reverse dark={dark}>
+          Bodh cultivates awareness of thoughts, emotions, and behavioral
+          patterns. It encourages people to pause, reflect, and respond
+          mindfully instead of reacting impulsively.
         </Section>
 
-        {/* Chaitanya */}
-        <Section
-          icon={Sparkles}
-          title="Chaitanya"
-          subtitle="Awakening inner potential"
-          dark={dark}
-        >
-          Chaitanya is a gentle and supportive mental wellness course
-          designed especially for older adults. It promotes mental clarity,
-          emotional balance, and inner calm through simple daily practices.
-          Participants experience improved confidence, reduced anxiety,
-          and a renewed sense of purpose — encouraging peaceful,
-          active, and fulfilling ageing.
+        <Section icon={<Sparkles size={32} />} title="Chaitanya" subtitle="Awakening inner potential" dark={dark}>
+          Chaitanya is a gentle course for older adults. It promotes mental
+          clarity, emotional balance, and inner calm through simple daily
+          practices that encourage active and fulfilling ageing.
         </Section>
       </main>
 
-      {/* CTA Section */}
-      <section className="relative mt-32">
+      <section className="relative">
         <div className="absolute inset-0 bg-linear-to-r from-blue-500/30 via-blue-500/10 to-blue-500/30" />
-        <div className="relative max-w-5xl mx-auto px-6 py-24 text-center">
-          <h3 className="text-4xl font-semibold">
-            Experience the Transformation
-          </h3>
-
+        <div className="relative max-w-5xl mx-auto px-6 py-20 text-center">
+          <h3 className="text-4xl font-semibold">Start with one conversation</h3>
           <p className={`mt-4 text-lg ${dark ? "text-gray-400" : "text-gray-600"}`}>
-            Begin your journey toward mental clarity, emotional balance,
-            and personal growth. Small daily practices can create
-            meaningful lifelong change.
+            Share what you are facing and the team will guide the next step.
           </p>
-
           <button
-            className="mt-10 px-10 py-4 rounded-2xl bg-blue-600 text-white font-medium shadow-lg hover:scale-[1.03] transition cursor-pointer"
-            onClick={() => navigate("/")}
+            className="mt-8 px-10 py-4 rounded-2xl bg-blue-600 text-white font-medium shadow-lg hover:bg-blue-700 transition cursor-pointer"
+            onClick={() => navigate("/book-session")}
           >
-            Get Started
+            Book Session
           </button>
         </div>
       </section>
+
+      <Footer dark={dark} />
     </div>
   );
 };

@@ -7,19 +7,19 @@ const EmployeesPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-slate-100">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="flex flex-col w-full min-w-0 max-h-screen">
+      <div className="flex min-w-0 flex-1 flex-col max-h-screen overflow-x-hidden">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="|MANASPATH EMPLOYEES|"
+          message="Employees"
         />
 
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4">
           <EmployeesTable />
         </div>
       </div>

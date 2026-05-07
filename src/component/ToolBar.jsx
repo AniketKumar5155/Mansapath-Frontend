@@ -28,47 +28,47 @@ const ToolBar = ({
   };
 
   const baseSelect =
-    "h-10 px-4 text-sm rounded-xl bg-white border border-gray-300 hover:border-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 cursor-pointer outline-none transition-all";
+    "h-11 w-full px-4 text-sm rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer outline-none transition-all";
 
   return (
-    <div className="w-full mb-4 p-4 rounded-2xl bg-white shadow-md border border-gray-200">
-      <div className="flex flex-wrap items-center gap-3 justify-between">
-        <div className="flex items-center gap-3 flex-1">
-          <div className="relative w-full sm:min-w-60">
+    <div className="w-full rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex w-full flex-col gap-3 sm:flex-row lg:flex-1">
+          <div className="relative w-full lg:max-w-md">
             <Search
               size={18}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
             />
             <input
               value={query}
               onChange={handleInput}
               type="text"
               placeholder="Search records"
-              className="h-10 w-full pl-11 pr-4 text-sm rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white"
+              className="h-11 w-full rounded-lg border border-slate-200 bg-white pl-11 pr-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
           <button
             onClick={() => setOpen((p) => !p)}
-            className="lg:hidden h-10 px-4 rounded-xl border border-gray-300 flex items-center gap-2 text-sm bg-white"
+            className="flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm lg:hidden"
           >
             <SlidersHorizontal size={16} />
             Filters
           </button>
         </div>
 
-        {actions && <div className="hidden lg:flex gap-2">{actions}</div>}
+        {actions && <div className="hidden shrink-0 lg:flex gap-2">{actions}</div>}
       </div>
 
       <div
         className={`
-          mt-4 flex flex-wrap items-center gap-3
-          ${open ? "flex" : "hidden"} lg:flex
+          mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4
+          ${open ? "grid" : "hidden"} lg:grid
         `}
       >
         {status.length > 0 && (
-          <div className="relative">
-            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative min-w-0">
+            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
               value={selectedStatus}
               onChange={(e) => onStatusChange(e.target.value)}
@@ -85,8 +85,8 @@ const ToolBar = ({
         )}
 
         {category.length > 0 && (
-          <div className="relative">
-            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative min-w-0">
+            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
@@ -103,8 +103,8 @@ const ToolBar = ({
         )}
 
         {sortTypes.length > 0 && (
-          <div className="relative">
-            <ArrowUpDown size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative min-w-0">
+            <ArrowUpDown size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
               value={selectedSortType}
               onChange={(e) => onSortTypeChange(e.target.value)}

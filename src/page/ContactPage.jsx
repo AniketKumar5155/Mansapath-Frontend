@@ -1,14 +1,9 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion as Motion } from "framer-motion";
 import Navbar from "../component/NavBar";
+import Footer from "../component/Footer";
 import SuccessModal from "../component/SuccessModal";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Send,
-  MessageCircle,
-} from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import useUserQueryStore from "../store/useUserQueryStore";
 
 const ContactPage = () => {
@@ -31,9 +26,7 @@ const ContactPage = () => {
   };
 
   const { createUserQuery, loading, error } = useUserQueryStore();
-
   const [showSuccess, setShowSuccess] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,37 +34,32 @@ const ContactPage = () => {
     message: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const success = await createUserQuery(formData);
 
     if (success) {
       setShowSuccess(true);
-      setFormData({
-        name: "",
-        email: "",
-        phone_number: "",
-        message: "",
-      });
+      setFormData({ name: "", email: "", phone_number: "", message: "" });
     }
   };
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-500 ${dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
-        }`}
+      className={`min-h-screen transition-colors duration-500 ${
+        dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
+      }`}
     >
       <Navbar dark={dark} toggleDark={toggleDark} />
 
       <section className="relative py-28 text-center">
         <div className="absolute inset-0 bg-linear-to-br from-blue-600/20 via-transparent to-blue-600/10" />
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -81,13 +69,13 @@ const ContactPage = () => {
             Contact <span className="text-blue-600">Us</span>
           </h1>
           <p className="mt-6 text-xl text-gray-500">
-            We’re here to listen, support, and guide you.
+            We're here to listen, support, and guide you.
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-14">
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -96,34 +84,34 @@ const ContactPage = () => {
         >
           <div>
             <h2 className="text-3xl font-semibold mb-4">
-              Let’s Start a Conversation
+              Let's Start a Conversation
             </h2>
             <p className="text-gray-500 text-lg">
-              Whether you’re seeking guidance or have a question — we’re just a
+              Whether you're seeking guidance or have a question, we're just a
               message away.
             </p>
           </div>
 
           <div className="space-y-6">
-            <InfoItem dark={dark} icon={Phone} title="Phone" value="+91 00000 00000" />
-            <InfoItem dark={dark} icon={Mail} title="Email" value="support@manaspath.com" />
-            <InfoItem dark={dark} icon={MapPin} title="Location" value="Motihari, Bihar, India" />
+            <InfoItem dark={dark} icon={<Phone size={22} />} title="Phone" value="+91 00000 00000" />
+            <InfoItem dark={dark} icon={<Mail size={22} />} title="Email" value="support@manaspath.com" />
+            <InfoItem dark={dark} icon={<MapPin size={22} />} title="Location" value="Motihari, Bihar, India" />
           </div>
 
           <div className={`rounded-3xl p-8 ${dark ? "bg-gray-800" : "bg-white"} shadow-lg`}>
             <MessageCircle className="text-blue-600 mb-4" size={28} />
             <p className="text-lg italic text-gray-500">
-              “Sometimes, reaching out is the bravest step towards healing.”
+              Sometimes, reaching out is the bravest step towards healing.
             </p>
           </div>
-        </motion.div>
+        </Motion.div>
 
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className={`rounded-3xl p-10 shadow-xl ${dark ? "bg-gray-800" : "bg-white"}`}
+          className={`rounded-3xl p-6 sm:p-10 shadow-xl ${dark ? "bg-gray-800" : "bg-white"}`}
         >
           <h3 className="text-2xl font-semibold mb-8">Send Us a Message</h3>
 
@@ -142,14 +130,12 @@ const ContactPage = () => {
               {loading ? "Sending..." : "Send Message"}
             </button>
 
-            {error && (
-              <p className="text-red-500 text-sm">
-                {error.message}
-              </p>
-            )}
+            {error && <p className="text-red-500 text-sm">{error.message}</p>}
           </form>
-        </motion.div>
+        </Motion.div>
       </section>
+
+      <Footer dark={dark} />
 
       <SuccessModal
         isOpen={showSuccess}
@@ -162,10 +148,10 @@ const ContactPage = () => {
   );
 };
 
-const InfoItem = ({ icon: Icon, title, value, dark }) => (
+const InfoItem = ({ icon, title, value, dark }) => (
   <div className="flex items-start gap-4">
     <div className={`p-4 rounded-2xl ${dark ? "bg-blue-600/20" : "bg-blue-100"} text-blue-600`}>
-      <Icon size={22} />
+      {icon}
     </div>
     <div>
       <h4 className="font-semibold">{title}</h4>
@@ -181,10 +167,11 @@ const Input = ({ placeholder, type = "text", dark, name, value, onChange }) => (
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-5 py-4 rounded-2xl border outline-none transition ${dark
+    className={`w-full px-5 py-4 rounded-2xl border outline-none transition ${
+      dark
         ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-blue-600"
         : "bg-gray-50 border-gray-300 focus:border-blue-600"
-      }`}
+    }`}
   />
 );
 
@@ -195,10 +182,11 @@ const Textarea = ({ placeholder, dark, name, value, onChange }) => (
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-5 py-4 rounded-2xl border outline-none transition resize-none ${dark
+    className={`w-full px-5 py-4 rounded-2xl border outline-none transition resize-none ${
+      dark
         ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-blue-600"
         : "bg-gray-50 border-gray-300 focus:border-blue-600"
-      }`}
+    }`}
   />
 );
 

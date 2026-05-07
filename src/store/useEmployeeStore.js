@@ -2,7 +2,8 @@ import { create } from "zustand";
 import {
     createEmployee,
     getAllEmployees,
-    getEmployeeById
+    getEmployeeById,
+    updateEmployee,
 } from "../service/employeeService";
 
 const useEmployeeStore = create((set => ({
@@ -26,6 +27,30 @@ const useEmployeeStore = create((set => ({
         } catch (error) {
             const message = error.response?.data?.message || error.message || "Failed to create employee"
             set({ error: message });
+        } finally {
+            set({ loading: false, error: {} });
+        }
+    },
+
+    updateEmployee: async (id, formData) => {
+        set({ loading: true, errors: {} })
+        try {
+            const updatedEmployee = await updateEmployee(id, formData)
+            set((state) => ({
+                employees: state.employees.map((employee) =>
+                    employee.id === id ? updatedEmployee : employee
+                ),
+                employee: updatedEmployee,
+            }));
+            return {
+                success: true,
+                message: "Employee updated successfully",
+                updatedEmployee,
+            };
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || "Failed to update employee"
+            set({ error: message });
+            return { success: false, error: message };
         } finally {
             set({ loading: false, error: {} });
         }

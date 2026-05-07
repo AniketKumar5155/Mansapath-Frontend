@@ -3,6 +3,7 @@ import {
   acceptSubmissionService,
   createFormSubmissionService,
   getAllAcceptedSubmissionService,
+  getEmployeeLeaderboardService,
   getAllSubmissionsService,
   getSubmissionsService,
   getSubmissionByIdService,
@@ -13,6 +14,7 @@ const useFormStore = create((set) => ({
   submissions: [],
   submission: null,
   acceptedSubmissions: [],
+  employeeLeaderboard: [],
   allSubmissions: [],
   total: 0,
   page: 1,
@@ -175,6 +177,21 @@ const useFormStore = create((set) => ({
     } catch (error) {
       const message =
         error.response?.data?.error || error.message;
+      set({ error: message });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  getEmployeeLeaderboard: async () => {
+    set({ loading: true, error: null });
+    try {
+      const leaderboard =
+        await getEmployeeLeaderboardService();
+      set({ employeeLeaderboard: leaderboard });
+    } catch (error) {
+      const message =
+        error.response?.data?.error || error.response?.data?.message || error.message;
       set({ error: message });
     } finally {
       set({ loading: false });

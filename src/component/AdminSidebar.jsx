@@ -6,6 +6,7 @@ import {
   Folder,
   X,
   LayoutDashboard,
+  Trophy,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -53,6 +54,12 @@ const AdminSidebar = ({ open, onClose }) => {
       path: "/superadmin/employees",
       adminOnly: true,
     },
+    {
+      icon: <Trophy size={18} />,
+      label: "Leaderboard",
+      path: "/superadmin/leaderboard",
+      adminOnly: true,
+    },
     { icon: <User size={18} />, label: "Profile", path: "/profile/me" },
   ];
 
@@ -66,7 +73,7 @@ const AdminSidebar = ({ open, onClose }) => {
     <>
       {open && (
         <div
-          className="fixed inset-0 bg-black/40 lg:hidden z-30"
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -75,13 +82,13 @@ const AdminSidebar = ({ open, onClose }) => {
         fixed lg:static top-0 left-0 h-screen min-w-60 max-w-60
       bg-white
         px-3 py-4
-        z-40 lg:z-10
+        z-50 lg:z-10
         flex flex-col transform transition-transform duration-300
         ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
 
-        <div className="flex items-center justify-between px-2 pb-4">
+        <div className="flex shrink-0 items-center justify-between px-2 pb-4">
           <h1 className="text-2xl font-bold text-[#2C7BA0]">Manaspath</h1>
 
           <button className="lg:hidden p-1" onClick={onClose}>
@@ -89,7 +96,7 @@ const AdminSidebar = ({ open, onClose }) => {
           </button>
         </div>
 
-        <ul className="flex flex-col gap-2">
+        <ul className="min-h-0 flex-1 overflow-y-auto pr-1 flex flex-col gap-2">
           {items
             .filter(
               (item) => !item.adminOnly || user?.role === "SUPERADMIN"
@@ -108,9 +115,7 @@ const AdminSidebar = ({ open, onClose }) => {
             ))}
         </ul>
 
-        <div className="grow" />
-
-        <ul className="pb-4">
+        <ul className="shrink-0 border-t border-gray-100 bg-white pt-3 pb-2">
           <SidebarItem
             icon={<LogOut size={18} />}
             label="Logout"

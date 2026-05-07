@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Mail, MapPin, Phone } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
 
 const Footer = ({ dark }) => {
@@ -14,8 +15,9 @@ const Footer = ({ dark }) => {
       <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
         <div>
           <h4 className="text-lg font-semibold mb-4">Manaspath</h4>
-          <p className="text-sm">
-            Dedicated to improving mental health with compassionate support.
+          <p className="text-sm leading-6">
+            Dedicated to improving mental health with compassionate,
+            confidential support for every stage of life.
           </p>
         </div>
 
@@ -46,16 +48,17 @@ const Footer = ({ dark }) => {
         </div>
 
         <div>
-          <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="px-4 py-2 rounded-xl w-full text-gray-800"
-            />
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-xl">
-              Join
-            </button>
+          <h4 className="text-lg font-semibold mb-4">Contact</h4>
+          <div className="space-y-3 text-sm">
+            <p className="flex items-center gap-3">
+              <Phone size={16} /> +91 00000 00000
+            </p>
+            <p className="flex items-center gap-3">
+              <Mail size={16} /> support@manaspath.com
+            </p>
+            <p className="flex items-center gap-3">
+              <MapPin size={16} /> Motihari, Bihar, India
+            </p>
           </div>
         </div>
       </div>

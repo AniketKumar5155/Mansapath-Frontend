@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion as Motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../component/NavBar";
 import Footer from "../component/Footer";
-import useAuthStore from "../store/useAuthStore";
 import {
   HeartPulse,
   Brain,
@@ -13,10 +12,13 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import homepageImage from "../assets/Homepage_Image.jpeg";
+import bannerImage from "../assets/M.png";
+import instagramIcon from "../assets/icons8-instagram-logo-94.png";
+import facebookIcon from "../assets/icons8-facebook-48.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const [dark, setDark] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") return true;
@@ -52,14 +54,14 @@ const HomePage = () => {
                 }`}
             >
               <img
-                src="src/assets/Homepage_Image.jpeg"
+                src={homepageImage}
                 alt="Mental health illustration"
                 className="w-full h-full object-contain rounded-2xl"
               />
             </div>
           </div>
 
-          <motion.div
+          <Motion.div
             className="order-2"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,7 +96,7 @@ const HomePage = () => {
               </a>
             </div>
 
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
@@ -186,8 +188,8 @@ const HomePage = () => {
             className={`h-72 md:h-96 rounded-2xl flex items-center justify-center ${dark ? "bg-gray-900" : "bg-gray-100"
               }`}
           >
-            <img
-              src="src/assets/M.png"
+              <img
+              src={bannerImage}
               alt="Mental wellness illustration"
               className="w-full h-full object-cover rounded-2xl"
             />
@@ -199,33 +201,32 @@ const HomePage = () => {
         id="contact"
         className={`py-20 transition ${dark ? "bg-gray-900" : "bg-blue-50"}`}
       >
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-          <div>
+        <div className="max-w-5xl mx-auto px-6 text-center">
             <h3 className="text-3xl font-bold mb-6">Get in Touch</h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500 mb-8 max-w-2xl mx-auto">
               If someone is struggling, reach out. We're here to help.
             </p>
 
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3">
+            <ul className="grid gap-4 md:grid-cols-3">
+              <li className={`flex items-center justify-center gap-3 rounded-2xl p-4 ${dark ? "bg-gray-800" : "bg-white"}`}>
                 <Phone size={18} /> +91 00000 00000
               </li>
-              <li className="flex items-center gap-3">
+              <li className={`flex items-center justify-center gap-3 rounded-2xl p-4 ${dark ? "bg-gray-800" : "bg-white"}`}>
                 <Mail size={18} /> support@manaspath.com
               </li>
-              <li className="flex items-center gap-3">
+              <li className={`flex items-center justify-center gap-3 rounded-2xl p-4 ${dark ? "bg-gray-800" : "bg-white"}`}>
                 <MapPin size={18} /> Motihari, Bihar, India
               </li>
             </ul>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <p
                 className={`text-xl font-bold mb-3 ${dark ? "text-gray-300" : "text-gray-800"
                   }`}
               >
                 Follow Us
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <a
                   href="https://www.instagram.com/manaspath25/"
                   target="_blank"
@@ -233,7 +234,7 @@ const HomePage = () => {
                   className="flex items-center gap-2"
                 >
                   <img
-                    src="src/assets/icons8-instagram-logo-94.png"
+                    src={instagramIcon}
                     alt="Instagram"
                     className="h-7 w-7"
                   />
@@ -247,7 +248,7 @@ const HomePage = () => {
                   className="flex items-center gap-2"
                 >
                   <img
-                    src="src/assets/icons8-facebook-48.png"
+                    src={facebookIcon}
                     alt="Facebook"
                     className="h-7 w-7"
                   />
@@ -255,13 +256,6 @@ const HomePage = () => {
                 </a>
               </div>
             </div>
-          </div>
-
-          <div
-            className={`h-64 md:h-full rounded-2xl overflow-hidden shadow-lg ${dark ? "bg-gray-800" : "bg-white"
-              }`}
-          >
-          </div>
         </div>
       </section>
 
@@ -271,7 +265,7 @@ const HomePage = () => {
 };
 
 const Card = ({ icon, title, desc, dark }) => (
-  <motion.div
+  <Motion.div
     whileHover={{ y: -6 }}
     className={`p-6 rounded-2xl shadow-md transition ${dark ? "bg-gray-700" : "bg-white"
       }`}
@@ -279,18 +273,18 @@ const Card = ({ icon, title, desc, dark }) => (
     <div className="text-blue-600 mb-4">{icon}</div>
     <h4 className="font-semibold mb-2">{title}</h4>
     <p className="text-gray-400 text-sm">{desc}</p>
-  </motion.div>
+  </Motion.div>
 );
 
 const OfferCard = ({ title, desc, dark }) => (
-  <motion.div
+  <Motion.div
     whileHover={{ scale: 1.02 }}
     className={`p-8 rounded-2xl shadow-md transition ${dark ? "bg-gray-800" : "bg-white"
       }`}
   >
     <h4 className="font-semibold mb-3">{title}</h4>
     <p className="text-gray-500 text-sm">{desc}</p>
-  </motion.div>
+  </Motion.div>
 );
 
 export default HomePage;

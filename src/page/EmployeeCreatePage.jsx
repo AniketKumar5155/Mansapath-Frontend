@@ -8,19 +8,19 @@ const CreateEmployeePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-linear-to-br from-sky-50 via-white to-cyan-50">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="flex flex-col w-full min-w-0 max-h-screen">
+      <div className="flex min-w-0 flex-1 flex-col max-h-screen overflow-x-hidden">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          message="|CREATE EMPLOYEE|"
+          message="Create Employee"
         />
 
-        <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="flex-1 overflow-y-auto">
           <CreateEmployeeForm />
         </div>
       </div>

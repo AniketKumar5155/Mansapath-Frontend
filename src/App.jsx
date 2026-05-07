@@ -10,6 +10,7 @@ import SubmissionsPage from "./page/SubmissionsPage";
 import AdminDashboard from "./page/adminDashboard";
 import EmployeesPage from "./page/EmployeesPage";
 import EmployeeCreatePage from "./page/EmployeeCreatePage";
+import EmployeeLeaderboardPage from "./page/EmployeeLeaderboardPage";
 import HomePage from "./page/HomePage";
 import ProfilePage from "./page/ProfilePage";
 
@@ -78,6 +79,15 @@ const App = () => {
             element={
               <AdminRoute>
                 <EnrolledSubmissionsPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/superadmin/leaderboard"
+            element={
+              <AdminRoute>
+                <EmployeeLeaderboardPage />
               </AdminRoute>
             }
           />

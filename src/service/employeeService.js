@@ -11,10 +11,11 @@ export const getAllEmployees = async (page = 1, limit = 10, search = "", filter 
 }
 
 export const getEmployeeById = async (id) => {
-  try {
     const res = await axiosEmployeeInstance.get(`/employee/${id}`);
     return res.data.data;
-  } catch (err) {
-    throw err;
-  }
+}
+
+export const updateEmployee = async (id, formData) => {
+    const res = await axiosEmployeeInstance.patch(`/update-employee/${id}`, formData);
+    return res.data.data;
 }

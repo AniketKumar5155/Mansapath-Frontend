@@ -35,3 +35,8 @@ export const getAllAcceptedSubmissionService = async () => {
     const res = await axiosFormInstance.get(`/all-accepted-submissions`);
     return res.data.data;
 }
+
+export const getEmployeeLeaderboardService = async () => {
+    const res = await axiosFormInstance.get(`/employee-leaderboard`);
+    return res.data.data;
+}
