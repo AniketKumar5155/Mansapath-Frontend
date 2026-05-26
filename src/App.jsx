@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast"
 import FormPage from "./page/FormPage";
 import OperatorLogin from "./page/OperatorLoginPage";
 import SubmissionsPage from "./page/SubmissionsPage";
-import AdminDashboard from "./page/adminDashboard";
+import AdminDashboard from "./page/AdminDashboard";
 import EmployeesPage from "./page/EmployeesPage";
 import EmployeeCreatePage from "./page/EmployeeCreatePage";
 import EmployeeLeaderboardPage from "./page/EmployeeLeaderboardPage";
@@ -15,7 +15,7 @@ import HomePage from "./page/HomePage";
 import ProfilePage from "./page/ProfilePage";
 
 import AdminRoute from "./component/AdminRoute";
-import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
+import EnrolledSubmissionsPage from "./page/AcceptedSubmissionsPage";
 import ServicePage from "./page/ServicePage";
 import AboutPage from "./page/AboutPage";
 import PrivacyPolicyPage from "./page/PrivacyPolicyPage";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import EmployeeCreateForm from "../component/employeeCreateForm";
+import EmployeeCreateForm from "../component/CreateEmployeeForm";
 import AdminSidebar from "../component/AdminSidebar";
 import AdminHeader from "../component/AdminHeader";
 
