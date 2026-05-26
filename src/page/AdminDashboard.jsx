@@ -17,7 +17,7 @@ const AdminDashboard = () => {
 
                 <AdminHeader
                     onToggleSidebar={() => setSidebarOpen(true)}
-                    message="Manaspath Admin"
+                    message="Manpath Admin"
                 />
 
                 <div className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6">

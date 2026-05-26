@@ -12,7 +12,7 @@ const Navbar = ({ dark, toggleDark }) => {
     { label: "Home", path: "/" },
     { label: "Services", path: "/services" },
     { label: "About", path: "/about-us" },
-    { label: "Contact", path: "/contact" },
+    { label: "Privacy Policy", path: "/privacy-policy" }
   ];
 
   const canAccessAdmin =
@@ -31,7 +31,7 @@ const Navbar = ({ dark, toggleDark }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <img
           src="src/assets/helloUpdated.png"
-          alt="Manasapath Logo"
+          alt="Manpath Logo"
           className="h-12 w-12 cursor-pointer"
           onClick={() => {
             closeMenu();
@@ -63,10 +63,10 @@ const Navbar = ({ dark, toggleDark }) => {
           </button>
 
           <Link
-            to="/contact"
+            to="/book-session"
             className="hidden sm:inline-flex bg-blue-600 text-white px-4 py-2 rounded-2xl shadow hover:bg-blue-700 transition"
           >
-            Get Help
+            Book Session
           </Link>
 
           {canAccessAdmin && (
@@ -119,11 +119,11 @@ const Navbar = ({ dark, toggleDark }) => {
               </Link>
             ))}
             <Link
-              to="/contact"
+              to="/book-session"
               onClick={closeMenu}
               className="rounded-lg bg-blue-600 px-3 py-3 text-center font-medium text-white shadow hover:bg-blue-700 transition"
             >
-              Get Help
+              Book Session
             </Link>
             {canAccessAdmin && (
               <Link

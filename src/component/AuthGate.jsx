@@ -8,7 +8,7 @@ const AuthGate = ({ children }) => {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900">
         <h1 className="text-5xl font-extrabold text-blue-600 tracking-wide">
-          Manaspath
+          Manpath
         </h1>
         <p className="mt-4 text-lg font-medium text-gray-600 dark:text-gray-400 animate-pulse">
           Loading...

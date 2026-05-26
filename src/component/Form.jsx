@@ -20,6 +20,7 @@ import {
   formUpdateSchema,
 } from "../validator/formSchema";
 import homepageImage from "../assets/Homepage_Image.jpeg";
+import Homepage_banner from "../assets/Homepage_banner.jpeg";
 
 function mapZodIssuesToFieldErrors(zodError) {
   const fieldErrors = {};
@@ -271,14 +272,14 @@ const FormSidePanel = ({ isDark }) => (
   >
     <div className="relative aspect-[4/3] min-h-72">
       <img
-        src={homepageImage}
+        src={Homepage_banner}
         alt="Mental health consultation"
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover object-top"
       />
       <div className="absolute inset-0 bg-linear-to-t from-slate-950/75 via-slate-950/20 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-cyan-100">
-          MANASPATH
+          MANPATH
         </p>
         <h1 className="text-3xl font-bold leading-tight md:text-4xl">
           Book a confidential session
@@ -506,7 +507,9 @@ const InnerForm = ({
                 <option value="">Select category</option>
                 <option value="CHAITANYA">{CATEGORY_LABELS.CHAITANYA}</option>
                 <option value="BRAIN GYM">{CATEGORY_LABELS["BRAIN GYM"]}</option>
-                <option value="BODH">{CATEGORY_LABELS.BODH}</option>
+                <option value="BODH" disabled>
+                  {CATEGORY_LABELS.BODH} - Coming soon
+                </option>
               </select>
             </div>
           </div>
@@ -673,7 +676,7 @@ const InnerForm = ({
           ? "Please wait..."
           : isEditing
           ? "Update submission"
-          : "Submit request"}
+          : "Submit"}
       </button>
     </form>
   );

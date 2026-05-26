@@ -12,9 +12,9 @@ import {
 import useAuthStore from "../store/useAuthStore";
 
 const HEADER_META = {
-  "manaspath admin": {
+  "manpath admin": {
     title: "Dashboard",
-    subtitle: "Overview of Manaspath operations and activity",
+    subtitle: "Overview of Manpath operations and activity",
     icon: <BarChart3 size={22} />,
   },
   "form submissions": {

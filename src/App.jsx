@@ -18,7 +18,7 @@ import AdminRoute from "./component/AdminRoute";
 import EnrolledSubmissionsPage from "./page/acceptedSubmissionsPage";
 import ServicePage from "./page/ServicePage";
 import AboutPage from "./page/AboutPage";
-import ContactPage from "./page/ContactPage";
+import PrivacyPolicyPage from "./page/PrivacyPolicyPage";
 import AuthGate from "./component/AuthGate";
 
 
@@ -39,7 +39,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/services" element={<ServicePage />} />
         <Route path="/about-us" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/operator-login" element={<OperatorLogin />} />
         <Route path="/book-session" element={<FormPage />} />
 

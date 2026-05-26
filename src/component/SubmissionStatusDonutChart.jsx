@@ -83,4 +83,4 @@ const SubmissionStatusDonutChart = () => {
   );
 };
 
-export default SubmissionStatusDonutChart;
+export default SubmissionStatusDonutChart

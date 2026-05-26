@@ -95,11 +95,11 @@ const OperatorLogin = () => {
             <div className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
               <img
                 src={logo}
-                alt="Manaspath Logo"
+                alt="Manpath Logo"
                 className="h-12 w-12 rounded-xl object-cover"
               />
               <div>
-                <p className="text-sm font-semibold text-blue-100">Manaspath</p>
+                <p className="text-sm font-semibold text-blue-100">Manpath</p>
                 <p className="text-xs text-slate-300">Admin workspace</p>
               </div>
             </div>
@@ -134,11 +134,11 @@ const OperatorLogin = () => {
                 type="button"
                 onClick={() => navigate("/")}
                 className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 p-1 transition hover:bg-blue-100"
-                aria-label="Go to Manaspath home"
+                aria-label="Go to Manpath home"
               >
                 <img
                   src={logo}
-                  alt="Manaspath Logo"
+                  alt="Manpath Logo"
                   className="h-full w-full rounded-xl object-cover"
                 />
               </button>
@@ -159,7 +159,7 @@ const OperatorLogin = () => {
                 <input
                   type="email"
                   name="email"
-                  placeholder="operator@manaspath.com"
+                  placeholder="operator@manpath.com"
                   value={formData.email}
                   onChange={handleChange}
                   autoComplete="email"

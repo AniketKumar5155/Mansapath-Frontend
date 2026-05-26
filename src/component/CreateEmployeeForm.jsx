@@ -23,7 +23,7 @@ import {
   employeeUpdateSchema,
   mapZodIssuesToFieldErrors,
 } from "../validator/employeeSchema";
-import logoImage from "../assets/ManasapathLogo.jpg";
+import logoImage from "../assets/ManpathLogo.jpg";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -192,11 +192,11 @@ const EmployeeSidePanel = () => (
   <aside className="overflow-hidden rounded-2xl bg-white text-slate-800 shadow-sm ring-1 ring-slate-200">
     <div className="relative min-h-72 bg-linear-to-br from-slate-900 via-cyan-900 to-slate-800 p-6 text-white">
       <div className="absolute right-6 top-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/95 p-2 shadow-lg">
-        <img src={logoImage} alt="Manaspath logo" className="h-full w-full object-contain" />
+        <img src={logoImage} alt="Manpath logo" className="h-full w-full object-contain" />
       </div>
       <div className="absolute bottom-6 left-6 right-6">
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-cyan-100">
-          MANASPATH ADMIN
+          MANPATH ADMIN
         </p>
         <h1 className="max-w-sm text-3xl font-bold leading-tight md:text-4xl">
           Create a trusted team profile

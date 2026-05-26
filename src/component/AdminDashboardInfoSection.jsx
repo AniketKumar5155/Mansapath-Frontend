@@ -135,7 +135,7 @@ const AdminDashboardInfoSection = () => {
               Live Operations
             </div>
             <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
-              Manaspath Dashboard
+              Manpath Dashboard
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
               Monitor submissions, enrollment movement, and team capacity from

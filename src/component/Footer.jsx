@@ -14,7 +14,7 @@ const Footer = ({ dark }) => {
     >
       <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
         <div>
-          <h4 className="text-lg font-semibold mb-4">Manaspath</h4>
+          <h4 className="text-lg font-semibold mb-4">Manpath</h4>
           <p className="text-sm leading-6">
             Dedicated to improving mental health with compassionate,
             confidential support for every stage of life.
@@ -40,8 +40,8 @@ const Footer = ({ dark }) => {
               </Link>
             </li>
             <li>
-              <Link className="hover:text-blue-400 transition" to="/contact">
-                Contact
+              <Link className="hover:text-blue-400 transition" to="/privacy-policy">
+                Privacy Policy
               </Link>
             </li>
           </ul>
@@ -54,7 +54,7 @@ const Footer = ({ dark }) => {
               <Phone size={16} /> +91 00000 00000
             </p>
             <p className="flex items-center gap-3">
-              <Mail size={16} /> support@manaspath.com
+              <Mail size={16} /> support@manpath.com
             </p>
             <p className="flex items-center gap-3">
               <MapPin size={16} /> Motihari, Bihar, India
@@ -80,7 +80,7 @@ const Footer = ({ dark }) => {
       </div>
 
       <div className="text-center py-2 border-t border-gray-700 text-sm">
-        &copy; 2025 Manaspath. All rights reserved.
+        &copy; 2025 Manpath. All rights reserved.
       </div>
     </footer>
   );
