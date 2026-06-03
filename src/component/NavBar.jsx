@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Menu, Moon, Sun, X } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
+import logo from "../assets/helloUpdated.png";
 
 const Navbar = ({ dark, toggleDark }) => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Navbar = ({ dark, toggleDark }) => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <img
-          src="src/assets/helloUpdated.png"
+          src={logo}
           alt="Manpath Logo"
           className="h-12 w-12 cursor-pointer"
           onClick={() => {
