@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { Copy, CheckCircle, AlertCircle } from "lucide-react";
+import { Copy, CheckCircle, AlertCircle, IndianRupee } from "lucide-react";
 import toast from "react-hot-toast";
 import paymentQR from "../assets/manpath-course-payment-QR.jpeg";
 
@@ -78,7 +78,10 @@ const PaymentPage = ({ isOpen, onPaymentComplete, onClose }) => {
           </div>
           <div className="border-t border-gray-200 pt-2 flex justify-between items-center">
             <span className="text-gray-600 font-medium text-sm">Amount:</span>
-            <span className="text-base font-bold text-green-600">{AMOUNT}</span>
+            <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-green-50 to-emerald-50 border-2 border-green-400 rounded-full px-4 py-2 shadow-md">
+              <IndianRupee size={18} className="text-green-600 font-bold" />
+              <span className="text-2xl font-bold text-green-700">{AMOUNT.replace('₹', '')}</span>
+            </div>
           </div>
         </div>
 
