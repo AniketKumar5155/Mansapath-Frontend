@@ -23,7 +23,7 @@ import {
   employeeUpdateSchema,
   mapZodIssuesToFieldErrors,
 } from "../validator/employeeSchema";
-import logoImage from "../assets/ManpathLogo.jpg";
+import logoImage from "../assets/brand-brain-logo.jpg";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 

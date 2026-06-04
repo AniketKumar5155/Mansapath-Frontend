@@ -101,7 +101,11 @@ const SubmissionInfo = ({ id, overlay = false, onClose, onEdit }) => {
                                     )}
 
                                     <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
-                                        {CATEGORY_LABELS[submission.category] || "Not Assigned"}
+                                        Course: {CATEGORY_LABELS[submission.choose_your_course] || "Not Selected"}
+                                    </span>
+
+                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-700">
+                                        Category: {CATEGORY_LABELS[submission.category] || "Not Assigned"}
                                     </span>
                                 </div>
 
@@ -120,6 +124,10 @@ const SubmissionInfo = ({ id, overlay = false, onClose, onEdit }) => {
                                         <Info label="Email" value={submission.email} />
                                         <Info label="Phone" value={submission.phone_number} />
                                         <Info label="Address" value={submission.address} />
+                                        <Info
+                                            label="Selected Course"
+                                            value={CATEGORY_LABELS[submission.choose_your_course] || submission.choose_your_course}
+                                        />
                                     </InfoGrid>
                                 </Section>
 

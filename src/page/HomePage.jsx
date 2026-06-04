@@ -12,11 +12,11 @@ import {
   Users,
   ShieldCheck,
 } from "lucide-react";
-import homepageImage from "../assets/Homepage_Image.jpeg";
-import bannerImage from "../assets/M.png";
+import homepageImage from "../assets/coming-soon-anxiety-overthinking-poster.jpeg";
+import bannerImage from "../assets/homepage-wide-brand-banner.png";
 import HomepageCard from "../component/HomepageCard";
 import HomepageOfferCard from "../component/HomepageOfferCard";
-import Homepage_banner from "../assets/Homepage_banner.jpeg";
+import homepageHeroCoursePoster from "../assets/homepage-hero-course-poster.jpeg";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -47,7 +47,8 @@ const HomePage = () => {
       dark,
       title: "Brain Gym",
       desc: "Focused routines for attention, study pressure, confidence, and emotional balance.",
-      fee: "1499",
+      originalFee: "1999",
+      fee: "999",
       meta: "66 days course",
       status: "Open",
     },
@@ -55,7 +56,8 @@ const HomePage = () => {
       dark,
       title: "Chaitanya",
       desc: "A calm, structured program for clarity, daily rhythm, and purposeful ageing.",
-      fee: "1999",
+      originalFee: "1999",
+      fee: "999",
       meta: "2 online classes weekly",
       status: "Open",
     },
@@ -89,7 +91,7 @@ const HomePage = () => {
                 }`}
             >
               <img
-                src={Homepage_banner}
+                src={homepageHeroCoursePoster}
                 alt="Mental health illustration"
                 className="block w-full object-contain"
               />
@@ -204,6 +206,7 @@ const HomePage = () => {
                   title={card.title}
                   desc={card.desc}
                   fee={card.fee}
+                  originalFee={card.originalFee}
                   meta={card.meta}
                   status={card.status}
                   onClick={() => navigate("/services")}
@@ -262,4 +265,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

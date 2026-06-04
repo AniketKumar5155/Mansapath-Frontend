@@ -217,6 +217,17 @@ const SubmissionTable = () => {
       },
 
       {
+        field: "choose_your_course",
+        headerName: "Course",
+        width: 170,
+        renderCell: ({ value }) => (
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${value ? "bg-cyan-50 text-cyan-700 ring-cyan-100" : "bg-slate-100 text-slate-600 ring-slate-200"}`}>
+            {value ? CATEGORY_LABELS[value] || value : "Not Selected"}
+          </span>
+        ),
+      },
+
+      {
         field: "category",
         headerName: "Category",
         width: 170,
@@ -489,6 +500,14 @@ const MobileSubmissionCard = ({ submission, onView, onEdit }) => {
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-400">Course</p>
+          <p className="mt-1 font-semibold text-slate-700">
+            {submission?.choose_your_course
+              ? CATEGORY_LABELS[submission.choose_your_course] || submission.choose_your_course
+              : "Not Selected"}
+          </p>
+        </div>
         <div>
           <p className="text-xs font-semibold uppercase text-slate-400">Category</p>
           <p className="mt-1 font-semibold text-slate-700">

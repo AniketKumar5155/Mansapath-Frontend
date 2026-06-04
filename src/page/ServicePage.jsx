@@ -20,7 +20,8 @@ const programs = [
     title: "Brain Gym",
     subtitle: "Strengthening focus and emotional balance",
     icon: Brain,
-    fee: "1499",
+    originalFee: "1999",
+    fee: "999",
     audience: "Students, teenagers, and young adults",
     status: "Open",
     description:
@@ -35,7 +36,8 @@ const programs = [
     title: "Chaitanya",
     subtitle: "Awakening calm, clarity, and purpose",
     icon: Sparkles,
-    fee: "1999",
+    originalFee: "1999",
+    fee: "999",
     audience: "Adults and older adults",
     status: "Open",
     description:
@@ -132,7 +134,16 @@ const ServiceCard = ({ program, dark, onBook }) => {
         </p>
         <div className="mt-2 flex items-center gap-2 text-2xl font-bold">
           {!program.comingSoon && <IndianRupee size={22} className="text-cyan-600" />}
-          {program.comingSoon ? "Coming soon" : program.fee}
+          {program.comingSoon ? (
+            "Coming soon"
+          ) : (
+            <div className="flex items-center gap-2">
+              {program.originalFee && (
+                <span className="line-through text-lg text-gray-500">Rs. {program.originalFee}</span>
+              )}
+              <span>Rs. {program.fee}</span>
+            </div>
+          )}
         </div>
         <p className={`mt-2 text-sm ${dark ? "text-gray-400" : "text-slate-500"}`}>
           {program.audience}

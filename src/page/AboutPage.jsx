@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Navbar from "../component/NavBar";
 import Footer from "../component/Footer";
-import founderPhoto from "../assets/founder-updated-crop.jpg";
+import founderPhoto from "../assets/founder-binay-about-portrait.jpg";
 
 const principles = [
   {

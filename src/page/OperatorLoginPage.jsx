@@ -12,7 +12,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
-import logo from "../assets/helloUpdated.png";
+import logo from "../assets/brand-brain-emblem-logo.png";
 
 const OperatorLogin = () => {
   const [formData, setFormData] = useState({

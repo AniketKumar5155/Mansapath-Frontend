@@ -59,6 +59,7 @@ const EnrolledSubmissionTable = () => {
         );
       },
     },
+    { field: "choose_your_course", headerName: "Course", width: 150 },
     { field: "category", headerName: "Category", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone_number", headerName: "Phone", width: 150 },

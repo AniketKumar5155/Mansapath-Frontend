@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 import {
   CheckCircle2,
   ClipboardList,
@@ -14,13 +15,14 @@ import {
 } from "lucide-react";
 import InputField from "./Input";
 import SuccessModal from "./SuccessModal";
+import PaymentPage from "./PaymentPage";
 import useFormStore from "../store/formStore";
 import {
   formSubmissionSchema,
   formUpdateSchema,
 } from "../validator/formSchema";
-import homepageImage from "../assets/Homepage_Image.jpeg";
-import Homepage_banner from "../assets/Homepage_banner.jpeg";
+import homepageImage from "../assets/coming-soon-anxiety-overthinking-poster.jpeg";
+import homepageHeroCoursePoster from "../assets/homepage-hero-course-poster.jpeg";
 
 function mapZodIssuesToFieldErrors(zodError) {
   const fieldErrors = {};
@@ -100,6 +102,25 @@ const CATEGORY_LABELS = {
   BODH: "Bodh",
 };
 
+const COURSE_OPTIONS = [
+  {
+    value: "BRAIN GYM",
+    title: "Brain Gym",
+    description: "Focus, confidence, study pressure, and emotional balance.",
+  },
+  {
+    value: "CHAITANYA",
+    title: "Chaitanya",
+    description: "Calm, clarity, daily rhythm, and purposeful ageing.",
+  },
+  {
+    value: "BODH",
+    title: "Bodh",
+    description: "Self-awareness, emotional regulation, and mindful responses.",
+    comingSoon: true,
+  },
+];
+
 const INITIAL_FORM_DATA = {
   first_name: "",
   middle_name: "",
@@ -108,6 +129,7 @@ const INITIAL_FORM_DATA = {
   age: "",
   status: "",
   category: "",
+  choose_your_course: "",
   email: "",
   phone_number: "",
   address: "",
@@ -120,6 +142,8 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [showPaymentPage, setShowPaymentPage] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const { loading, submitForm, updateSubmission, submissions } = useFormStore();
@@ -142,6 +166,8 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
       age: existing.age ?? "",
       status: existing.status ?? "",
       category: existing.category ?? "",
+      choose_your_course:
+        existing.choose_your_course ?? existing.category ?? "",
       email: existing.email ?? "",
       phone_number: existing.phone_number ?? "",
       address: existing.address ?? "",
@@ -176,6 +202,7 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
       problem_description: formData.problem_description || undefined,
       status: formData.status || undefined,
       category: formData.category || undefined,
+      choose_your_course: formData.choose_your_course || undefined,
     });
 
     const parsed = isEditing
@@ -193,7 +220,13 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
       : await submitForm(cleanedData);
 
     if (res?.success) {
-      setSubmitted(true);
+      if (isEditing) {
+        // For editing, show success modal directly
+        setShowSuccessModal(true);
+      } else {
+        // For new submission, show payment page first
+        setShowPaymentPage(true);
+      }
     } else {
       toast.error(res?.message || res?.error || "Action failed");
     }
@@ -248,14 +281,25 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
           </div>
         </div>
 
+        <PaymentPage
+          isOpen={showPaymentPage}
+          onPaymentComplete={() => {
+            setShowPaymentPage(false);
+            setShowSuccessModal(true);
+          }}
+          onClose={() => {
+            setShowPaymentPage(false);
+          }}
+        />
+
         <SuccessModal
-          isOpen={submitted}
-          title={isEditing ? "Form Updated" : "Form Submitted"}
-          messageline1="Your request has been processed."
+          isOpen={showSuccessModal}
+          title={isEditing ? "Form Updated" : "Payment Successful"}
+          messageline1={isEditing ? "Your request has been processed." : "Your enrollment is complete!"}
           messageline2="Thank you."
           buttonText="OK"
           onClose={() => {
-            setSubmitted(false);
+            setShowSuccessModal(false);
             if (overlay) onClose();
           }}
         />
@@ -270,9 +314,9 @@ const FormSidePanel = ({ isDark }) => (
       isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
     }`}
   >
-    <div className="relative aspect-[4/3] min-h-72">
+    <div className="relative aspect-4/3 min-h-72">
       <img
-        src={Homepage_banner}
+        src={homepageHeroCoursePoster}
         alt="Mental health consultation"
         className="h-full w-full object-cover object-top"
       />
@@ -473,6 +517,70 @@ const InnerForm = ({
             {renderError("age")}
           </div>
         </div>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <ClipboardList size={18} className="text-cyan-600" />
+            <h3 className="text-base font-semibold">Choose your course</h3>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {COURSE_OPTIONS.map((course) => {
+            const checked = formData.choose_your_course === course.value;
+            const disabled = course.comingSoon;
+
+            return (
+              <label
+                key={course.value}
+                className={cx(
+                  "flex min-h-32 flex-col rounded-xl border p-4 text-sm transition",
+                  disabled
+                    ? dark
+                      ? "cursor-not-allowed border-white/10 bg-slate-900/30 text-gray-500 opacity-70"
+                      : "cursor-not-allowed border-amber-200 bg-amber-50/70 text-amber-800 opacity-80"
+                    : checked
+                    ? "border-cyan-400 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-100"
+                    : dark
+                    ? "cursor-pointer border-white/10 bg-slate-900/40 text-gray-300 hover:border-cyan-400/50"
+                    : "cursor-pointer border-slate-200 bg-slate-50/70 text-slate-600 hover:border-cyan-300"
+                )}
+              >
+                <span className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="choose_your_course"
+                      value={course.value}
+                      checked={checked}
+                      disabled={disabled}
+                      onChange={handleChange}
+                      className="h-4 w-4 border-slate-300 accent-cyan-600 disabled:cursor-not-allowed"
+                    />
+                    <span className="font-semibold">{course.title}</span>
+                  </span>
+                  {disabled && (
+                    <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800">
+                      Coming soon
+                    </span>
+                  )}
+                </span>
+                <span className="mt-3 leading-6">{course.description}</span>
+              </label>
+            );
+          })}
+        </div>
+
+        {renderError("choose_your_course")}
+
+        <Link
+          to="/services"
+          className="inline-flex text-sm font-semibold text-blue-600 transition hover:text-blue-700"
+        >
+          See details
+        </Link>
       </section>
 
       {isEditing && (

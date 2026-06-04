@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Menu, Moon, Sun, X } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
-import logo from "../assets/helloUpdated.png";
+import logo from "../assets/brand-brain-emblem-logo.png";
 
 const Navbar = ({ dark, toggleDark }) => {
   const navigate = useNavigate();

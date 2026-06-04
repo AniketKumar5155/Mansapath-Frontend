@@ -43,6 +43,10 @@ export const formSubmissionSchema = z.object({
     .min(1, "Address cannot be empty")
     .max(300, "Address must be at most 300 characters"),
 
+  choose_your_course: z.enum(["CHAITANYA", "BRAIN GYM"], {
+    required_error: "Course selection is required",
+  }),
+
   problem_description: z
     .string()
     .max(2000, "Problem description too long")
@@ -87,6 +91,9 @@ export const formUpdateSchema = z.object({
   email: z.string().email().max(100).optional(),
   phone_number: z.string().regex(/^[0-9+\-() ]{7,15}$/).optional(),
   address: z.string().max(300).optional(),
+  choose_your_course: z
+    .enum(["CHAITANYA", "BRAIN GYM"])
+    .optional(),
   problem_description: z.string().max(2000).optional(),
 
   status: z
