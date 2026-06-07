@@ -80,7 +80,7 @@ const Footer = ({ dark }) => {
       </div>
 
       <div className="text-center py-2 border-t border-gray-700 text-sm">
-        &copy; 2025 Manpath. All rights reserved.
+        &copy; {new Date().getFullYear()} Manpath. All rights reserved.
       </div>
     </footer>
   );
