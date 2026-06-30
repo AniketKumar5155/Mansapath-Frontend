@@ -49,7 +49,8 @@ const HomePage = () => {
       desc: "Focused routines for attention, study pressure, confidence, and emotional balance.",
       originalFee: "1999",
       fee: "999",
-      meta: "66 days course",
+      meta1: "66 days course",
+      meta2: "2 online classes weekly",
       status: "Open",
     },
     {
@@ -58,7 +59,8 @@ const HomePage = () => {
       desc: "A calm, structured program for clarity, daily rhythm, and purposeful ageing.",
       originalFee: "1999",
       fee: "999",
-      meta: "2 online classes weekly",
+      meta1: "66 days course",
+      meta2: "2 online classes weekly",
       status: "Open",
     },
     {
@@ -207,7 +209,8 @@ const HomePage = () => {
                   desc={card.desc}
                   fee={card.fee}
                   originalFee={card.originalFee}
-                  meta={card.meta}
+                  meta1={card.meta1}
+                  meta2={card.meta2}
                   status={card.status}
                   onClick={() => navigate("/services")}
                 />

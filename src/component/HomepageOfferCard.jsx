@@ -2,7 +2,7 @@ import { motion as Motion } from "framer-motion";
 import { ArrowRight, IndianRupee } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const HomepageOfferCard = ({ title, desc, dark, fee, originalFee, meta, status, onClick }) => {
+const HomepageOfferCard = ({ title, desc, dark, fee, originalFee, meta1, meta2, status, onClick }) => {
   const navigate = useNavigate();
 
   return (
@@ -53,7 +53,8 @@ const HomepageOfferCard = ({ title, desc, dark, fee, originalFee, meta, status, 
           )}
         </div>
         <div className="mt-3 flex items-center justify-between gap-3 text-sm font-semibold text-blue-600">
-          <span>{meta}</span>
+          <span>{meta1}</span>
+          <span>{meta2}</span>
           <ArrowRight size={17} />
         </div>
       </div>
