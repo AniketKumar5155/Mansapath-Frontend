@@ -1,2 +1,2 @@
-/api/* :env(VITE_APP_BACKEND_URL)/api/:splat  200
-/* /index.html   200
+/api/* https://ripa74vxrc.execute-api.ap-south-1.amazonaws.com/api/:splat 200
+/* /index.html 200
