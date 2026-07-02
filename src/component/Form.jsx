@@ -106,12 +106,12 @@ const COURSE_OPTIONS = [
   {
     value: "BRAIN GYM",
     title: "Brain Gym",
-    description: "Strengthening focus and emotional balance",
+    description: "Students, teenagers, and young adults",
   },
   {
     value: "CHAITANYA",
     title: "Chaitanya",
-    description: "Awakening calm, clarity, and purpose",
+    description: "Adults and older adults",
   },
   {
     value: "BODH",
