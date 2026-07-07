@@ -21,8 +21,7 @@ import {
   formSubmissionSchema,
   formUpdateSchema,
 } from "../validator/formSchema";
-import homepageImage from "../assets/coming-soon-anxiety-overthinking-poster.jpeg";
-import homepageHeroCoursePoster from "../assets/homepage-hero-course-poster.jpeg";
+import Hero_Poster from "../assets/Hero_Poster.jpeg";
 
 function mapZodIssuesToFieldErrors(zodError) {
   const fieldErrors = {};
@@ -316,7 +315,7 @@ const FormSidePanel = ({ isDark }) => (
   >
     <div className="relative aspect-4/3 min-h-72">
       <img
-        src={homepageHeroCoursePoster}
+        src={Hero_Poster}
         alt="Mental health consultation"
         className="h-full w-full object-cover object-top"
       />

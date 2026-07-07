@@ -12,11 +12,9 @@ import {
   Users,
   ShieldCheck,
 } from "lucide-react";
-import homepageImage from "../assets/coming-soon-anxiety-overthinking-poster.jpeg";
-import bannerImage from "../assets/homepage-wide-brand-banner.png";
 import HomepageCard from "../component/HomepageCard";
 import HomepageOfferCard from "../component/HomepageOfferCard";
-import homepageHeroCoursePoster from "../assets/homepage-hero-course-poster.jpeg";
+import Hero_Poster from "../assets/Hero_Poster.jpeg";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -93,7 +91,7 @@ const HomePage = () => {
                 }`}
             >
               <img
-                src={homepageHeroCoursePoster}
+                src={Hero_Poster}
                 alt="Mental health illustration"
                 className="block w-full object-contain"
               />

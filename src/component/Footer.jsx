@@ -51,10 +51,10 @@ const Footer = ({ dark }) => {
           <h4 className="text-lg font-semibold mb-4">Contact</h4>
           <div className="space-y-3 text-sm">
             <p className="flex items-center gap-3">
-              <Phone size={16} /> +91 00000 00000
+              <Phone size={16} /> +91 9288101818
             </p>
             <p className="flex items-center gap-3">
-              <Mail size={16} /> support@manpath.com
+              <Mail size={16} /> manpath25@gmail.com
             </p>
             <p className="flex items-center gap-3">
               <MapPin size={16} /> Motihari, Bihar, India

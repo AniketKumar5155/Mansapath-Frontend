@@ -18,7 +18,7 @@ import Footer from "../component/Footer";
 const programs = [
   {
     title: "Brain Gym",
-    subtitle: "Strengthening focus and emotional balance",
+    subtitle: "Students, teenagers, and young adults",
     icon: Brain,
     originalFee: "1999",
     fee: "999",
@@ -34,7 +34,7 @@ const programs = [
   },
   {
     title: "Chaitanya",
-    subtitle: "Awakening calm, clarity, and purpose",
+    subtitle: "Adults and older adults",
     icon: Sparkles,
     originalFee: "1999",
     fee: "999",
