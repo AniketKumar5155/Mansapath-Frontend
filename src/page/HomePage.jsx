@@ -70,7 +70,6 @@ const HomePage = () => {
       status: "Coming soon",
     },
   ];
-
   return (
     <div
       className={`min-h-screen transition-colors duration-500 scroll-smooth ${dark ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-800"
