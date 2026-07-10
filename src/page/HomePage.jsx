@@ -44,7 +44,7 @@ const HomePage = () => {
     {
       dark,
       title: "Brain Gym",
-      desc: "Focused routines for attention, study pressure, confidence, and emotional balance.",
+      desc: "Students, teenagers, and young adults",
       originalFee: "1999",
       fee: "999",
       meta1: "66 days course",
@@ -54,7 +54,7 @@ const HomePage = () => {
     {
       dark,
       title: "Chaitanya",
-      desc: "A calm, structured program for clarity, daily rhythm, and purposeful ageing.",
+      desc: "Adults and older adults",
       originalFee: "1999",
       fee: "999",
       meta1: "66 days course",
@@ -64,7 +64,7 @@ const HomePage = () => {
     {
       dark,
       title: "Bodh",
-      desc: "A self-awareness program for better emotional regulation and mindful responses.",
+      desc: "Awareness and understanding",
       fee: "Coming soon",
       meta: "Launching soon",
       status: "Coming soon",
