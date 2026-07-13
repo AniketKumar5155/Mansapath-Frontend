@@ -225,10 +225,8 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
 
     if (res?.success) {
       if (isEditing) {
-        // For editing, show success modal directly
         setShowSuccessModal(true);
       } else {
-        // For new submission, show payment page first
         setShowPaymentPage(true);
       }
     } else {
@@ -318,46 +316,50 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
             setShowSuccessModal(false);
             if (overlay) onClose();
           }}
-          />
-            {
-              showDeleteConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm">
-                  <div className={cx(
-                    "w-full max-w-md rounded-2xl p-6 shadow-xl ring-1",
-                    isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
-                  )}>
-                    <h3 className="text-lg font-bold">Delete Submission</h3>
-                    <p className={cx("mt-2 text-sm leading-6", isDark ? "text-gray-400" : "text-slate-500")}>
-                      Are you absolutely sure you want to delete this submission? This action cannot be undone.
-                    </p>
-                    <div className="mt-6 flex justify-end gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setShowDeleteConfirm(false)}
-                        className={cx(
-                          "rounded-xl px-4 py-2.5 text-sm font-semibold border transition",
-                          isDark
-                            ? "border-white/10 text-gray-300 hover:bg-white/5"
-                            : "border-slate-200 text-slate-600 hover:bg-slate-50"
-                        )}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleDelete}
-                        disabled={loading}
-                        className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
-                      >
-                        {loading ? "Deleting..." : "Confirm Delete"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )
-            }
-
+        />
       </div>
+
+      {showDeleteConfirm && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm"
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div 
+            className={cx(
+              "w-full max-w-md rounded-2xl p-6 shadow-xl ring-1",
+              isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
+            )}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold">Delete Submission</h3>
+            <p className={cx("mt-2 text-sm leading-6", isDark ? "text-gray-400" : "text-slate-500")}>
+              Are you absolutely sure you want to delete this submission? This action cannot be undone.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(false)}
+                className={cx(
+                  "rounded-xl px-4 py-2.5 text-sm font-semibold border transition",
+                  isDark
+                    ? "border-white/10 text-gray-300 hover:bg-white/5"
+                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={loading}
+                className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {loading ? "Deleting..." : "Confirm Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
