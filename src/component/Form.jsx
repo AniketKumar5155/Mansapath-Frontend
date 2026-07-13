@@ -313,9 +313,9 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
         />
       </div>
 
-      {showDeleteConfirm && (
+      {showDeleteConfirm && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
           onClick={(event) => {
             event.stopPropagation();
             setShowDeleteConfirm(false);
@@ -323,7 +323,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
         >
           <div 
             className={cx(
-              "w-full max-w-md rounded-2xl p-6 shadow-xl ring-1",
+              "w-full max-w-md rounded-2xl p-6 shadow-2xl ring-1 animate-[scaleIn_0.2s_ease-in-out]",
               isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
             )}
             onClick={(event) => event.stopPropagation()}
@@ -355,7 +355,20 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
               </button>
             </div>
           </div>
-        </div>
+          <style>{`
+            @keyframes scaleIn {
+              from {
+                transform: scale(0.85);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
+            }
+          `}</style>
+        </div>,
+        document.body
       )}
     </div>
   );
