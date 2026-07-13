@@ -17,6 +17,7 @@ import InputField from "./Input";
 import SuccessModal from "./SuccessModal";
 import PaymentPage from "./PaymentPage";
 import useFormStore from "../store/formStore";
+import useAuthStore from "../store/useAuthStore";
 import {
   formSubmissionSchema,
   formUpdateSchema,
@@ -136,7 +137,7 @@ const INITIAL_FORM_DATA = {
   problem_description: "",
 };
 
-const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
+const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
   const isDark = overlay ? false : dark;
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -144,8 +145,12 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
   const [showPaymentPage, setShowPaymentPage] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const { loading, submitForm, updateSubmission, submissions } = useFormStore();
+  const { loading, submitForm, updateSubmission, submissions, deleteSubmission } = useFormStore();
+
+  const { user } = useAuthStore();
+  const isSuperAdmin = user?.role === "SUPERADMIN";
 
   useEffect(() => {
     setIsEditing(Boolean(id));
@@ -231,40 +236,50 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
     }
   };
 
+  const handleDelete = async (event) => {
+    if (event) event.preventDefault();
+
+    const res = await deleteSubmission(id);
+    if (res?.success) {
+      toast.success("Submission deleted successfully");
+      setShowDeleteConfirm(false);
+      if (overlay) onClose();
+    } else {
+      toast.error(res?.message || res?.error || "Delete failed");
+    }
+  };
+
   return (
     <div
       className={
         overlay
           ? "fixed inset-0 z-50 flex justify-center overflow-y-auto bg-slate-950/60 px-3 py-6 backdrop-blur-sm sm:px-6"
           : isDark
-          ? "min-h-screen w-full bg-gray-900 text-gray-200"
-          : "min-h-screen w-full bg-linear-to-br from-sky-50 via-white to-cyan-50 text-gray-800"
+            ? "min-h-screen w-full bg-gray-900 text-gray-200"
+            : "min-h-screen w-full bg-linear-to-br from-sky-50 via-white to-cyan-50 text-gray-800"
       }
       onClick={overlay ? onClose : undefined}
     >
       <div
-        className={`w-full ${
-          overlay
+        className={`w-full ${overlay
             ? "max-w-5xl"
             : "mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-12"
-        }`}
+          }`}
         onClick={(event) => event.stopPropagation()}
       >
         <div
-          className={`grid ${
-            overlay ? "" : "items-start gap-8 lg:grid-cols-[0.88fr_1.12fr]"
-          }`}
+          className={`grid ${overlay ? "" : "items-start gap-8 lg:grid-cols-[0.88fr_1.12fr]"
+            }`}
         >
           {!overlay && <FormSidePanel isDark={isDark} />}
 
           <div
-            className={`rounded-2xl shadow-sm ring-1 ${
-              overlay
+            className={`rounded-2xl shadow-sm ring-1 ${overlay
                 ? "bg-white text-slate-800 ring-slate-200"
                 : isDark
-                ? "bg-gray-800 text-gray-200 ring-white/10"
-                : "bg-white text-gray-800 ring-slate-200"
-            }`}
+                  ? "bg-gray-800 text-gray-200 ring-white/10"
+                  : "bg-white text-gray-800 ring-slate-200"
+              }`}
           >
             <InnerForm
               formData={formData}
@@ -276,6 +291,8 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
               dark={isDark}
               overlay={overlay}
               onClose={onClose}
+              isSuperAdmin={isSuperAdmin}
+              onDeleteClick={() => setShowDeleteConfirm(true)}
             />
           </div>
         </div>
@@ -300,8 +317,47 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
           onClose={() => {
             setShowSuccessModal(false);
             if (overlay) onClose();
+
+            {
+              showDeleteConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm">
+                  <div className={cx(
+                    "w-full max-w-md rounded-2xl p-6 shadow-xl ring-1",
+                    isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
+                  )}>
+                    <h3 className="text-lg font-bold">Delete Submission</h3>
+                    <p className={cx("mt-2 text-sm leading-6", isDark ? "text-gray-400" : "text-slate-500")}>
+                      Are you absolutely sure you want to delete this submission? This action cannot be undone.
+                    </p>
+                    <div className="mt-6 flex justify-end gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowDeleteConfirm(false)}
+                        className={cx(
+                          "rounded-xl px-4 py-2.5 text-sm font-semibold border transition",
+                          isDark
+                            ? "border-white/10 text-gray-300 hover:bg-white/5"
+                            : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                        )}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleDelete}
+                        disabled={loading}
+                        className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+                      >
+                        {loading ? "Deleting..." : "Confirm Delete"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
           }}
         />
+
       </div>
     </div>
   );
@@ -309,9 +365,8 @@ const Form = ({ overlay = false, onClose = () => {}, id, dark = false }) => {
 
 const FormSidePanel = ({ isDark }) => (
   <aside
-    className={`overflow-hidden rounded-2xl shadow-sm ring-1 ${
-      isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
-    }`}
+    className={`overflow-hidden rounded-2xl shadow-sm ring-1 ${isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
+      }`}
   >
     <div className="relative aspect-4/3 min-h-72">
       <img
@@ -350,18 +405,16 @@ const FormSidePanel = ({ isDark }) => (
       ].map(({ icon, title, text }) => (
         <div key={title} className="flex gap-3">
           <span
-            className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-              isDark ? "bg-cyan-400/10 text-cyan-300" : "bg-cyan-50 text-cyan-700"
-            }`}
+            className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isDark ? "bg-cyan-400/10 text-cyan-300" : "bg-cyan-50 text-cyan-700"
+              }`}
           >
             {icon}
           </span>
           <div>
             <h2 className="text-sm font-semibold">{title}</h2>
             <p
-              className={`mt-1 text-sm leading-6 ${
-                isDark ? "text-gray-400" : "text-slate-500"
-              }`}
+              className={`mt-1 text-sm leading-6 ${isDark ? "text-gray-400" : "text-slate-500"
+                }`}
             >
               {text}
             </p>
@@ -382,6 +435,8 @@ const InnerForm = ({
   dark,
   overlay,
   onClose,
+  isSuperAdmin,
+  onDeleteClick,
 }) => {
   const textMuted = dark ? "text-gray-400" : "text-slate-500";
   const labelClass = dark ? "text-gray-200" : "text-slate-700";
@@ -541,10 +596,10 @@ const InnerForm = ({
                       ? "cursor-not-allowed border-white/10 bg-slate-900/30 text-gray-500 opacity-70"
                       : "cursor-not-allowed border-amber-200 bg-amber-50/70 text-amber-800 opacity-80"
                     : checked
-                    ? "border-cyan-400 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-100"
-                    : dark
-                    ? "cursor-pointer border-white/10 bg-slate-900/40 text-gray-300 hover:border-cyan-400/50"
-                    : "cursor-pointer border-slate-200 bg-slate-50/70 text-slate-600 hover:border-cyan-300"
+                      ? "border-cyan-400 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-100"
+                      : dark
+                        ? "cursor-pointer border-white/10 bg-slate-900/40 text-gray-300 hover:border-cyan-400/50"
+                        : "cursor-pointer border-slate-200 bg-slate-50/70 text-slate-600 hover:border-cyan-300"
                 )}
               >
                 <span className="flex items-center justify-between gap-3">
@@ -725,8 +780,8 @@ const InnerForm = ({
                         checked
                           ? "border-cyan-300 bg-cyan-50 text-cyan-800"
                           : dark
-                          ? "border-white/10 bg-slate-900/60 text-gray-300 hover:border-cyan-400/50"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-cyan-300"
+                            ? "border-white/10 bg-slate-900/60 text-gray-300 hover:border-cyan-400/50"
+                            : "border-slate-200 bg-white text-slate-600 hover:border-cyan-300"
                       )}
                     >
                       <input
@@ -773,18 +828,33 @@ const InnerForm = ({
         {renderError("problem_description")}
       </section>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
-      >
-        {loading && <Loader2 size={18} className="animate-spin" />}
-        {loading
-          ? "Please wait..."
-          : isEditing
-          ? "Update submission"
-          : "Submit"}
-      </button>
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        {isEditing && isSuperAdmin && (
+          <button
+            type="button"
+            onClick={onDeleteClick}
+            disabled={loading}
+            className="flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-100 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+          >
+            Delete submission
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={loading}
+          className={cx(
+            "flex items-center justify-center gap-2 rounded-xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70",
+            isEditing ? "sm:w-auto px-6" : "w-full"
+          )}
+        >
+          {loading && <Loader2 size={18} className="animate-spin" />}
+          {loading
+            ? "Please wait..."
+            : isEditing
+              ? "Update submission"
+              : "Submit"}
+        </button>
+      </div>
     </form>
   );
 };

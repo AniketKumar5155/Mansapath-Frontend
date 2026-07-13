@@ -8,6 +8,7 @@ import {
   getSubmissionsService,
   getSubmissionByIdService,
   updateSubmissionService,
+  deleteFormSubmissionService,
 } from "../service/formService";
 
 const useFormStore = create((set) => ({
@@ -197,6 +198,27 @@ const useFormStore = create((set) => ({
       set({ loading: false });
     }
   },
+
+  deleteSubmission: async (id) => {
+  set({ loading: true, error: null });
+  try {
+    await deleteFormSubmissionService(id);
+
+    set((state) => ({
+      submissions: state.submissions.filter((s) => s.id !== id),
+      allSubmissions: state.allSubmissions.filter((s) => s.id !== id),
+      submission: state.submission?.id === id ? null : state.submission,
+    }));
+
+    return { success: true };
+  } catch (error) {
+    const message = error.response?.data?.error || error.response?.data?.message || error.message;
+    set({ error: message });
+    return { success: false, error: message };
+  } finally {
+    set({ loading: false });
+  }
+}
 }));
 
 export default useFormStore;

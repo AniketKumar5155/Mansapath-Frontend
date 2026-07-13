@@ -40,3 +40,8 @@ export const getEmployeeLeaderboardService = async () => {
     const res = await axiosFormInstance.get(`/employee-leaderboard`);
     return res.data.data;
 }
+
+export const deleteFormSubmissionService = async (id) => {
+    const res = await axiosFormInstance.delete(`/delete-submission/${id}`);
+    return res.data.data;
+}
