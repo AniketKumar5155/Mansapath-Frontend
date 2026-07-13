@@ -24,7 +24,7 @@ export default function AdminRoute({ children }) {
 
   if (!accessToken) {
     return <Navigate to="/operator-login" replace />;
-  }a
+  }
 
   if (user?.role !== "SUPERADMIN") {
     return <Navigate to="/" replace />;

@@ -42,8 +42,8 @@ const App = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/operator-login" element={<OperatorLogin />} />
         <Route path="/book-session" element={<FormPage />} />
-
-        <Route element={<AuthGate/>} >
+        
+        <Route element= {<AuthGate />}>
           <Route path="/admin/submissions" element={<SubmissionsPage />} />
           <Route path="/profile/me" element={<ProfilePage />} />
 
