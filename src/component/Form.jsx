@@ -317,7 +317,8 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
           onClose={() => {
             setShowSuccessModal(false);
             if (overlay) onClose();
-
+          }}
+          />
             {
               showDeleteConfirm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm">
@@ -355,8 +356,6 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
                 </div>
               )
             }
-          }}
-        />
 
       </div>
     </div>
