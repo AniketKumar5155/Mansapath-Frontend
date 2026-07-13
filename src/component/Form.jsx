@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import {
@@ -141,7 +142,6 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
   const isDark = overlay ? false : dark;
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [showPaymentPage, setShowPaymentPage] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -247,7 +247,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
     }
   };
 
-  return (
+  const formContent = (
     <div
       className={
         overlay
@@ -259,16 +259,10 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
       onClick={overlay ? onClose : undefined}
     >
       <div
-        className={`w-full ${overlay
-            ? "max-w-5xl"
-            : "mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-12"
-          }`}
+        className={`w-full ${overlay ? "max-w-5xl" : "mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-12"}`}
         onClick={(event) => event.stopPropagation()}
       >
-        <div
-          className={`grid ${overlay ? "" : "items-start gap-8 lg:grid-cols-[0.88fr_1.12fr]"
-            }`}
-        >
+        <div className={`grid ${overlay ? "" : "items-start gap-8 lg:grid-cols-[0.88fr_1.12fr]"}`}>
           {!overlay && <FormSidePanel isDark={isDark} />}
 
           <div
@@ -322,7 +316,10 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
       {showDeleteConfirm && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-sm"
-          onClick={() => setShowDeleteConfirm(false)}
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowDeleteConfirm(false);
+          }}
         >
           <div 
             className={cx(
@@ -362,6 +359,12 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
       )}
     </div>
   );
+
+  if (overlay) {
+    return createPortal(formContent, document.body);
+  }
+
+  return formContent;
 };
 
 const FormSidePanel = ({ isDark }) => (
