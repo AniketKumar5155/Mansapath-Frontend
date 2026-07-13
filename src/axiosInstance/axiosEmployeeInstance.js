@@ -3,7 +3,7 @@ import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
 const axiosEmployeeInstance = axios.create({
-    baseURL: `/api/employees`,
+    baseURL: `${BACKEND_URL}/api/employees`,
     withCredentials: true,
 });
 
