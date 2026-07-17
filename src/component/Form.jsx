@@ -302,9 +302,9 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
 
         <SuccessModal
           isOpen={showSuccessModal}
-          title={isEditing ? "Form Updated" : "Payment Successful"}
+          title={isEditing ? "Form Updated" : "Registration Successful"}
           messageline1={isEditing ? "Your request has been processed." : "Your enrollment is complete!"}
-          messageline2="Thank you."
+          messageline2="You will be contacted soon by our representative."
           buttonText="OK"
           onClose={() => {
             setShowSuccessModal(false);
