@@ -267,10 +267,10 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
 
           <div
             className={`rounded-2xl shadow-sm ring-1 ${overlay
-                ? "bg-white text-slate-800 ring-slate-200"
-                : isDark
-                  ? "bg-gray-800 text-gray-200 ring-white/10"
-                  : "bg-white text-gray-800 ring-slate-200"
+              ? "bg-white text-slate-800 ring-slate-200"
+              : isDark
+                ? "bg-gray-800 text-gray-200 ring-white/10"
+                : "bg-white text-gray-800 ring-slate-200"
               }`}
           >
             <InnerForm
@@ -314,14 +314,14 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
       </div>
 
       {showDeleteConfirm && createPortal(
-        <div 
+        <div
           className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
           onClick={(event) => {
             event.stopPropagation();
             setShowDeleteConfirm(false);
           }}
         >
-          <div 
+          <div
             className={cx(
               "w-full max-w-md rounded-2xl p-6 shadow-2xl ring-1 animate-[scaleIn_0.2s_ease-in-out]",
               isDark ? "bg-gray-800 text-gray-200 ring-white/10" : "bg-white text-gray-800 ring-slate-200"
@@ -793,7 +793,8 @@ const InnerForm = ({
                     <label
                       key={issue.id}
                       className={cx(
-                        "flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition",
+                        "flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm",
+                        "transform-gpu will-change-transform transition-colors duration-150 ease-in-out",
                         checked
                           ? "border-cyan-300 bg-cyan-50 text-cyan-800"
                           : dark
