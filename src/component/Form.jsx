@@ -773,7 +773,7 @@ const InnerForm = ({
             {formData.issues.length} selected
           </span>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4" style={{ contain: "layout paint" }}>
           {Object.entries(ISSUE_CATEGORIES).map(([category, issues]) => (
             <div
               key={category}
