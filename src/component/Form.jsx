@@ -147,6 +147,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
   const [showPaymentPage, setShowPaymentPage] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { loading, submitForm, updateSubmission, submissions, deleteSubmission } = useFormStore();
@@ -199,6 +200,9 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting || loading) return;
+
+    setIsSubmitting(true);
 
     const cleanedData = removeEmpty({
       ...formData,
@@ -218,21 +222,26 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
     if (!parsed.success) {
       setFieldErrors(mapZodIssuesToFieldErrors(parsed.error));
       toast.error("Please fix the highlighted errors");
+      setIsSubmitting(false);
       return;
     }
 
-    const res = isEditing
-      ? await updateSubmission(id, cleanedData)
-      : await submitForm(cleanedData);
+    try {
+      const res = isEditing
+        ? await updateSubmission(id, cleanedData)
+        : await submitForm(cleanedData);
 
-    if (res?.success) {
-      if (isEditing) {
-        setShowSuccessModal(true);
+      if (res?.success) {
+        if (isEditing) {
+          setShowSuccessModal(true);
+        } else {
+          setShowPaymentChoiceModal(true);
+        }
       } else {
-        setShowPaymentChoiceModal(true);
+        toast.error(res?.message || res?.error || "Action failed");
       }
-    } else {
-      toast.error(res?.message || res?.error || "Action failed");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -281,6 +290,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
               fieldErrors={fieldErrors}
               handleSubmit={handleSubmit}
               loading={loading}
+              isSubmitting={isSubmitting}
               isEditing={isEditing}
               dark={isDark}
               overlay={overlay}
@@ -516,6 +526,7 @@ const InnerForm = ({
   fieldErrors,
   handleSubmit,
   loading,
+  isSubmitting,
   isEditing,
   dark,
   overlay,
@@ -523,6 +534,7 @@ const InnerForm = ({
   isSuperAdmin,
   onDeleteClick,
 }) => {
+  const submitDisabled = loading || isSubmitting;
   const textMuted = dark ? "text-gray-400" : "text-slate-500";
   const labelClass = dark ? "text-gray-200" : "text-slate-700";
   const controlClass = dark
@@ -927,14 +939,14 @@ const InnerForm = ({
         )}
         <button
           type="submit"
-          disabled={loading}
+          disabled={submitDisabled}
           className={cx(
             "flex items-center justify-center gap-2 rounded-xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70",
             isEditing ? "sm:w-auto px-6" : "w-full"
           )}
         >
-          {loading && <Loader2 size={18} className="animate-spin" />}
-          {loading
+          {submitDisabled && <Loader2 size={18} className="animate-spin" />}
+          {submitDisabled
             ? "Please wait..."
             : isEditing
               ? "Update submission"
