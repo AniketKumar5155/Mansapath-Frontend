@@ -11,6 +11,7 @@ import {
   MapPin,
   Phone,
   ShieldCheck,
+  Wallet,
   UserRound,
   X,
 } from "lucide-react";
@@ -142,6 +143,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
   const isDark = overlay ? false : dark;
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [showPaymentChoiceModal, setShowPaymentChoiceModal] = useState(false);
   const [showPaymentPage, setShowPaymentPage] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -227,7 +229,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
       if (isEditing) {
         setShowSuccessModal(true);
       } else {
-        setShowPaymentPage(true);
+        setShowPaymentChoiceModal(true);
       }
     } else {
       toast.error(res?.message || res?.error || "Action failed");
@@ -289,6 +291,18 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
           </div>
         </div>
 
+        <PaymentChoiceModal
+          isOpen={showPaymentChoiceModal}
+          onPayNow={() => {
+            setShowPaymentChoiceModal(false);
+            setShowPaymentPage(true);
+          }}
+          onPayLater={() => {
+            setShowPaymentChoiceModal(false);
+            setShowSuccessModal(true);
+          }}
+        />
+
         <PaymentPage
           isOpen={showPaymentPage}
           onPaymentComplete={() => {
@@ -297,6 +311,7 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
           }}
           onClose={() => {
             setShowPaymentPage(false);
+            setShowPaymentChoiceModal(true);
           }}
         />
 
@@ -378,6 +393,59 @@ const Form = ({ overlay = false, onClose = () => { }, id, dark = false }) => {
   }
 
   return formContent;
+};
+
+const PaymentChoiceModal = ({ isOpen, onPayNow, onPayLater }) => {
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl animate-[scaleIn_0.2s_ease-in-out]">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+          <CheckCircle2 size={38} className="text-green-600" />
+        </div>
+
+        <h2 className="text-2xl font-bold text-gray-800">
+          Registration Successful
+        </h2>
+        <p className="mt-3 text-base leading-relaxed text-gray-600">
+          Would you like to pay now or later?
+        </p>
+
+        <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={onPayLater}
+            className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            Pay Later
+          </button>
+          <button
+            type="button"
+            onClick={onPayNow}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-800"
+          >
+            <Wallet size={18} />
+            Pay Now
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.85);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </div>,
+    document.body
+  );
 };
 
 const FormSidePanel = ({ isDark }) => (
